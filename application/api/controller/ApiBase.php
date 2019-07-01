@@ -173,4 +173,25 @@ class ApiBase extends Controller
     public function _empty(){
         $this->ajaxReturn(['status' => -1 , 'msg'=>'接口不存在','data'=>null]);
     }
+
+    public function successResult($data = [])
+    {
+        return $this->getResult(200, 'success', $data);
+    }
+
+    public function failResult($message, $status = 301)
+    {
+        return $this->getResult($status, $message, false);
+    }
+
+    public function getResult($status, $message, $data)
+    {
+
+        return [
+            'status' => $status,
+            'msg' => $message,
+            'data' => $data
+        ];
+    }
+
 }
