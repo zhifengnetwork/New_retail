@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 use app\common\model\Advertisement as Advertise;
+use app\common\model\Announce;
 use think\Db;
 
 /**
@@ -19,6 +20,64 @@ class Advertisement extends Common
         $this->assign('meta_title', '页面');
         return $this->fetch();
     }
+    /**
+     * 公告栏列表
+     */
+    public function announce()
+    {
+        $list = Db::table('announce')->where(['status'=>['<>',-1]])->select();
+//        $list = Advertise::order('sort')->select();
+        $this->assign('list', $list);
+        $this->assign('meta_title', '公告');
+        return $this->fetch();
+    }
+
+     /**
+     * 编辑页面的广告和轮播
+     */
+    public function announce_edit()
+    {
+         $id = input('id', 0);
+
+        if (request()->isPost()) {
+            $id    = input('id', 0);
+            $title = input('title', '');
+            $desc = input('desc', '');
+            $urllink = input('urllink', '');
+
+            $status = input('status/d', 0);
+            $data  = [
+                'title' => $title,
+                'desc'  => $desc,
+                'urllink'  => $urllink,
+                'status'  => $status,
+            ];
+    
+            !$title && $this->error('标题不能为空');
+       
+        $Announce = new Announce;
+            if ($id) {
+                if ($Announce->save($data, ['id' => $id]) !== false) {
+                    $this->success('编辑成功', url('advertisement/announce'));
+                }
+                $this->error('编辑失败');
+            }
+
+            if ($Announce->save($data)) {
+                $this->success('添加成功', url('advertisement/announce'));
+            }
+            $this->error('添加失败');
+        }
+        $info = $id ? Announce::where('id', $id)->find()->getdata() : [];
+        $this->assign('info', $info);
+        $this->assign('id', $id);
+        // $this->assign('page_id', request()->param('page_id',0));
+        $this->assign('meta_title', $id ? '编辑公告' : '新增公告');
+        return $this->fetch();
+    }
+
+
+
 
     /**
      *  页面广告轮播列表
@@ -154,6 +213,24 @@ class Advertisement extends Common
         $status = request()->param('status',0);
         if ($id){
             $update = Db::table('page_advertisement')->where('id',$id)->update(['status'=>$status]);
+            if ($update){
+                return json(['code'=>1,'msg'=>'操作成功！','data'=>[]]);
+            }else{
+                json(['code'=>0,'msg'=>'修改失败！','data'=>[]]);
+            }
+        }else{
+            return json(['code'=>0,'msg'=>'id不存在！','data'=>[]]);
+        }
+    }
+
+    /**
+     *  修改公告状态
+     */
+    public function announce_status () {
+        $id = request()->param('id',0);
+        $status = request()->param('status',0);
+        if ($id){
+            $update = Db::table('announce')->where('id',$id)->update(['status'=>$status]);
             if ($update){
                 return json(['code'=>1,'msg'=>'操作成功！','data'=>[]]);
             }else{
