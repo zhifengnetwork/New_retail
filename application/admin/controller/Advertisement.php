@@ -25,7 +25,9 @@ class Advertisement extends Common
      */
     public function list() {
         $page_id = request()->param('page_id',0);
-        $list = Db::table('advertisement')->where(['state'=>['<>',-1],'page_id'=>$page_id])->order('type asc sort asc')->select();
+        $list = Db::table('advertisement')->where(['state'=>['<>',-1],'page_id'=>$page_id])->order('type asc sort asc')->paginate(20,false, ['query' => array('page_id' => $page_id)]);
+        $page=$list->render();
+        $this->assign('page',$page);
         $this->assign('list',$list);
         $this->assign('page_id',$page_id);
         return $this->fetch();
@@ -36,7 +38,7 @@ class Advertisement extends Common
      */
     public function edit()
     {
-        $id = input('id', 0);
+         $id = input('id', 0);
 
         if (request()->isPost()) {
             $id    = input('id', 0);
@@ -54,16 +56,15 @@ class Advertisement extends Common
                 'type'  => $type,
             ];
             $data['state']  = $state;
-            
             !$title && $this->error('标题不能为空');
             !$sort && $this->error('排序不能为空');
             ($sort < 0 || $sort > 10) && $this->error('排序在0和10之间');
-            // 图片验证
+        //     // 图片验证
             $res = Advertise::pictureUpload('fixed_picture', 0);
             if ($res[0] == 1) {
                 $this->error($res[0]);
             } else {
-                $pictureName                             = $res[1];
+                $pictureName  = $res[1];
                 !empty($pictureName) && $data['picture'] = $pictureName;
             }
             if ($id) {
@@ -75,6 +76,7 @@ class Advertisement extends Common
             }
 
             $file = request()->file('file');
+            
             !$file && $this->error('图片不能为空');
             $Advertise = new Advertise($data);
             if ($Advertise->save()) {
@@ -86,7 +88,7 @@ class Advertisement extends Common
         $this->assign('info', $info);
         $this->assign('id', $id);
         $this->assign('page_id', request()->param('page_id',0));
-        $this->assign('meta_title', $id ? '编辑广告' : '新增广告');
+        // $this->assign('meta_title', $id ? '编辑广告' : '新增广告');
         return $this->fetch();
     }
 
