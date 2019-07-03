@@ -252,6 +252,7 @@ class User extends ApiAbstract
      * @apiParamExample {json} 请求数据:
      * {
      *      "phone":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     *      "type":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
      *      "verify_code":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
      *      "user_password":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
      *      "confirm_password":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -261,11 +262,7 @@ class User extends ApiAbstract
      * {
      * "status": 200,
      * "msg": "success",
-     * "data": {
-     * "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQyIsImlhdCI6MTU2MjEyNDc0NCwiZXhwIjoxNTYyMTYwNzQ0LCJ1c2VyX2lkIjoiODAifQ.y_TRtHQ347Hl3URRJ4ECVgPbyGbniwyGyHjSjJY7fXY",   token值，下次调用接口，需传回给后端
-     * "mobile": "18520783339",     手机号码
-     * "id": "80"       用户ID
-     * }
+     * "data": "修改成功"
      * }
      * //错误返回结果
      * {
@@ -285,8 +282,8 @@ class User extends ApiAbstract
             $password = input('user_password/s', '');
             $confirm_password = input('confirm_password/s', '');
 
-            if($password != $confirm_password){
-                return $this->failResult('密码不一致错误',301);
+            if ($password != $confirm_password) {
+                return $this->failResult('密码不一致错误', 301);
             }
 
             if (!preg_match("/^1[23456789]\d{9}$/", $phone)) {
@@ -299,8 +296,8 @@ class User extends ApiAbstract
             }
 
             $member = Db::name('member')->where(['mobile' => $phone])->field('id,password,pwd,mobile,salt')->find();
-            if(empty($member)){
-                return $this->failResult('手机号码不存在',301);
+            if (empty($member)) {
+                return $this->failResult('手机号码不存在', 301);
             }
 
             //验证码判断
@@ -311,20 +308,20 @@ class User extends ApiAbstract
                 return $this->failResult('验证码错误！', 301);
             }
 
-            if($type == 1 ){
+            if ($type == 1) {
                 $stri = 'password';
-            }else{
+            } else {
                 $stri = 'pwd';
             }
             $password = md5($member['salt'] . $password);
-            if ($password == $member[$stri]){
-                return $this->failResult('新密码和旧密码不能相同',301);
-            }else{
-                $data = array($stri=>$password);
-                $update = Db::name('member')->where('id',$member['id'])->data($data)->update();
-                if($update){
+            if ($password == $member[$stri]) {
+                return $this->failResult('新密码和旧密码不能相同', 301);
+            } else {
+                $data = array($stri => $password);
+                $update = Db::name('member')->where('id', $member['id'])->data($data)->update();
+                if ($update) {
                     return $this->successResult('修改成功');
-                }else{
+                } else {
                     return $this->failResult('修改失败');
                 }
             }

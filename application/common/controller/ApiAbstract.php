@@ -98,14 +98,22 @@ class ApiAbstract extends Controller
         if(!$res){
             return ['status' => -2 , 'msg'=>'发送失败，请重试！'];
         }
-
-        $ret = send_zhangjun($mobile, $code);
+//      测试默认通过  zgp
+        $ret['message'] = 'ok';
+//        正式启动验证码 zgp
+//        $ret = send_zhangjun($mobile, $code);
         if($ret['message'] == 'ok'){
             return ['status' => 1 , 'msg'=>'发送成功！'];
         }
         return ['status' => -2 , 'msg'=>'发送失败，请重试！'];
     }
 
+    /**
+     * 校验验证码是否过期
+     * @param $mobile
+     * @param $auth_code
+     * @return bool|int
+     */
     public function phoneAuth($mobile, $auth_code)
     {
         $res = Db::name('phone_auth')->field('exprie_time')->where('mobile','=',$mobile)->where('auth_code',$auth_code)->order('id DESC')->find();
