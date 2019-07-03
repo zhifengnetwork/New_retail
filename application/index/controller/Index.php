@@ -13,19 +13,21 @@ class Index
     
      /**
      * 前端发送短信方法: APP/WAP/PC 共用发送方法
+     * type:mobile
+     * scene:1
+     * mobile:手机号
+     * send：手机号
+     *  
      */
     public function send_validate_code()
     {
         $this->send_scene = Config('SEND_SCENE');
 
-        // $type = input('type');
-        $type = 'mobile';
-        // $scene = input('scene');    //发送短信验证码使用场景
-        $scene = 1;    //发送短信验证码使用场景
-        // $mobile = input('mobile');
-        $mobile = 13202029884;
-        // $sender = input('send');
-        $sender = 13202029884;
+        $type = input('type');
+        $scene = input('scene');    //发送短信验证码使用场景 
+        $mobile = input('mobile');
+        $sender = input('send');
+
         $verify_code = input('verify_code');
         $mobile = !empty($mobile) ? $mobile : $sender;
         $session_id = input('unique_id', session_id());
