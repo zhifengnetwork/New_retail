@@ -31,8 +31,8 @@ class User extends Validate
 
 	protected $scene = [
 		'login'=>['phone','user_password'],
-		'register_phone'=>['phone','user_password','verify_code'],
-		'find_login_password'=>['user_password','confirm_password','verify_code'],
+		'register_phone'=>['phone','user_password','verify_code','confirm_password'],
+		'find_login_password'=>['phone','user_password','confirm_password','verify_code'],
 	];
 
 }

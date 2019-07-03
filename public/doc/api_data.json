@@ -9,7 +9,11 @@
       "examples": [
         {
           "title": "返回数据：",
+<<<<<<< HEAD
           "content": "//正确返回结果\n{\"status\":200,\"msg\":\"success\",\"data\":[{\"id\":12,\"sort\":4,\"picture\":\"\\\\uploads\\\\fixed_picture\\\\20190702\\\\90897f0182450d71dd9839045ee70f61.png\",\"state\":1,\"update_time\":0,\"create_time\":1562030000,\"page_id\":1,\"url\":\"www.sogou.com\",\"type\":0},{\"id\":11,\"sort\":3,\"picture\":\"\\\\uploads\\\\fixed_picture\\\\20190701\\\\de5e3e1a45e1796b5dd26acda83ff4df.png\",\"state\":1,\"update_time\":0,\"create_time\":1561976397,\"page_id\":1,\"url\":\"www.google.com\",\"type\":0},{\"id\":5,\"sort\":2,\"picture\":\"\\\\uploads\\\\fixed_picture\\\\20190529\\\\bce5780d314bb3bfd3921ffefc77fcdd.jpeg\",\"state\":1,\"update_time\":0,\"create_time\":1559122339,\"page_id\":1,\"url\":\"www.cctvhong.com\",\"type\":0}]}\n//错误返回结果\n{\n\"status\": 401,\n\"msg\": \"暂无数据\",\n\"data\": false\n}",
+=======
+          "content": "//正确返回结果\n{\"status\":200,\"msg\":\"success\",\"data\":[{\"picture\":\"\\\\uploads\\\\fixed_picture\\\\20190702\\\\90897f0182450d71dd9839045ee70f61.png\",\"title\":\"轮播图test\",\"url\":\"www.sogou.com\"},{\"picture\":\"\\\\uploads\\\\fixed_picture\\\\20190701\\\\de5e3e1a45e1796b5dd26acda83ff4df.png\",\"title\":\"google\",\"url\":\"www.google.com\"},{\"picture\":\"\\\\uploads\\\\fixed_picture\\\\20190529\\\\bce5780d314bb3bfd3921ffefc77fcdd.jpeg\",\"title\":\"个人中心个人资料和设置\",\"url\":\"www.cctvhong.com\"}]}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"暂无数据\",\n\"data\": false\n}",
+>>>>>>> 603627108407fce7c2be69e542d28b740cbc6f51
           "type": "json"
         }
       ]
@@ -19,6 +23,7 @@
     "name": "GetBannerBanner"
   },
   {
+<<<<<<< HEAD
     "type": "POST",
     "url": "/user/distribut_list",
     "title": "佣金明细",
@@ -58,6 +63,8 @@
     "name": "PostUserDistribut_list"
   },
   {
+=======
+>>>>>>> 603627108407fce7c2be69e542d28b740cbc6f51
     "type": "POST",
     "url": "/user/login",
     "title": "用户登录",
@@ -165,6 +172,73 @@
   },
   {
     "type": "POST",
+    "url": "/user/resetPassword",
+    "title": "修改密码",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>手机号码*（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "type",
+            "description": "<p>1 登录密码；2 支付密码*（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "verify_code",
+            "description": "<p>验证码（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "user_password",
+            "description": "<p>用户密码（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "confirm_password",
+            "description": "<p>用户确认密码（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"phone\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"type\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"verify_code\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"user_password\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"confirm_password\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n\"status\": 200,\n\"msg\": \"success\",\n\"data\": \"修改成功\"\n}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"验证码错误！\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/User.php",
+    "groupTitle": "user",
+    "name": "PostUserResetpassword"
+  },
+  {
+    "type": "POST",
     "url": "/user/sendVerifyCode",
     "title": "发送验证码",
     "group": "user",
@@ -184,7 +258,7 @@
             "type": "string",
             "optional": false,
             "field": "temp",
-            "description": "<p>发送模板类型注册（sms_reg）（必填）</p>"
+            "description": "<p>发送模板类型：注册 sms_reg；忘记密码 sms_forget（必填）</p>"
           },
           {
             "group": "Parameter",
@@ -198,7 +272,7 @@
             "type": "string",
             "optional": false,
             "field": "type",
-            "description": "<p>默认1（必填）</p>"
+            "description": "<p>1登录密码 2支付密码（必填）</p>"
           }
         ]
       },

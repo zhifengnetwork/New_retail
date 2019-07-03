@@ -6,3 +6,4 @@ runtime
 upload
 /application/database.php
 /public/index.php
+/public/uploads/fixed_picture
