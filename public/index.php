@@ -16,8 +16,8 @@ define('HTTP_HOST', $_SERVER['HTTP_HOST']);
 if (preg_match("/(.*)\.zhifengwangluo\.com/i", HTTP_HOST, $matches)) {
     $partner = $matches[1];
     $terrace = [
-        'new_retail'   => 'admin',
-        'new_api'      => 'api',
+        'new_retail'        => 'admin',
+        'new_retail_api'    => 'api',
     ];
     $module = isset($terrace[$partner]) ? $terrace[$partner] : 'home';
     define('BIND_MODULE', $module);
