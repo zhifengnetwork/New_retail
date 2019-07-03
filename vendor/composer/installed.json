@@ -392,6 +392,7 @@
         ]
     },
     {
+<<<<<<< HEAD
         "name": "topthink/think-image",
         "version": "v1.0.7",
         "version_normalized": "1.0.7.0",
@@ -414,12 +415,41 @@
             "topthink/framework": "^5.0"
         },
         "time": "2016-09-29T06:05:43+00:00",
+=======
+        "name": "topthink/think-captcha",
+        "version": "v1.0.8",
+        "version_normalized": "1.0.8.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/top-think/think-captcha.git",
+            "reference": "1d64363c814c92f6086c4fa5e3223fe7e23db09d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/top-think/think-captcha/zipball/1d64363c814c92f6086c4fa5e3223fe7e23db09d",
+            "reference": "1d64363c814c92f6086c4fa5e3223fe7e23db09d",
+            "shasum": ""
+        },
+        "require": {
+            "topthink/framework": "~5.0.0",
+            "topthink/think-installer": ">=1.0.10"
+        },
+        "time": "2019-01-28T04:48:36+00:00",
+>>>>>>> 3ae058c8a2dd2bc5cc2e96f30cea53c2ac989e95
         "type": "library",
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
+<<<<<<< HEAD
                 "think\\": "src"
             }
+=======
+                "think\\captcha\\": "src/"
+            },
+            "files": [
+                "src/helper.php"
+            ]
+>>>>>>> 3ae058c8a2dd2bc5cc2e96f30cea53c2ac989e95
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -431,7 +461,11 @@
                 "email": "448901948@qq.com"
             }
         ],
+<<<<<<< HEAD
         "description": "The ThinkPHP5 Image Package"
+=======
+        "description": "captcha package for thinkphp5"
+>>>>>>> 3ae058c8a2dd2bc5cc2e96f30cea53c2ac989e95
     },
     {
         "name": "topthink/think-installer",

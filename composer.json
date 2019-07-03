@@ -19,7 +19,11 @@
         "php": ">=5.4.0",
         "topthink/framework": "5.0.*",
         "riverslei/payment": "*",
+<<<<<<< HEAD
         "topthink/think-image": "^1.0"
+=======
+        "topthink/think-captcha": "1.*"
+>>>>>>> 3ae058c8a2dd2bc5cc2e96f30cea53c2ac989e95
         
     },
     "autoload": {
