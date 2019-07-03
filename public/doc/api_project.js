@@ -6,7 +6,11 @@ define({
   "url": "http://new_retail.zhifengwangluo.com/api",
   "header": {
     "title": "首页",
+<<<<<<< HEAD
+    "content": "<ul>\n<li>\n<p>测试接口地址：http://new_retail.zhifengwangluo.com/api/index/login</p>\n</li>\n<li>\n<p>服务器状态说明：501 服务器异常 ；404 HTTP异常； 200 正常请求 ；301 tips提示；302 弹框提示； 999 重新登录 ；\n900 账号由于违规操作，账号已被平台管理员封禁  666 该账号已在其他地方登录  ;</p>\n</li>\n</ul>\n"
+=======
     "content": "<ul>\n<li>\n<p>测试接口地址：http://new_retail.zhifengwangluo.com/api/user/login</p>\n</li>\n<li>\n<p>服务器状态说明：501 服务器异常 ；404 HTTP异常； 200 正常请求 ；301 tips提示；302 弹框提示； 999 重新登录 ；\n900 账号由于违规操作，账号已被平台管理员封禁  666 该账号已在其他地方登录  ;</p>\n</li>\n</ul>\n"
+>>>>>>> b7eb01ae4142dddec7665c47b0016fbfd96e8393
   },
   "template": {
     "withCompare": true,
@@ -17,7 +21,11 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
+<<<<<<< HEAD
+    "time": "2019-07-02T06:51:44.996Z",
+=======
     "time": "2019-07-03T06:03:20.734Z",
+>>>>>>> b7eb01ae4142dddec7665c47b0016fbfd96e8393
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

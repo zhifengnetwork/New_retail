@@ -127,7 +127,6 @@ class ApiBase extends ApiAbstract
     
             if(!$res){
                 $this->ajaxReturn(['status' => -1 , 'msg'=>'token已过期','data'=>null]);
-    
             }
     
             if(!isset($res['iat']) || !isset($res['exp']) || !isset($res['user_id']) ){

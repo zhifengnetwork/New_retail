@@ -22,11 +22,6 @@ class Login extends \think\Controller
         exit;
     }
 
-
-
-
-
-
     /**
      * 登录接口
      */
