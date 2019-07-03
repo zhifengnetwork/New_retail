@@ -3,6 +3,7 @@
  * 用户API
  */
 namespace app\api\controller;
+use app\common\controller\ApiBase;
 use app\common\model\Users;
 use app\common\logic\UsersLogic;
 use think\Db;
@@ -81,6 +82,9 @@ class Index extends ApiBase
      * }
      */
     public function sendRegisterCode(){
+        //
+        return $this->failResult('error',301);
+
         return $this->successResult('验证码发送成功');
     }
 

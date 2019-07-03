@@ -2,7 +2,7 @@
 /**
  * 继承
  */
-namespace app\api\controller;
+namespace app\common\controller;
 use app\common\util\jwt\JWT;
 use think\Db;
 use think\Controller;
@@ -11,7 +11,7 @@ use think\Request;
 use think\Session;
 use app\common\util\Redis;
 
-class ApiBase extends Controller
+class ApiBase extends ApiAbstract
 {
     protected $uid;
     protected $user_name;
@@ -35,15 +35,12 @@ class ApiBase extends Controller
             $action_array[] = strtolower('goods/categoryList');
             $action_array[] = strtolower('goods/category');
             $action_array[] = strtolower('goods/goodsDetail');
-            $action_array[] = strtolower('phoneauth/verifycode');
-            $action_array[] = strtolower('user/register');
-            $action_array[] = strtolower('user/login');
             $action_array[] = strtolower('pay/alipay_notify');
             if (in_array($action, $action_array)) {
                 return;
             }
             $user_id = $this->decode_token(input('token'));
-            if(empty($user_id)) exit(json_encode(['code'=>10000,'msg'=>'您未登录，请登录！']));
+            if(empty($user_id)) exit(json_encode(['status'=>999,'msg'=>'您未登录，请登录！']));
 
         }
     }
@@ -66,14 +63,6 @@ class ApiBase extends Controller
 //            'User' => 'user',
         ];
         return $controller;
-    }
-
-    public function ajaxReturn($data){
-        header('Access-Control-Allow-Origin:*');
-        header('Access-Control-Allow-Headers:*');
-        header("Access-Control-Allow-Methods:GET, POST, OPTIONS, DELETE");
-        header('Content-Type:application/json; charset=utf-8');
-        exit(str_replace("\\/", "/",json_encode($data,JSON_UNESCAPED_UNICODE)));
     }
 
     /**
@@ -164,34 +153,6 @@ class ApiBase extends Controller
             return true;
         }
 
-    }
-
-
-    /**
-     * 空
-     */
-    public function _empty(){
-        $this->ajaxReturn(['status' => -1 , 'msg'=>'接口不存在','data'=>null]);
-    }
-
-    public function successResult($data = [])
-    {
-        return $this->getResult(200, 'success', $data);
-    }
-
-    public function failResult($message, $status = 301)
-    {
-        return $this->getResult($status, $message, false);
-    }
-
-    public function getResult($status, $message, $data)
-    {
-
-        return [
-            'status' => $status,
-            'msg' => $message,
-            'data' => $data
-        ];
     }
 
 }
