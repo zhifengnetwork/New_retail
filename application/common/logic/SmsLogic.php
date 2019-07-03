@@ -23,12 +23,13 @@ class SmsLogic
      */
     public function sendSms($scene, $sender, $params, $unique_id=0)
     {
+        // var_dump($params);die;array(1) { ["code"]=> int(6977) }
         $smsTemp = M('sms_template')->where("send_scene", $scene)->find();    //用户注册.
         $code = !empty($params['code']) ? $params['code'] : false;
         $consignee = !empty($params['consignee']) ? $params['consignee'] : false;
         $user_name = !empty($params['user_name']) ? $params['user_name'] : false;
         $mobile = !empty($params['mobile']) ? $params['mobile'] : false;
-        $order_id = $params['order_id']; 
+        $order_id = !empty($params['order_id'])?$params['order_id']:false; 
         if(empty($unique_id)){
             $session_id = session_id();
         }else{
@@ -266,8 +267,8 @@ class SmsLogic
         include_once './vendor/Dysmsapi/Request/V20170525/SendSmsRequest.php';
         
 
-        $accessKeyId = M('config')->where(['name'=>'sms_appkey'])->value('value');
-        $accessKeySecret = M('config')->where(['name'=>'sms_secretKey'])->value('value');
+        $accessKeyId = M('tp_config')->where(['name'=>'sms_appkey'])->value('value');
+        $accessKeySecret = M('tp_config')->where(['name'=>'sms_secretKey'])->value('value');
 
         // $accessKeyId = $this->config['sms_appkey'];
         // $accessKeySecret = $this->config['sms_secretKey'];
