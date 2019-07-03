@@ -43,7 +43,6 @@ class Common extends Controller
         $this->auth();
         $this->view->mginfo     = $this->mginfo    = session('admin_user_auth');
         $leftmenu =  self::get_leftmenu();
-    
         $this->view->lefts_menu  = self::lefts_menu($leftmenu);
         $this->view->left_menu   = $leftmenu;
         // var_dump(self::lefts_menu($leftmenu)[0]['_child']);
@@ -87,8 +86,10 @@ class Common extends Controller
             }
         }
         $menu_tree = list_to_tree($list);
+        
         Session::set('ALL_MENU_LIST', $menu_tree);
         $left_menu = self::menu($menu_tree);
+        
         return $left_menu;
     }
 
@@ -100,19 +101,20 @@ class Common extends Controller
         static $url;
         //!$url && $url = strtolower(request()->controller() . '/' . request()->action());
         !$url && $url = request()->path();
+       
         if($url == '/'){
            $url = 'index/index';
         }
         // $url = str_replace('admin/', '', $url);
         $array = array();
         foreach ($left_menu as $key => &$val) {
-            if($url == $val['url']){
+            if($url == $val['url']||stripos($url,$val['url'])){
                 $val['left'] = 1;
             }
             if (!empty($val['_child'])) {
                 $val['_child'] = self::menu($val['_child']);
                 
-                if ($url == $val['url']) {
+                if ($url == $val['url']||stripos($url,$val['url'])) {
                     $val['class']  = 'active';
                     $val['class2'] = 'select';
                     $val['left']  =  1;

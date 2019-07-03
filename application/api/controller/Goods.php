@@ -65,7 +65,39 @@ class Goods extends ApiBase
     }*/
 
 
+    /**
+    * 热门商品
+    */
+    public function hot_goods(){
+        $list = Db::table('goods')->alias('g')
+                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
+                ->where('gi.main',1)
+                ->where('g.is_show',1)
+                ->where('FIND_IN_SET(3,g.goods_attr)')
+                ->order('g.goods_id DESC')
+                ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
+                ->limit(4)
+                ->select();
 
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$list]);
+    }
+
+    /**
+    * 推荐商品
+    */
+    public function recommend_goods(){
+
+        $list = Db::table('goods')->alias('g')
+                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
+                ->where('gi.main',1)
+                ->where('g.is_show',1)
+                ->where('FIND_IN_SET(1,g.goods_attr)')
+                ->order('g.goods_id DESC')
+                ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
+                ->paginate(4);
+
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$list]);
+    }
 
 
 
@@ -86,7 +118,6 @@ class Goods extends ApiBase
                                 ->group('g.goods_id')
                                 ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
                                 ->order('g.goods_id DESC')
-                                ->limit(4)
                                 ->field('g.goods_id,goods_name,gi.picture img,price,original_price,GROUP_CONCAT(ga.attr_name) attr_name,g.cat_id1 comment')
                                 ->select();
             if($list[$key]['goods']){
@@ -102,7 +133,7 @@ class Goods extends ApiBase
             }
         }
         
-        $this->ajaxReturn(['status' => 1 , 'msg'=>'获取成功','data'=>$list]);
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$list]);
     }
 
     public function category(){

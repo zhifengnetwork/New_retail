@@ -3,6 +3,7 @@
  * 用户API
  */
 namespace app\api\controller;
+use app\common\controller\ApiBase;
 use app\common\model\Users;
 use app\common\logic\UsersLogic;
 use think\Db;
@@ -58,51 +59,6 @@ class Index extends ApiBase
         
 
         $this->ajaxReturn(['status' => 0 , 'msg'=>'获取成功','data'=>$data]);
-    }
-
-    /**
-     * @api {POST} /api/index/sendRegisterCode 获取验证码
-     * @apiGroup index
-     * @apiVersion 1.0.0
-     *
-     * @apiParam {string}    user_name        用户名(邮箱或手机号码)*（必填）
-     * @apiParam {string}    login_type        1 手机 2邮箱（必填）
-     * @apiParam {string}    area_code        当login_type为1时，区号（必填）
-     * @apiParamExample {json} 请求数据:
-     * {
-     *      "user_name":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-     *      "area_code":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-     * }
-     * @apiSuccessExample {json} 返回数据：
-     * {
-     * "status": 200,
-     * "msg": "验证码发送成功",
-     * "data": ''
-     * }
-     */
-    public function sendRegisterCode(){
-        return $this->successResult('验证码发送成功');
-    }
-
-    /**
-     * @api {POST} /api/index/userInfo 用户信息
-     * @apiGroup index
-     * @apiVersion 1.0.0
-     *
-     * @apiParam {int}    user_id        用户ID*（必填）
-     * @apiParamExample {json} 请求数据:
-     * {
-     *      "user_id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-     * }
-     * @apiSuccessExample {json} 返回数据：
-     * {
-     * "status": 200,
-     * "msg": "验证码发送成功",
-     * "data": ''
-     * }
-     */
-    public function userInfo(){
-        return $this->successResult(['user_id'=>1,'user_name'=>'test']);
     }
 
     /***
