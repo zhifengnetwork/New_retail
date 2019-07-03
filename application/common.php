@@ -39,6 +39,17 @@ function substr_cut($user_name){
     return $strlen == 2 ? $firstStr . str_repeat('*', mb_strlen($user_name, 'utf-8') - 1) : $firstStr . str_repeat("*", $strlen - 2) . $lastStr;
 }
 
+//获取所有下级id
+function get_all_lower($user_id){
+    $all_lower = Db::query("select `user_id` from `parents_cache` where find_in_set($user_id,parents)");
+    $all_lower_ids = array();
+    if ($all_lower) {
+        $all_lower_ids = array_column($all_lower,'user_id');
+    }
+
+    return $all_lower_ids;
+}
+
 function get_randMoney($money_total = 20 , $personal_num = 10){
     $min_money    = $money_total/$personal_num - $money_total/$personal_num*0.1;
     $money_right  = $money_total;
