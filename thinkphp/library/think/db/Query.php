@@ -3042,4 +3042,22 @@ class Query
         }
         return $result;
     }
+       /**
+     * 
+     * 此函数提供作者 QQ名 IT草根
+     * @access public
+     * @param array     $data 数据          
+     * @return integer|false
+     */
+    public function save($data = [])
+    {        
+        if(isset($this->options['where']) && $this->options['where'])
+        {
+            return $this->update($data);
+        }
+        else
+        {
+            return $this->insert($data);
+        }
+    }
 }
