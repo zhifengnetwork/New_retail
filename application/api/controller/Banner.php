@@ -24,7 +24,7 @@ class Banner extends ApiAbstract
      *{"status":200,"msg":"success","data":[{"picture":"\\uploads\\fixed_picture\\20190702\\90897f0182450d71dd9839045ee70f61.png","title":"轮播图test","url":"www.sogou.com"},{"picture":"\\uploads\\fixed_picture\\20190701\\de5e3e1a45e1796b5dd26acda83ff4df.png","title":"google","url":"www.google.com"},{"picture":"\\uploads\\fixed_picture\\20190529\\bce5780d314bb3bfd3921ffefc77fcdd.jpeg","title":"个人中心个人资料和设置","url":"www.cctvhong.com"}]}
      * //错误返回结果
      * {
-     * "status": 401,
+     * "status": 301,
      * "msg": "暂无数据",
      * "data": false
      * }
@@ -34,7 +34,7 @@ class Banner extends ApiAbstract
         if($banners){
             return $this->successResult($banners);
         }else{
-            return $this->failResult('暂无数据', 401);
+            return $this->failResult('暂无数据', 301);
         }
     }
 
