@@ -17,11 +17,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-<<<<<<< HEAD
-    "time": "2019-07-03T11:08:22.009Z",
-=======
-    "time": "2019-07-03T10:40:48.662Z",
->>>>>>> 603627108407fce7c2be69e542d28b740cbc6f51
+    "time": "2019-07-03T11:15:13.903Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

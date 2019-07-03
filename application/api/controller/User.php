@@ -434,6 +434,7 @@ class User extends ApiAbstract
      * @apiVersion 1.0.0
      *
      * @apiParam {string}    token              token*（必填）
+     * @apiParam {string}    page              页数*（必填）
      * @apiParamExample {json} 请求数据:
      * {
      *      "page":"1"  页数 默认1,
