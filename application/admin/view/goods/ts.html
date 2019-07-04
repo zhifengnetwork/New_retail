@@ -67,7 +67,6 @@ $.ajax({
             spec += '</div>';
             spec += '</div>';
         });
-        console.log(spec)
         $('#gg').append(spec);
     } 
 });
@@ -111,6 +110,7 @@ $('input[type="radio"]').on('click',function(){
     });
 
     var res = where(new_arr,arr);
+    console.log(res);
     var sku_attr = '';
     for(var i=0;i<res.length;i++){
         sku_attr =  JSON.stringify(res[i]);
