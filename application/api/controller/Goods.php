@@ -3,7 +3,7 @@
  * 用户API
  */
 namespace app\api\controller;
-use app\common\controller\ApiAbstract;
+use app\common\controller\ApiBase;
 use app\common\model\Users;
 use app\common\logic\UsersLogic;
 use app\common\logic\GoodsLogic;
@@ -13,7 +13,7 @@ use think\AjaxPage;
 use think\Page;
 use think\Db;
 
-class Goods extends ApiAbstract
+class Goods extends ApiBase
 {
 
     /**
@@ -307,24 +307,232 @@ class Goods extends ApiAbstract
     }
 
     /**
-     * 商品详情
+     * @api {POST} /goods/goodsDetail 商品详情
+     * @apiGroup goods
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     "token":"",
+     *     "goods_id",商品ID
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *   "status": 200,
+     *   "msg": "获取成功",
+     *   "data": {
+     *   "goods_id": 18,商品ID
+     *   "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",商品名称
+     *   "type_id": 0,
+     *   "desc": "宽幅变温；铂金净味；雷达感温；风冷无霜；",描述
+     *   "content": null,内容
+     *   "goods_attr": "2,3",
+     *   "limited_start": 1559318400,
+     *   "limited_end": 1559577600,
+     *   "add_time": 1557417600,
+     *   "goods_spec": "[{\"key\":\"规格\",\"value\":\"默认;升级版;超级版\"},{\"key\":\"颜色\",\"value\":\"阳光米;星空灰;天空黑\"},{\"key\":\"尺寸\",\"value\":\"中;大;小;加大\"}]",
+     *   "price": "2188.00",现价
+     *   "original_price": "2588.00",市场价
+     *   "cost_price": "10.00",
+     *   "cat_id1": 13,
+     *   "cat_id2": 14,
+     *   "stock": 1190,总库存数量
+     *   "stock1": 1193,
+     *   "less_stock_type": 2,
+     *   "shipping_setting": 1,运费方式 1：统一运费价格 ，2：运费模板
+     *   "shipping_price": "0.00",统一运费价格
+     *   "delivery_id": 0,
+     *   "is_hdfk": 0,是否支持货到付款 0：否，1：是
+     *   "is_distribution": 1,
+     *   "most_buy_number": 10000,
+     *   "gift_points": "10%",
+     *   "number_sales": 66,已售数量
+     *   "single_number": 10000,单次最多购买量
+     *   "distributor_level": 0,
+     *   "is_full_return": 0,
+     *   "is_arrange_all": 0,
+     *   "shopping_all_return": 0,
+     *   "is_show": 1,
+     *   "dividend_agent_level": 0,
+     *   "is_del": 0,
+     *   "is_puls": 0,
+     *   "province_proportion": 0,
+     *   "tow_proportion": 0,
+     *   "infinite_proportion": 0,
+     *   "puls_discount": 0,
+     *   "share_discount": 0,
+     *   "attr_name": [
+     *       "新上",
+     *       "热卖"
+     *   ],商品属性
+     *   "spec": {
+     *       "spec_attr": [
+     *       {
+     *           "spec_id": 1,
+     *           "spec_name": "规格",规格名称
+     *           "res": [
+     *           {
+     *               "attr_id": 34478,
+     *               "attr_name": "默认"规格值
+     *           },
+     *           {
+     *               "attr_id": 34480,
+     *               "attr_name": "升级版"
+     *           },
+     *           {
+     *               "attr_id": 34494,
+     *               "attr_name": "超级版"
+     *           }
+     *           ]
+     *       },
+     *       {
+     *           "spec_id": 2,
+     *           "spec_name": "颜色",
+     *           "res": [
+     *           {
+     *               "attr_id": 34479,
+     *               "attr_name": "阳光米"
+     *           },
+     *           {
+     *               "attr_id": 34481,
+     *               "attr_name": "星空灰"
+     *           },
+     *           {
+     *               "attr_id": 34495,
+     *               "attr_name": "天空黑"
+     *           }
+     *           ]
+     *       },
+     *       {
+     *           "spec_id": 4,
+     *           "spec_name": "尺寸",
+     *           "res": [
+     *           {
+     *               "attr_id": 34484,
+     *               "attr_name": "中"
+     *           },
+     *           {
+     *               "attr_id": 34485,
+     *               "attr_name": "大"
+     *           },
+     *           {
+     *               "attr_id": 34486,
+     *               "attr_name": "小"
+     *           },
+     *           {
+     *               "attr_id": 34496,
+     *               "attr_name": "加大"
+     *           }
+     *           ]
+     *       }
+     *       ],
+     *       "goods_sku": [
+     *       {
+     *           "sku_id": 1,规格ID
+     *           "goods_id": 18,
+     *           "sku_attr": "{\"1\":34478,\"2\":34479,\"4\":34484}",
+     *           "price": "2199.00",价格
+     *           "groupon_price": "1999.00",
+     *           "img": "",
+     *           "inventory": 0,剩余库存
+     *           "frozen_stock": 2,
+     *           "sales": 0,销量
+     *           "virtual_sales": 559,虚拟销量
+     *           "sku_attr1": "34478,34479,34484"
+     *       },
+     *       {
+     *           "sku_id": 2,
+     *           "goods_id": 18,
+     *           "sku_attr": "{\"1\":34480,\"2\":34481,\"4\":34485}",
+     *           "price": "2388.00",
+     *           "groupon_price": "2288.00",
+     *           "img": "",
+     *           "inventory": 493,
+     *           "frozen_stock": 0,
+     *           "sales": 0,
+     *           "virtual_sales": 472,
+     *           "sku_attr1": "34480,34481,34485"
+     *       },
+     *       {
+     *           "sku_id": 4,
+     *           "goods_id": 18,
+     *           "sku_attr": "{\"1\":34480,\"2\":34479,\"4\":34486}",
+     *           "price": "1988.00",
+     *           "groupon_price": "1799.00",
+     *           "img": "",
+     *           "inventory": 298,
+     *           "frozen_stock": 1,
+     *           "sales": 0,
+     *           "virtual_sales": 538,
+     *           "sku_attr1": "34480,34479,34486"
+     *       },
+     *       {
+     *           "sku_id": 10,
+     *           "goods_id": 18,
+     *           "sku_attr": "{\"1\":34494,\"2\":34495,\"4\":34496}",
+     *           "price": "2500.00",
+     *           "groupon_price": "2300.00",
+     *           "img": "",
+     *           "inventory": 199,
+     *           "frozen_stock": 0,
+     *           "sales": 0,
+     *           "virtual_sales": 443,
+     *           "sku_attr1": "34494,34495,34496"
+     *       },
+     *       {
+     *           "sku_id": 11,
+     *           "goods_id": 18,
+     *           "sku_attr": "{\"1\":34494,\"2\":34481,\"4\":34485}",
+     *           "price": "2488.00",
+     *           "groupon_price": "2388.00",
+     *           "img": "",
+     *           "inventory": 200,
+     *           "frozen_stock": 0,
+     *           "sales": 0,
+     *           "virtual_sales": 450,
+     *           "sku_attr1": "34494,34481,34485"
+     *       }
+     *       ]
+     *   },商品规格
+     *   "groupon_price": "1799.00",
+     *   "img": [
+     *       {
+     *       "picture": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png"
+     *       }
+     *   ],商品组图
+     *   "collection": 0,是否收藏
+     *   "comment_count": 18,评论总数
+     *   "coupon": [
+     *       
+     *   ]优惠券
+     *   }
+     * }
+     * //错误返回结果
+     * {
+     *     "status": 999,
+     *     "msg": "用户不存在！",
+     *     "data": false
+     * }
+     * {
+     *     "status": 301,
+     *     "msg": "商品不存在！",
+     *     "data": false
+     * }
      */
     public function goodsDetail()
     {   
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
-        }
-
+        
         $goods_id = input('goods_id');
-
+        
         $goodsRes = Db::table('goods')->alias('g')
                     ->join('goods_attr ga','FIND_IN_SET(ga.attr_id,g.goods_attr)','LEFT')
                     ->field('g.*,GROUP_CONCAT(ga.attr_name) attr_name')
                     ->where('g.is_show',1)
                     ->find($goods_id);
         if (empty($goodsRes)) {
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'商品不存在！']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'商品不存在！']);
         }
 
         if($goodsRes['attr_name']){
@@ -337,7 +545,7 @@ class Goods extends ApiAbstract
         $goodsRes['stock'] = $goodsRes['spec']['count_num'];
         $goodsRes['groupon_price'] = $goodsRes['spec']['min_groupon_price'];
         unset($goodsRes['spec']['count_num'],$goodsRes['spec']['min_groupon_price']);
-
+        
         //组图
         $goodsRes['img'] = Db::table('goods_img')->where('goods_id',$goods_id)->field('picture')->order('main DESC')->select();
         
@@ -348,24 +556,9 @@ class Goods extends ApiAbstract
         }else{
             $goodsRes['collection'] = 0;
         }
-
+        
         //评论总数
         $goodsRes['comment_count'] = Db::table('goods_comment')->where('goods_id',$goods_id)->count();
-
-        //限时购
-        $goodsRes['is_limited'] = 0;
-        $attr = explode(',',$goodsRes['goods_attr']);
-        if( in_array(6,$attr) ){
-            if($goodsRes['limited_end'] < time()){
-                $k =  array_search(6,$attr);
-                unset($attr[$k]);
-                $goods_attr = implode(',',$attr);
-                Db::table('goods')->where('goods_id',$goods_id)->update(['goods_attr'=>$goods_attr]);
-                $goodsRes['is_limited'] = 0;
-            }else{
-                $goodsRes['is_limited'] = 1;
-            }
-        }
 
         //优惠券
         $where = [];
@@ -383,57 +576,52 @@ class Goods extends ApiAbstract
                 }
             }
         }
-        
-        //拼团
-        $goodsRes['group'] = [];
-        $goodsRes['group_user'] = [];
-        $group = Db::table('goods_groupon')->where('goods_id',$goods_id)->where('is_show',1)->where('is_delete',0)->where('status',2)->order('period DESC')->find();
-        if($group){
-            $goodsRes['group'] = $group;
-            $goodsRes['group']['surplus'] = $group['target_number'] - $group['sold_number'];      //剩余量
-
-            //过期或者拼团人数已满，重新生成新团购信息
-            if( !$goodsRes['group']['surplus'] || $group['end_time'] < time() ){
-                //更改团购过期状态
-                $update_res = Db::name('goods_groupon')->where('groupon_id',$group['groupon_id'])->update(['is_show'=>0,'status'=>3]);
-                if($update_res){
-                    //生成新一期团购
-                    $new_roupon = action('Groupon/new_groupon',[$group]);
-                    if ($new_roupon) $goodsRes['group'] = $new_roupon;
-                }
-            }else{
-                $goodsRes['group']['surplus_percentage'] = $goodsRes['group']['surplus'] / $group['target_number'];      //剩余百分比
-
-                $group_list = Db::table('order')->alias('o')
-                                ->join('member m','m.id=o.user_id','LEFT')
-                                ->where('o.groupon_id',$group['groupon_id'])
-                                ->where('o.pay_status',1)
-                                ->order('o.order_id DESC')
-                                ->field('id user_id,nickname,realname,avatar')
-                                ->select();
-                if($group_list){
-                    for($i=0;$i<$group['sold_number'];$i++){
-                        $group_list[$i]['cha'] = $group['target_number'] - $group['sold_number'] + $i;
-                    }
-                }
-                
-                $goodsRes['group_user'] = $group_list;
-            }
-        }
-        
-        $this->ajaxReturn(['status' => 1 , 'msg'=>'获取成功','data'=>$goodsRes]);
+              
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$goodsRes]);
 
     }
 
     /**
-     * 获取评论列表
+     * @api {POST} /goods/comment_list 商品评论
+     * @apiGroup goods
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *      "token",
+     *      "goods_id",商品ID
+     *      "page",请求页数
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+    *      "status": 1,
+    *      "msg": "获取成功",
+    *      "data": [
+    *      {
+    *          "mobile": "",手机号
+    *          "user_id": 0,
+    *          "comment_id": 13,
+    *          "content": null,评论内容
+    *          "star_rating": 5,星评
+    *          "replies": null,商家回复
+    *          "praise": 0,点赞
+    *          "add_time": 1558087885,
+    *          "img": [
+    *          
+    *          ],评论图片
+    *          "sku_id": 4,
+    *          "spec": "规格:升级版,颜色:阳光米,尺寸:小",购买规格
+    *          "is_praise": 0,是否已点赞改评论 0：否，1：是
+    *      }
+    *      ]
+    * }
+     * //错误返回结果
+     * 无
      */
     public function comment_list(){
 
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
-        }
 
         $goods_id = input('goods_id');
         $page = input('page');
@@ -449,7 +637,7 @@ class Goods extends ApiAbstract
         $comment = $comment->all();
 
         if (empty($comment)) {
-            $this->ajaxReturn(['status' => 1 , 'msg'=>'暂无评论！','data'=>[]]);
+            $this->ajaxReturn(['status' => 200 , 'msg'=>'暂无评论！','data'=>[]]);
         }
         
         foreach($comment as $key=>$value ){
@@ -518,7 +706,7 @@ class Goods extends ApiAbstract
         $specData['spec_attr'] = $specRes;
         $specData['goods_sku'] = $skuRes;
         $specData['count_num'] = $count_num;
-        $specData['min_groupon_price'] = min($min);
+        $specData['min_groupon_price'] = $min ? min($min) : 0;
         return $specData;
     }
 
