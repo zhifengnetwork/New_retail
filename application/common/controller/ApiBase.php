@@ -18,10 +18,7 @@ class ApiBase extends ApiAbstract
     protected $is_bing_mobile;
 
     public function _initialize () {
-        header("Access-Control-Allow-Origin:*");
-        header("Access-Control-Allow-Headers:*");
-        header("Access-Control-Allow-Methods:GET, POST, OPTIONS, DELETE");
-        header('Content-Type:application/json; charset=utf-8');
+        parent::_initialize();
 
         config((new Config)->getConfig());
 //        if (empty($this->is_bing_mobile($openid))){

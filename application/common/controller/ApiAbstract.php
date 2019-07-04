@@ -21,12 +21,12 @@ class ApiAbstract extends Controller
     private static $redis = null;
 
     public function _initialize () {
+        parent::_initialize();
         header("Access-Control-Allow-Origin:*");
         header("Access-Control-Allow-Headers:*");
         header("Access-Control-Allow-Methods:GET, POST, OPTIONS, DELETE");
         header('Content-Type:application/json; charset=utf-8');
 
-        parent::_initialize();
         $param = Request::instance()->param();
         $this->param = isset($param) && !empty($param) ? $param : '';
 
