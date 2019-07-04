@@ -67,52 +67,6 @@ class Goods extends ApiBase
 
 
     /**
-     * @api {GET} /goods/hot_goods 热门商品
-     * @apiGroup goods
-     * @apiVersion 1.0.0
-     *
-     * @apiParamExample {json} 请求数据:
-     * 无
-     * @apiSuccessExample {json} 返回数据：
-     * //正确返回结果
-     * {
-     *   "status": 200,
-     *   "msg": "获取成功",
-     *   "data": [
-     *       {
-     *       "goods_id": 39,
-     *       "goods_name": "本草",
-     *       "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
-     *       "price": "200.00",
-     *       "original_price": "250.00"
-     *       },
-     *       {
-     *       "goods_id": 18,
-     *       "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",
-     *       "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
-     *       "price": "2188.00",
-     *       "original_price": "2588.00"
-     *       }
-     *   ]
-     *   }
-     * //错误返回结果
-     * 无
-     */
-    public function hot_goods(){
-        $list = Db::table('goods')->alias('g')
-                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
-                ->where('gi.main',1)
-                ->where('g.is_show',1)
-                ->where('FIND_IN_SET(3,g.goods_attr)')
-                ->order('g.goods_id DESC')
-                ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
-                ->limit(4)
-                ->select();
-
-        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$list]);
-    }
-
-    /**
      * @api {GET} /goods/recommend_goods 推荐商品
      * @apiGroup goods
      * @apiVersion 1.0.0
