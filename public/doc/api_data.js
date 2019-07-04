@@ -38,6 +38,146 @@ define({ "api": [
     "name": "GetBannerBanner"
   },
   {
+    "type": "POST",
+    "url": "/cart/addCart",
+    "title": "加入|修改购物车",
+    "group": "cart",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"sku_id\":\"14\",规格ID\n    \"cart_number\":\"1\",购买数量\n    \"edit\":\"1\",修改购物车数量，参数传1，cart_number参数传实际要修改成的数量\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n    \"status\": 200,\n    \"msg\": \"成功\",\n    \"data\": 3,购物车ID\n}\n//错误返回结果\nstatus:301",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Cart.php",
+    "groupTitle": "cart",
+    "name": "PostCartAddcart"
+  },
+  {
+    "type": "POST",
+    "url": "/cart/cart_sum",
+    "title": "购物车总数",
+    "group": "cart",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n    \"status\": 200,\n    \"msg\": \"成功\",\n    \"data\": 3\n}\n//错误返回结果\n{\n  \"status\": 301,\n  \"msg\": \"token不存在！\",\n  \"data\": [\n      \n  ]\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Cart.php",
+    "groupTitle": "cart",
+    "name": "PostCartCart_sum"
+  },
+  {
+    "type": "POST",
+    "url": "/cart/cartlist",
+    "title": "购物车列表",
+    "group": "cart",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n    \"status\": 200,\n    \"msg\": \"成功\",\n    \"data\": [\n    {\n        \"cart_id\": 1737,购物车ID\n        \"selected\": 1,是否选中状态 0：否，1：是\n        \"user_id\": 76,\n        \"groupon_id\": 0,\n        \"goods_id\": 18,商品ID\n        \"goods_sn\": \"\",\n        \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",商品名称\n        \"market_price\": \"2588.00\",市场价\n        \"goods_price\": \"2388.00\",现价\n        \"member_goods_price\": \"2388.00\",\n        \"subtotal_price\": \"2388.00\",该商品总价\n        \"sku_id\": 2,规格ID\n        \"goods_num\": 1,购买数量\n        \"spec_key_name\": \"规格:升级版,颜色:星空灰,尺寸:大\",购买规格\n        \"img\": \"http://api.retail.com/upload/images/goods/20190514155782540787289.png\",商品图片\n    },\n    {\n        \"cart_id\": 1735,\n        \"selected\": 1,\n        \"user_id\": 76,\n        \"groupon_id\": 0,\n        \"goods_id\": 39,\n        \"goods_sn\": \"\",\n        \"goods_name\": \"本草\",\n        \"market_price\": \"250.00\",\n        \"goods_price\": \"199.90\",\n        \"member_goods_price\": \"199.90\",\n        \"subtotal_price\": \"199.90\",\n        \"sku_id\": 22,\n        \"goods_num\": 1,\n        \"spec_key_name\": \"规格:颜色\",\n        \"img\": \"http://api.retail.com/upload/images/goods/20190514155782540787289.png\"\n    },\n    {\n        \"cart_id\": 1653,\n        \"selected\": 1,\n        \"user_id\": 76,\n        \"groupon_id\": 0,\n        \"goods_id\": 18,\n        \"goods_sn\": \"\",\n        \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",\n        \"market_price\": \"2588.00\",\n        \"goods_price\": \"2388.00\",\n        \"member_goods_price\": \"2388.00\",\n        \"subtotal_price\": \"2388.00\",\n        \"sku_id\": 2,\n        \"goods_num\": 1,\n        \"spec_key_name\": \"规格:升级版,颜色:星空灰,尺寸:大\",\n        \"img\": \"http://api.retail.com/upload/images/goods/20190514155782540787289.png\"\n    }\n    ]\n}\n//错误返回结果\n{\n  \"status\": 301,\n  \"msg\": \"token不存在！\",\n  \"data\": [\n      \n  ]\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Cart.php",
+    "groupTitle": "cart",
+    "name": "PostCartCartlist"
+  },
+  {
+    "type": "POST",
+    "url": "/cart/delCart",
+    "title": "删除购物车",
+    "group": "cart",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"cart_id\":\"14\",购物车ID，多个逗号分开\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n    \"status\": 200,\n    \"msg\": \"成功\",\n    \"data\": \"\"\n}\n//错误返回结果\nstatus:301",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Cart.php",
+    "groupTitle": "cart",
+    "name": "PostCartDelcart"
+  },
+  {
+    "type": "POST",
+    "url": "/cart/selected",
+    "title": "选中状态",
+    "group": "cart",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"cart_id\":\"14\",购物车ID\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n    \"status\": 200,\n    \"msg\": \"成功\",\n    \"data\": \"\"\n}\n//错误返回结果\nstatus:301",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Cart.php",
+    "groupTitle": "cart",
+    "name": "PostCartSelected"
+  },
+  {
     "type": "GET",
     "url": "/goods/categoryList",
     "title": "分类",
@@ -179,6 +319,367 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/order/apply_refund",
+    "title": "申请退款",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"order_id\":\"12\", 订单ID\n    \"refund_type\":\"\", 退款方式\n    \"refund_reason\":\"\", 退款理由\n    \"cancel_remark\":\"\", 退款备注\n    \"img\":\"\", 图片（base64）数组\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n  \"status\": 200,\n  \"msg\": \"成功！\",\n  \"data\": {\n  }\n  }\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "PostOrderApply_refund"
+  },
+  {
+    "type": "POST",
+    "url": "/order/cancel_refund",
+    "title": "取消申请退款",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"order_id\":\"12\", 订单ID\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n  \"status\": 200,shu\n  \"msg\": \"取消申请退款成功！\",\n  \"data\": {\n  }\n  }\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "PostOrderCancel_refund"
+  },
+  {
+    "type": "POST",
+    "url": "/order/edit_status",
+    "title": "修改订单状态(取消订单|确认收货|删除订单)",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"order_id\":\"12\",订单ID\n    \"status\":\"1\",订单状态\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n  \"status\": 200,\n  \"msg\": \"获取成功\",\n  \"data\": {\n  }\n}\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "PostOrderEdit_status"
+  },
+  {
+    "type": "POST",
+    "url": "/order/get_refund",
+    "title": "获取退款信息",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"order_id\":\"12\", 订单ID\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n  \"status\": 200,\n  \"msg\": \"成功！\",\n  \"data\": {\n  \"consignee\": \"董惠纺\",联系人\n  \"mobile\": \"15847059545\",联系电话\n  \"refund_reason\": [\n      \"7天无理由退款\",\n      \"退运费\",\n      \"商品描述不符\",\n      \"质量问题\",\n      \"少件漏发\",\n      \"包装/商品破损/污渍\",\n      \"发票问题\",\n      \"卖家发错货\"\n  ],退款理由\n  \"refund_type\": [\n      \"支付原路退回\",\n      \"退到用户余额\"\n  ]退款方式\n  }\n  }\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "PostOrderGet_refund"
+  },
+  {
+    "type": "POST",
+    "url": "/order/order_comment",
+    "title": "订单商品评论",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"comments\":\"\",json包array,示例comments\t是\tjson\tjson对象包数组 comments[order_id]\t是\tjson\t订单ID comments[goods_id]\t是\tjson\t商品ID comments[sku_id]\t是\tjson\t规格ID comments[star_rating]\t是\tjson\t星评1-5 comments[content]\t否\tjson\t评论内容 comments[img]\t否\tjson[array]\t评论图片（base64）\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n  \"status\": 200,\n  \"msg\": \"成功！\",\n  \"data\": {\n  }\n}\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "PostOrderOrder_comment"
+  },
+  {
+    "type": "POST",
+    "url": "/order/order_comment_list",
+    "title": "获取订单评论",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"order_id\":\"12\", 订单ID\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n  \"status\": 200,\n  \"msg\": \"成功！\",\n  \"data\": [\n  {\n      \"goods_id\": 18,\n      \"sku_id\": 2,\n      \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",\n      \"goods_num\": 1,\n      \"spec_key_name\": \"规格:升级版,颜色:星空灰,尺寸:大\",\n      \"img\": \"goods/20190704156222261239875.png\"\n  }\n  ]\n}\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "PostOrderOrder_comment_list"
+  },
+  {
+    "type": "POST",
+    "url": "/order/order_detail",
+    "title": "订单详情",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"order_id\":\"12\",订单ID\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n  \"status\": 200,\n  \"msg\": \"获取成功\",\n  \"data\": {\n  \"order_id\": 1631,订单ID\n  \"order_sn\": \"20190704150438408830\",订单编号\n  \"order_status\": 1,\n  \"pay_status\": 0,\n  \"shipping_status\": 0,\n  \"pay_type\": {\n      \"pay_type\": 2,\n      \"pay_name\": \"微信支付\"\n  },支付方式\n  \"consignee\": \"董惠纺\",收货人\n  \"mobile\": \"15847059545\",收货手机号\n  \"address\": \"内蒙古自治区赤峰市红山区内蒙古赤峰市红山区三道街植物园路口二毛对夹\",收货地址\n  \"coupon_price\": \"0.00\",优惠金额\n  \"order_amount\": \"2388.00\",订单金额（实付金额）\n  \"total_amount\": \"2388.00\",订单总金额\n  \"add_time\": 1562223878,\n  \"shipping_name\": \"\",\n  \"shipping_price\": \"0.00\",物流费用\n  \"user_note\": \"\",下单备注\n  \"pay_time\": 0,付款时间\n  \"user_money\": \"0.00\",使用余额\n  \"status\": 1,订单状态 1：待付款,2：待发货,3：待收货,4：待评价,5：已取消,6：待退款,7：已退款,8：拒绝退款\n  \"order_refund\": {\n      \"count_num\": 1\n  },\n  \"goods_res\": [\n      {\n      \"goods_id\": 18,\n      \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",\n      \"goods_num\": 1,\n      \"spec_key_name\": \"规格:升级版,颜色:星空灰,尺寸:大\",\n      \"goods_price\": \"2388.00\",\n      \"original_price\": \"2588.00\",\n      \"img\": \"http://api.retail.com/upload/images/goods/20190704156222261239875.png\"\n      }\n  ]\n  }\n  }\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "PostOrderOrder_detail"
+  },
+  {
+    "type": "POST",
+    "url": "/order/order_list",
+    "title": "订单列表",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"type\":\"all\",类型 all：全部订单，dfk：待付款，dfh:代发货，dsh：待收货，dpj：待评价，tk：退款，yqx：已取消 \n    \"page\":\"1\",请求页数 \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n  \"status\": 200,\n  \"msg\": \"获取成功\",\n  \"data\": [\n      {\n      \"order_id\": 1631,订单ID\n      \"order_sn\": \"20190704150438408830\",订单编号\n      \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",商品名称\n      \"img\": \"http://api.retail.com/upload/images/goods/20190704156222261239875.png\",\n      \"spec_key_name\": \"规格:升级版,颜色:星空灰,尺寸:大\",购买规格\n      \"goods_price\": \"2388.00\",商品价格\n      \"original_price\": \"2588.00\",市场价\n      \"goods_num\": 1,购买数量\n      \"order_status\": 1,\n      \"pay_status\": 0,\n      \"shipping_status\": 0,\n      \"pay_type\": 2,\n      \"comment\": 0,是否评论 0：否，1：是\n      \"status\": 1 订单状态 1：待付款,2：待发货,3：待收货,4：待评价,5：已取消,6：待退款,7：已退款,8：拒绝退款\n      }\n  ]\n  }\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "PostOrderOrder_list"
+  },
+  {
+    "type": "POST",
+    "url": "/order/submitOrder",
+    "title": "提交订单",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"cart_id\":\"12,13\",购物车ID，多个逗号分开\n    \"address_id\":\"13\",地址ID\n    \"coupon_id\":\"\",优惠券ID（没有可不传）\n    \"pay_type\":\"\",支付类型\n    \"user_note\":\"\",下单备注\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n      \"status\": 200,\n      \"msg\": \"成功\",\n      \"data\": 21,订单ID\n}\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "PostOrderSubmitorder"
+  },
+  {
+    "type": "POST",
+    "url": "/order/temporary",
+    "title": "购物车提交订单",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"cart_id\":\"12,13\"购物车ID，多个逗号分开\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n      \"status\": 200,\n      \"msg\": \"成功\",\n      \"data\": {\n          \"goods_res\": [\n          {\n              \"cart_id\": 1737,购物车ID\n              \"selected\": 1,\n              \"user_id\": 76,\n              \"groupon_id\": 0,\n              \"goods_id\": 18,商品ID\n              \"goods_sn\": \"\",\n              \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",商品名称\n              \"market_price\": \"2588.00\",市场价\n              \"goods_price\": \"2388.00\",现价\n              \"member_goods_price\": \"2388.00\",\n              \"subtotal_price\": \"2388.00\",\n              \"sku_id\": 2,规格ID\n              \"goods_num\": 1,购买数量\n              \"spec_key_name\": \"规格:升级版,颜色:星空灰,尺寸:大\",购买规格\n              \"img\": \"http://api.retail.com/upload/images/goods/20190514155782540787289.png\"商品图片\n          }\n          ],\n          \"addr_res\": [\n          \n          ],地址\n          \"pay_type\": [\n          {\n              \"pay_type\": 2,\n              \"pay_name\": \"微信支付\"\n          },\n          {\n              \"pay_type\": 1,\n              \"pay_name\": \"余额支付\"\n          },\n          {\n              \"pay_type\": 4,\n              \"pay_name\": \"货到付款\"\n          },\n          {\n              \"pay_type\": 3,\n              \"pay_name\": \"支付宝支付\"\n          }\n          ],支付类型\n          \"shipping_price\": \"0.00\",物流费用\n          \"coupon\": [\n          \n          ],可用优惠券\n      }\n      }\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "PostOrderTemporary"
+  },
+  {
+    "type": "POST",
+    "url": "/address/addAddress",
+    "title": "地址添加和编辑",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token*（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "address_id",
+            "description": "<p>address_id（选填,没有为添加模式）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "consignee",
+            "description": "<p>客户名称（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "district",
+            "description": "<p>区id（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "address",
+            "description": "<p>地址（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "mobile",
+            "description": "<p>地址（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "is_default",
+            "description": "<p>默认地址（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address_id\":\"xxxxxxxx\",\n     \"consignee\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"district\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"mobile\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"is_default\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\"status\":200,\n\"msg\":\"添加成功\",\n\"data\":[]\n}\n* //错误返回结果\n{\n\"status\": 301,\n\"msg\": \"操作失败\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Address.php",
+    "groupTitle": "user",
+    "name": "PostAddressAddaddress"
+  },
+  {
+    "type": "POST",
     "url": "/address/addressList",
     "title": "地址列表",
     "group": "user",
@@ -215,6 +716,52 @@ define({ "api": [
     "filename": "application/api/controller/Address.php",
     "groupTitle": "user",
     "name": "PostAddressAddresslist"
+  },
+  {
+    "type": "POST",
+    "url": "/address/delAddress",
+    "title": "地址删除",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token*（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "id",
+            "description": "<p>地址id（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"id\":\"xxxxxxxx\",\n \n     \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\"status\":200,\n\"msg\":\"删除成功\",\n\"data\":[]\n}\n* //错误返回结果\n{\n\"status\": 301,\n\"msg\": \"操作失败\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Address.php",
+    "groupTitle": "user",
+    "name": "PostAddressDeladdress"
   },
   {
     "type": "POST",

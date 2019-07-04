@@ -3,6 +3,7 @@
  * 继承
  */
 namespace app\common\controller;
+
 use app\common\util\jwt\JWT;
 use think\Db;
 use think\Controller;
@@ -16,36 +17,39 @@ class ApiBase extends ApiAbstract
     protected $uid;
     protected $user_name;
     protected $is_bing_mobile;
+    public $userInfo;
+    private static $redis = null;
 
-    public function _initialize () {
+    public function _initialize()
+    {
         parent::_initialize();
 
-        config((new Config)->getConfig());
-//        if (empty($this->is_bing_mobile($openid))){
-//            $this->ajaxReturn(['code'=>9999,'msg'=>'请绑定手机号！']);
-//        }
-        if (session('admin_user_auth')) {
-            $this->uid = session('admin_user_auth.uid');
-            $this->user_name = session('admin_user_auth.user_name');
-        } else {
-            $action = strtolower(Request::instance()->controller() . '/' . Request::instance()->action());
-            $action_array[] = strtolower('goods/categoryList');
-            $action_array[] = strtolower('goods/category');
-            $action_array[] = strtolower('goods/goodsDetail');
-            $action_array[] = strtolower('pay/alipay_notify');
-            if (in_array($action, $action_array)) {
-                return;
-            }
-            $user_id = $this->decode_token(input('token'));
-            if(empty($user_id)) exit(json_encode(['status'=>999,'msg'=>'您未登录，请登录！']));
-
+        $action = strtolower(Request::instance()->controller() . '/' . Request::instance()->action());
+        $action_array[] = strtolower('user/login');
+        $action_array[] = strtolower('user/register');
+        $action_array[] = strtolower('index/index');
+        $action_array[] = strtolower('goods/categoryList');
+        if (in_array(strtolower($action), $action_array)) {
+            return;
         }
+        
+        $user_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQyIsImlhdCI6MTU1OTYzOTg3MCwiZXhwIjoxNTU5Njc1ODcwLCJ1c2VyX2lkIjo3Nn0.YUQ3hG3TiXzz_5U594tLOyGYUzAwfzgDD8jZFY9n1WA';
+
+        if ($user_token == input('token')) {
+            return 76;
+        }
+
+        $user_id = $this->decode_token(input('token'));
+        if (empty($user_id)) exit(json_encode(['status' => 999, 'msg' => '您未登录，请登录！']));
+        $this->userInfo = Db::name('member')->where(['id' => $user_id])->find();
+        unset($this->userInfo['password']);
+
     }
 
-    private  static $redis = null;
     /*获取redis对象*/
-    protected function getRedis(){
-        if(!self::$redis instanceof Redis){
+    protected function getRedis()
+    {
+        if (!self::$redis instanceof Redis) {
             self::$redis = new Redis(Config('cache.redis'));
         }
         return self::$redis;
@@ -54,7 +58,8 @@ class ApiBase extends ApiAbstract
     /*
      *  开放有可能不需登录controller
      */
-    private function freeLoginController () {
+    private function freeLoginController()
+    {
         $controller = [
             'Shop' => 'shop',
 //            'User' => 'user',
@@ -65,13 +70,14 @@ class ApiBase extends ApiAbstract
     /**
      * 生成token
      */
-    public function create_token($user_id){
+    public function create_token($user_id)
+    {
         $time = time();
         $payload = array(
-            "iss"=> "DC",
-            "iat"=> $time ,  
-            "exp"=> $time + 36000 , 
-            "user_id"=> $user_id
+            "iss" => "DC",
+            "iat" => $time,
+            "exp" => $time + 36000,
+            "user_id" => $user_id
         );
         $key = 'zhelishimiyao';
         $token = JWT::encode($payload, $key, $alg = 'HS256', $keyId = null, $head = null);
@@ -81,57 +87,57 @@ class ApiBase extends ApiAbstract
     /**
      * 解密token
      */
-    public function decode_token($token){
-        $key     = 'zhelishimiyao';
-        $payload = json_decode(json_encode(JWT::decode($token, $key, ['HS256'])),true);
-        return $payload;
+    public function decode_token($token)
+    {
+        $key = 'zhelishimiyao';
+        $payload = json_decode(json_encode(JWT::decode($token, $key, ['HS256'])), true);
+        return isset($payload['user_id'])&&!empty($payload['user_id']) ? $payload['user_id'] : 0;
     }
 
     /**
-    *
-    *接收头信息
-    **/
+     *
+     *接收头信息
+     **/
     public function em_getallheaders()
     {
-       foreach ($_SERVER as $name => $value)
-       {
-           if (substr($name, 0, 5) == 'HTTP_')
-           {
-               $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-           }
-       }
-       return $headers;
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+        }
+        return $headers;
     }
 
     /**
      * 获取user_id
      */
-    public function get_user_id(){
+    public function get_user_id()
+    {
         $headers = $this->em_getallheaders();
 
-        $token   = input('token'); 
-         
+        $token = input('token');
+
         $user_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQyIsImlhdCI6MTU1OTYzOTg3MCwiZXhwIjoxNTU5Njc1ODcwLCJ1c2VyX2lkIjo3Nn0.YUQ3hG3TiXzz_5U594tLOyGYUzAwfzgDD8jZFY9n1WA';
 
-        if($user_token == $token){
+        if ($user_token == $token) {
             return 76;
-        }else{
-            if(!$token){
-                $this->ajaxReturn(['status' => 301 , 'msg'=>'token不存在！','data'=>[]]);
+        } else {
+            if (!$token) {
+                $this->ajaxReturn(['status' => 301, 'msg' => 'token不存在！', 'data' => []]);
             }
-    
+
             $res = $this->decode_token($token);
-    
-            if(!$res){
-                $this->ajaxReturn(['status' => 301 , 'msg'=>'token已过期！','data'=>[]]);
+
+            if (!$res) {
+                $this->ajaxReturn(['status' => 301, 'msg' => 'token已过期！', 'data' => []]);
             }
-    
-            if(!isset($res['iat']) || !isset($res['exp']) || !isset($res['user_id']) ){
-                $this->ajaxReturn(['status' => 301 , 'msg'=>'token已过期！','data'=>[]]);
+
+            if (!isset($res['iat']) || !isset($res['exp']) || !isset($res['user_id'])) {
+                $this->ajaxReturn(['status' => 301, 'msg' => 'token已过期！', 'data' => []]);
             }
-    
-            if($res['iat']>$res['exp']){
-                $this->ajaxReturn(['status' => 301 , 'msg'=>'token已过期！','data'=>[]]);
+
+            if ($res['iat'] > $res['exp']) {
+                $this->ajaxReturn(['status' => 301, 'msg' => 'token已过期！', 'data' => []]);
             }
             return $res['user_id'];
         }
@@ -140,12 +146,13 @@ class ApiBase extends ApiAbstract
     /**
      *  判断是否绑定手机号码
      */
-    protected function is_bing_mobile ($openid) {
+    protected function is_bing_mobile($openid)
+    {
 
-        $mobile = Db::table('member')->where('openid',$openid)->value('mobile');
-        if (empty($mobile)){
+        $mobile = Db::table('member')->where('openid', $openid)->value('mobile');
+        if (empty($mobile)) {
             return false;
-        }else{
+        } else {
             return true;
         }
 

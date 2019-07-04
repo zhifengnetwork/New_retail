@@ -53,13 +53,13 @@ class UserAddr extends Model
         {
             $c = $this->where(['user_id' => $user_id])->count();
             if($c >= 20)
-                return array('status'=>-2,'msg'=>'最多只能添加20个收货地址','data'=>'');
+                return json(array('status'=>-2,'msg'=>'最多只能添加20个收货地址','data'=>''));
         }
         //检查手机格式
         if($post['consignee'] == '')
-            return array('status'=>-2,'msg'=>'收货人不能为空','data'=>'');
+            return json(array('status'=>-2,'msg'=>'收货人不能为空','data'=>''));
         if (!($post['district']>0))
-            return array('status'=> -2,'msg'=>'所在地区不能为空','data'=>'');
+            return json(array('status'=> -2,'msg'=>'所在地区不能为空','data'=>''));
 
         $district = Db::name('region')->where(['code' => $post['district']])->find();
         $post['district'] = $district['area_id'];
@@ -70,9 +70,9 @@ class UserAddr extends Model
 
 
         if(empty($post['address']))
-            return array('status'=>-2,'msg'=>'地址不能为空','data'=>'');
+            return json(array('status'=>-2,'msg'=>'地址不能为空','data'=>''));
         if(!checkMobile($post['mobile']))
-            return array('status'=>-2,'msg'=>'手机号码格式有误','data'=>'');
+            return json(array('status'=>-2,'msg'=>'手机号码格式有误','data'=>''));
          unset($post['token']);
         //编辑模式
         if($address_id > 0){
@@ -81,9 +81,9 @@ class UserAddr extends Model
                    $this->where(array('user_id'=>$user_id))->update(array('is_default'=>0));
             $row = $this->where(array('address_id'=>$address_id,'user_id'=> $user_id))->update($post);
             if($row !== false){
-                return array('status'=>1,'msg'=>'编辑成功','data'=>$address_id);
+                return json(array('status'=>1,'msg'=>'编辑成功','data'=>$address_id));
             }else{
-                return array('status'=>-2,'msg'=>'操作失败','data'=>$address_id);
+                return json(array('status'=>-2,'msg'=>'操作失败','data'=>$address_id));
             }
 
         }
@@ -101,7 +101,7 @@ class UserAddr extends Model
         $map['address_id'] = array('neq',$insert_id);
                
         if($post['is_default'] == 1)$this->where($map)->update(array('is_default'=>0));
-        
-        return array('status'=>1,'msg'=>'添加成功','data'=>'');
+      
+        return json(['status'=>200,'msg'=>'添加成功','data'=>'']);
     }
 }
