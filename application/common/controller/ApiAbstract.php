@@ -19,6 +19,7 @@ class ApiAbstract extends Controller
     public $param;
     public $userInfo;
     private static $redis = null;
+    const PAGE_SIZE = 20;   // 每页条数
 
     public function _initialize () {
         parent::_initialize();
