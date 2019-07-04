@@ -275,7 +275,9 @@ class User extends ApiBase
         $distribut_money  = Db::name('member')->where('id',$user_id)->value('distribut_money');
         //团队人数
         $team_count        = Db::query("SELECT count(*) as count FROM parents_cache where find_in_set('$user_id',`parents`)");
-        $data['estimate_money']  = 0.01;//预计收入
+        //预计收益
+        $estimate_money     = Db::name('distrbut_commission_log')->where(['to_user_id' => $user_id,'distrbut_state' => 0])->field('sum(money) as money')->find();
+        $data['estimate_money']  = $estimate_money['money'];//预计收入
         $data['distribut_money'] = $distribut_money;
         $data['team_count']      = $team_count[0]['count'] ? $team_count[0]['count'] : 0;
         return $this->successResult($data);
@@ -388,8 +390,12 @@ class User extends ApiBase
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
-        $where['to_user_id'] = $user_id;
-        $list = Db::name('distrbut_commission_log')->where($where)->field('order_sn,money,desc')->paginate(20,false,['page'=>$page]);
+        $where['distrbut_state'] = 1;
+        $where['to_user_id']     = $user_id;
+        $list = Db::name('distrbut_commission_log')
+        ->where($where)
+        ->field('order_sn,money,desc')
+        ->paginate(20,false,['page'=>$page]);
      
         $data['list'] = $list;
         
@@ -446,9 +452,14 @@ class User extends ApiBase
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
-        $where['to_user_id'] = $user_id;
-        $list = Db::name('distrbut_commission_log')->where($where)->field('user_id,order_sn,money,desc as realname')->paginate(20,false,['page'=>$page]);
         
+        $where['to_user_id']     = $user_id;
+        $where['distrbut_state'] = 0;
+        $list = Db::name('distrbut_commission_log')->alias('d')
+        ->join('member m','m.id=d.user_id','LEFT')
+        ->where($where)
+        ->field('d.user_id,d.order_sn,d.money,m.realname')
+        ->paginate(20,false,['page'=>$page]);
      
         $data['list'] = $list;
         
@@ -498,8 +509,8 @@ class User extends ApiBase
      */
     public function user_info()
     {
-        if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
-        $user_id = $this->get_user_id();
+        //if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
+        $user_id = 76;
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
@@ -516,8 +527,10 @@ class User extends ApiBase
         $not_evaluate   = Db::name('order')->where(['user_id' => $user_id,'comment' =>0,'pay_status' => 1,'shipping_status' => 3])->field('*')->count();
         //收藏
         $collection     = Db::name('collection')->where(['user_id' => $user_id])->field('*')->count();
+        //预计收益
+        $estimate_money     = Db::name('distrbut_commission_log')->where(['to_user_id' => $user_id,'distrbut_state' => 0])->field('sum(money) as money')->find();
         
-        $info['estimate_money'] = '0.01'; //预计收益
+        $info['estimate_money'] = $estimate_money['money']; //预计收益
         $info['refund']         = $refund;
         $info['not_pay']        = $not_pay;
         $info['not_delivery']   = $not_delivery;
