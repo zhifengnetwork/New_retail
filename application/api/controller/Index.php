@@ -12,78 +12,81 @@ class Index extends ApiBase
 {
 
 
-   /**
+    /**
      * @api {GET} /index/index 首页
-     * @apiGroup goods
+     * @apiGroup index
      * @apiVersion 1.0.0
      *
      * @apiParamExample {json} 请求数据:
+     * {
+     *     
+     * }
      * @apiSuccessExample {json} 返回数据：
      * //正确返回结果
      * {
-     *   "status": 200,
-     *   "msg": "获取成功",
-     *   "data": {
-     *       "banners": [
-     *       {
-     *           "picture": "http://api.retail.com\\uploads\\fixed_picture\\20190529\\bce5780d314bb3bfd3921ffefc77fcdd.jpeg",
-     *           "title": "个人中心个人资料和设置",
-     *           "url": "www.cctvhong.com"
-     *       },
-     *       {
-     *           "picture": "http://api.retail.com\\uploads\\fixed_picture\\20190529\\94cbe33d1e15a5ebdd92cd0e3a4f4f19.jpeg",
-     *           "title": "13.2 我的钱包-提现记录",
-     *           "url": "www.ceshi.com"
-     *       },
-     *       {
-     *           "picture": "http://api.retail.com\\uploads\\fixed_picture\\20190529\\414eac4f30c011288ae42e822cb637cc.jpeg",
-     *           "title": "钱包转换",
-     *           "url": "www.ceshi.com"
-     *       }
-     *       ],banner轮播图
-     *       "announce": [
-     *       
-     *       ],公告
-     *       "hot_goods": [
-     *       {
-     *           "goods_id": 39,
-     *           "goods_name": "本草",
-     *           "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
-     *           "price": "200.00",
-     *           "original_price": "250.00"
-     *       },
-     *       {
-     *           "goods_id": 18,
-     *           "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",
-     *           "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
-     *           "price": "2188.00",
-     *           "original_price": "2588.00"
-     *       }
-     *       ],热门商品
-     *       "recommend_goods": {
-     *       "total": 2,
-     *       "per_page": 4,
-     *       "current_page": 1,
-     *       "last_page": 1,
-     *       "data": [
+     *       "status": 200,
+     *       "msg": "获取成功",
+     *       "data": {
+     *           "banners": [
      *           {
-     *           "goods_id": 39,
-     *           "goods_name": "本草",
-     *           "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
-     *           "price": "200.00",
-     *           "original_price": "250.00"
+     *               "picture": "http://api.retail.com\\uploads\\fixed_picture\\20190529\\bce5780d314bb3bfd3921ffefc77fcdd.jpeg",
+     *               "title": "个人中心个人资料和设置",
+     *               "url": "www.cctvhong.com"
      *           },
      *           {
-     *           "goods_id": 36,
-     *           "goods_name": "美的（Midea） 三门冰箱 ",
-     *           "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
-     *           "price": "50.00",
-     *           "original_price": "40.00"
+     *               "picture": "http://api.retail.com\\uploads\\fixed_picture\\20190529\\94cbe33d1e15a5ebdd92cd0e3a4f4f19.jpeg",
+     *               "title": "13.2 我的钱包-提现记录",
+     *               "url": "www.ceshi.com"
+     *           },
+     *           {
+     *               "picture": "http://api.retail.com\\uploads\\fixed_picture\\20190529\\414eac4f30c011288ae42e822cb637cc.jpeg",
+     *               "title": "钱包转换",
+     *               "url": "www.ceshi.com"
      *           }
-     *       ]
-     *       }推荐商品
-     *   }
-     *   }
+     *           ],banner轮播图
+     *           "announce": [
+     *           
+     *           ],公告
+     *           "hot_goods": [
+     *           {
+     *               "goods_id": 39,
+     *               "goods_name": "本草",
+     *               "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *               "price": "200.00",
+     *               "original_price": "250.00"
+     *           },
+     *           {
+     *               "goods_id": 18,
+     *               "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",
+     *               "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *               "price": "2188.00",
+     *               "original_price": "2588.00"
+     *           }
+     *           ],热门商品
+     *           "recommend_goods": {
+     *           "total": 2,
+     *           "per_page": 4,
+     *           "current_page": 1,
+     *           "last_page": 1,
+     *           "data": [
+     *               {
+     *               "goods_id": 39,
+     *               "goods_name": "本草",
+     *               "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *               "price": "200.00",
+     *               "original_price": "250.00"
+     *               },
+     *               {
+     *               "goods_id": 36,
+     *               "goods_name": "美的（Midea） 三门冰箱 ",
+     *               "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *               "price": "50.00",
+     *               "original_price": "40.00"
+     *               }
+     *           ]
+     *           }推荐商品
+     *       }
+     *       }
      * //错误返回结果
      * 无
      */
@@ -118,7 +121,6 @@ class Index extends ApiBase
                 ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
                 ->paginate(4);
         
-
         $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>['banners'=>$banners,'announce'=>$announce,'hot_goods'=>$hot_goods,'recommend_goods'=>$recommend_goods]]);
     }
 
