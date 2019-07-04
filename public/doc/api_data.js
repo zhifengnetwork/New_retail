@@ -375,6 +375,87 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/address/addAddress",
+    "title": "地址添加和编辑",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token*（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "address_id",
+            "description": "<p>address_id（选填,没有为添加模式）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "consignee",
+            "description": "<p>客户名称（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "district",
+            "description": "<p>区id（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "address",
+            "description": "<p>地址（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "mobile",
+            "description": "<p>地址（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "is_default",
+            "description": "<p>默认地址（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address_id\":\"xxxxxxxx\",\n     \"consignee\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"district\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"mobile\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"is_default\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\"status\":200,\n\"msg\":\"添加成功\",\n\"data\":[]\n}\n* //错误返回结果\n{\n\"status\": 301,\n\"msg\": \"操作失败\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Address.php",
+    "groupTitle": "user",
+    "name": "PostAddressAddaddress"
+  },
+  {
+    "type": "POST",
     "url": "/address/addressList",
     "title": "地址列表",
     "group": "user",
@@ -411,6 +492,52 @@ define({ "api": [
     "filename": "application/api/controller/Address.php",
     "groupTitle": "user",
     "name": "PostAddressAddresslist"
+  },
+  {
+    "type": "POST",
+    "url": "/address/delAddress",
+    "title": "地址删除",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token*（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "id",
+            "description": "<p>地址id（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"id\":\"xxxxxxxx\",\n \n     \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\"status\":200,\n\"msg\":\"删除成功\",\n\"data\":[]\n}\n* //错误返回结果\n{\n\"status\": 301,\n\"msg\": \"操作失败\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Address.php",
+    "groupTitle": "user",
+    "name": "PostAddressDeladdress"
   },
   {
     "type": "POST",
