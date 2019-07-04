@@ -21,6 +21,7 @@ class Goods extends Common
         $pageParam = ['query' => []];
 
         $where['g.is_del'] = 0;
+        $where['g.goods_id'] = ['neq',50];
         // $pageParam['query']['is_del'] = 0;
 
         $is_show = input('is_show');

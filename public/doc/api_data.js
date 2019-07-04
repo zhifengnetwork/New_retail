@@ -1,43 +1,5 @@
 define({ "api": [
   {
-    "type": "GET",
-    "url": "/banner/announce",
-    "title": "获取公告",
-    "group": "__",
-    "version": "1.0.0",
-    "success": {
-      "examples": [
-        {
-          "title": "返回数据：",
-          "content": "//正确返回结果\n{\"status\":200,\"msg\":\"success\",\"data\":[{\"id\":4,\"title\":\"第二个公告\",\"link\":\"www.er.com\",\"desc\":\"第二个公告\"},{\"id\":2,\"title\":\"ddd222dd\",\"link\":\"www.baidu.com\",\"desc\":\"dddd222dddddddd\"}]}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"暂无数据\",\n\"data\": false\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "application/api/controller/Banner.php",
-    "groupTitle": "__",
-    "name": "GetBannerAnnounce"
-  },
-  {
-    "type": "GET",
-    "url": "/banner/banner",
-    "title": "获取banner",
-    "group": "__",
-    "version": "1.0.0",
-    "success": {
-      "examples": [
-        {
-          "title": "返回数据：",
-          "content": "//正确返回结果\n{\"status\":200,\"msg\":\"success\",\"data\":[{\"picture\":\"\\\\uploads\\\\fixed_picture\\\\20190702\\\\90897f0182450d71dd9839045ee70f61.png\",\"title\":\"轮播图test\",\"url\":\"www.sogou.com\"},{\"picture\":\"\\\\uploads\\\\fixed_picture\\\\20190701\\\\de5e3e1a45e1796b5dd26acda83ff4df.png\",\"title\":\"google\",\"url\":\"www.google.com\"},{\"picture\":\"\\\\uploads\\\\fixed_picture\\\\20190529\\\\bce5780d314bb3bfd3921ffefc77fcdd.jpeg\",\"title\":\"个人中心个人资料和设置\",\"url\":\"www.cctvhong.com\"}]}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"暂无数据\",\n\"data\": false\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "application/api/controller/Banner.php",
-    "groupTitle": "__",
-    "name": "GetBannerBanner"
-  },
-  {
     "type": "POST",
     "url": "/cart/addCart",
     "title": "加入|修改购物车",
@@ -599,7 +561,7 @@ define({ "api": [
   },
   {
     "type": "POST",
-    "url": "/address/addAddress",
+    "url": "/address/add_address",
     "title": "地址添加和编辑",
     "group": "user",
     "version": "1.0.0",
@@ -646,7 +608,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "mobile",
-            "description": "<p>地址（必填）</p>"
+            "description": "<p>电话号码（必填）</p>"
           },
           {
             "group": "Parameter",
@@ -654,13 +616,41 @@ define({ "api": [
             "optional": false,
             "field": "is_default",
             "description": "<p>默认地址（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "poiaddress",
+            "description": "<p>定位地址（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "poiname",
+            "description": "<p>定位名称（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>lat（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "lnt",
+            "description": "<p>lnt（必填）</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "请求数据:",
-          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address_id\":\"xxxxxxxx\",\n     \"consignee\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"district\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"mobile\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"is_default\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \n}",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address_id\":\"xxxxxxxx\",\n     \"consignee\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"district\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"mobile\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"is_default\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"poiaddress\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"poiname\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"lat\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"lnt\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \n}",
           "type": "json"
         }
       ]
@@ -676,7 +666,7 @@ define({ "api": [
     },
     "filename": "application/api/controller/Address.php",
     "groupTitle": "user",
-    "name": "PostAddressAddaddress"
+    "name": "PostAddressAdd_address"
   },
   {
     "type": "POST",
@@ -1129,7 +1119,11 @@ define({ "api": [
       "examples": [
         {
           "title": "返回数据：",
+<<<<<<< HEAD
           "content": "//正确返回结果\n{\n\"status\": 200,\n\"msg\": \"success\",\n\"data\": {\n\"id\": \"12\",  用户id\n\"mobile\": 12.20 手机号\n\"realname\": \"20.00\", 用户名称\n\"remainder_money\": \"20.00\",  余额\n\"distribut_money\": \"20.00\",  佣金累计收益\n\"estimate_money\": \"20.00\",   预计收益\n\"createtime\": \"\",  注册时间\n\"avatar\": \"\",  头像\n\"collection\": \"20\",  收藏\n\"not_pay\" : 0 ,待付款\n\"not_delivery\" : 0 ,待发货\n\"not_receiving\" : 0 ,待收货\n\"not_evaluate\" : 0 ,待评价\n\"refund\" : 0 ,退款\n\n}\n}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"验证码错误！\",\n\"data\": false\n}",
+=======
+          "content": "//正确返回结果\n{\n\"status\": 200,\n\"msg\": \"success\",\n\"data\": {\n\"team_count\": \"12\",  团队人数\n\"distribut_money\": 12.20 佣金总收益\n\"estimate_money\": \"20.00\",  预计收益\n}\n}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"验证码错误！\",\n\"data\": false\n}",
+>>>>>>> a1a58c009c70d2f28d90720c087b11d1472f616d
           "type": "json"
         }
       ]
