@@ -60,6 +60,11 @@ class Banner extends ApiAbstract
     public function announce()
     {
         $announce=Db::name('announce')->field('id,title,urllink as link,desc')->where(['status'=>1])->order('create_time','desc')->limit(3)->select();
+        foreach($announce as $ak=>$av){
+            if(strpos('http',$av['link'])===false){
+                $announce[$ak]['link']='http://'.$av['link'];
+            } 
+        }
         if($announce){
             return $this->successResult($announce);
         }else{
