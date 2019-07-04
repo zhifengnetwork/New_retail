@@ -111,6 +111,12 @@ class Goods extends ApiBase
                 ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
                 ->paginate(4);
 
+        if($list){
+            foreach($list as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') .$value['img'];
+            }
+        }
+
         $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$list]);
     }
 
@@ -195,6 +201,8 @@ class Goods extends ApiBase
                         $list[$key]['goods'][$k]['attr_name'] = array();
                     }
 
+                    $list[$key]['goods'][$k]['img'] = Config('c_pub.apiimg') .$v['img'];
+
                     $list[$key]['goods'][$k]['comment'] = Db::table('goods_comment')->where('goods_id',$v['goods_id'])->count();
                 }
             }
@@ -203,7 +211,7 @@ class Goods extends ApiBase
         $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$list]);
     }
 
-    public function category(){
+    /*public function category(){
         $cat_id = input('cat_id');
         $cat_id2 = 'cat_id1';
         $sort = input('sort');
@@ -258,7 +266,7 @@ class Goods extends ApiBase
         
         $this->ajaxReturn(['status' => 1 , 'msg'=>'获取成功','data'=>['cate_list'=>$cate_list,'goods_list'=>$goods_list['data']]]);
 
-    }
+    }*/
 
     /**
      * @api {POST} /goods/goodsDetail 商品详情
@@ -502,6 +510,11 @@ class Goods extends ApiBase
         
         //组图
         $goodsRes['img'] = Db::table('goods_img')->where('goods_id',$goods_id)->field('picture')->order('main DESC')->select();
+        if($goodsRes['img']){
+            foreach($goodsRes['img'] as $key=>&$value){
+                $value['picture'] = Config('c_pub.apiimg') .$value['picture'];
+            }
+        }
         
         //收藏
         $goodsRes['collection'] = Db::table('collection')->where('user_id',$user_id)->where('goods_id',$goods_id)->find();
@@ -600,6 +613,9 @@ class Goods extends ApiBase
 
             if($value['img']){
                 $comment[$key]['img'] = explode(',',$value['img']);
+                foreach($comment[$key]['img'] as $k=>&$v){
+                    $comment[$key]['img'][$k] = Config('c_pub.apiimg') .$v;
+                }
             }else{
                 $comment[$key]['img'] = [];
             }

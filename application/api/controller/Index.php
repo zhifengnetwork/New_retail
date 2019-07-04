@@ -110,8 +110,13 @@ class Index extends ApiBase
                 ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
                 ->limit(4)
                 ->select();
-
-
+        
+        if($hot_goods){
+            foreach($hot_goods as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') .$value['img'];
+            }
+        }
+        
         $recommend_goods = Db::table('goods')->alias('g')
                 ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
                 ->where('gi.main',1)
@@ -120,6 +125,12 @@ class Index extends ApiBase
                 ->order('g.goods_id DESC')
                 ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
                 ->paginate(4);
+
+        if($recommend_goods){
+            foreach($recommend_goods as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') .$value['img'];
+            }
+        }
         
         $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>['banners'=>$banners,'announce'=>$announce,'hot_goods'=>$hot_goods,'recommend_goods'=>$recommend_goods]]);
     }
