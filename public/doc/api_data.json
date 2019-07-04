@@ -1,9 +1,28 @@
 [
   {
     "type": "GET",
+    "url": "/banner/announce",
+    "title": "获取公告",
+    "group": "__",
+    "version": "1.0.0",
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\"status\":200,\"msg\":\"success\",\"data\":[{\"id\":4,\"title\":\"第二个公告\",\"link\":\"www.er.com\",\"desc\":\"第二个公告\"},{\"id\":2,\"title\":\"ddd222dd\",\"link\":\"www.baidu.com\",\"desc\":\"dddd222dddddddd\"}]}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"暂无数据\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Banner.php",
+    "groupTitle": "__",
+    "name": "GetBannerAnnounce"
+  },
+  {
+    "type": "GET",
     "url": "/banner/banner",
     "title": "获取banner",
-    "group": "banner",
+    "group": "__",
     "version": "1.0.0",
     "success": {
       "examples": [
@@ -15,8 +34,92 @@
       ]
     },
     "filename": "application/api/controller/Banner.php",
-    "groupTitle": "banner",
+    "groupTitle": "__",
     "name": "GetBannerBanner"
+  },
+  {
+    "type": "GET",
+    "url": "/goods/categoryList",
+    "title": "分类",
+    "group": "goods",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "无",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n  \"status\": 200,\n  \"msg\": \"获取成功\",\n  \"data\": [\n      {\n      \"cat_id\": 13,\n      \"cat_name\": \"化妆品\",\n      \"pid\": 0,\n      \"level\": 1,\n      \"img\": \"category/20190516155797968450728.png\",\n      \"is_show\": 1,\n      \"desc\": \"\",\n      \"sort\": 1,\n      \"goods\": [\n          {\n          \"goods_id\": 39,\n          \"goods_name\": \"本草\",\n          \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n          \"price\": \"200.00\",\n          \"original_price\": \"250.00\",\n          \"attr_name\": [\n              \"精选\",\n              \"限时卖\",\n              \"热卖\"\n          ],\n          \"comment\": 0\n          },\n          {\n          \"goods_id\": 18,\n          \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",\n          \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n          \"price\": \"2188.00\",\n          \"original_price\": \"2588.00\",\n          \"attr_name\": [\n              \"热卖\",\n              \"新上\"\n          ],\n          \"comment\": 18\n          }\n      ]\n      }\n  ]\n  }\n//错误返回结果\n无",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Goods.php",
+    "groupTitle": "goods",
+    "name": "GetGoodsCategorylist"
+  },
+  {
+    "type": "GET",
+    "url": "/goods/hot_goods",
+    "title": "热门商品",
+    "group": "goods",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "无",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n  \"status\": 200,\n  \"msg\": \"获取成功\",\n  \"data\": [\n      {\n      \"goods_id\": 39,\n      \"goods_name\": \"本草\",\n      \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n      \"price\": \"200.00\",\n      \"original_price\": \"250.00\"\n      },\n      {\n      \"goods_id\": 18,\n      \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",\n      \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n      \"price\": \"2188.00\",\n      \"original_price\": \"2588.00\"\n      }\n  ]\n  }\n//错误返回结果\n无",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Goods.php",
+    "groupTitle": "goods",
+    "name": "GetGoodsHot_goods"
+  },
+  {
+    "type": "GET",
+    "url": "/goods/recommend_goods",
+    "title": "推荐商品",
+    "group": "goods",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"page\":\"1\", 请求页数\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n  \"status\": 200,\n  \"msg\": \"获取成功\",\n  \"data\": [\n      {\n      \"goods_id\": 39,\n      \"goods_name\": \"本草\",\n      \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n      \"price\": \"200.00\",\n      \"original_price\": \"250.00\"\n      },\n      {\n      \"goods_id\": 18,\n      \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",\n      \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n      \"price\": \"2188.00\",\n      \"original_price\": \"2588.00\"\n      }\n  ]\n  }\n//错误返回结果\n无",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Goods.php",
+    "groupTitle": "goods",
+    "name": "GetGoodsRecommend_goods"
   },
   {
     "type": "POST",

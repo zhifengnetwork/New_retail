@@ -14,9 +14,10 @@ use think\Db;
 class Banner extends ApiAbstract
 {
 
+   
        /**
      * @api {GET} /banner/banner 获取banner
-     * @apiGroup banner
+     * @apiGroup 首页
      * @apiVersion 1.0.0
      *
      * @apiSuccessExample {json} 返回数据：
@@ -31,6 +32,9 @@ class Banner extends ApiAbstract
      */
     public function banner () {
         $banners=Db::name('advertisement')->field('picture,title,url')->where(['type'=>0,'state'=>1])->order('sort','desc')->limit(3)->select();
+        foreach($banners as $bk=>$bv){
+            $banners[$bk]['picture']=SITE_URL.$bv['picture'];
+        }
         if($banners){
             return $this->successResult($banners);
         }else{
@@ -38,6 +42,21 @@ class Banner extends ApiAbstract
         }
     }
 
+  /**
+     * @api {GET} /banner/announce 获取公告
+     * @apiGroup 首页
+     * @apiVersion 1.0.0
+     *
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     *{"status":200,"msg":"success","data":[{"id":4,"title":"第二个公告","link":"www.er.com","desc":"第二个公告"},{"id":2,"title":"ddd222dd","link":"www.baidu.com","desc":"dddd222dddddddd"}]}
+     * //错误返回结果
+     * {
+     * "status": 301,
+     * "msg": "暂无数据",
+     * "data": false
+     * }
+     */
     public function announce()
     {
         $announce=Db::name('announce')->field('id,title,urllink as link,desc')->where(['status'=>1])->order('create_time','desc')->limit(3)->select();
