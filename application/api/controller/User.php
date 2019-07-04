@@ -469,6 +469,7 @@ class User extends ApiAbstract
     public function distribut_list()
     {
         if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
+        
         $user_id = $this->get_user_id();
         $page    = input('page',1);
         if(!$user_id){
