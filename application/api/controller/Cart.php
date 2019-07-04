@@ -3,58 +3,172 @@
  * 购物车API
  */
 namespace app\api\controller;
+use app\common\controller\ApiBase;
 use app\common\model\Users;
 use app\common\logic\UsersLogic;
 use app\common\logic\CartLogic;
 use think\Request;
 use think\Db;
+use think\Config;
 
 class Cart extends ApiBase
 {
     
-    /*
-     * 请求获取购物车列表
+    /**
+     * @api {GET} /cart/cartlist 购物车列表
+     * @apiGroup cart
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     "token":"", 
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *     "status": 200,
+     *     "msg": "成功",
+     *     "data": [
+     *     {
+     *         "cart_id": 1737,购物车ID
+     *         "selected": 1,是否选中状态 0：否，1：是
+     *         "user_id": 76,
+     *         "groupon_id": 0,
+     *         "goods_id": 18,商品ID
+     *         "goods_sn": "",
+     *         "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",商品名称
+     *         "market_price": "2588.00",市场价
+     *         "goods_price": "2388.00",现价
+     *         "member_goods_price": "2388.00",
+     *         "subtotal_price": "2388.00",该商品总价
+     *         "sku_id": 2,规格ID
+     *         "goods_num": 1,购买数量
+     *         "spec_key_name": "规格:升级版,颜色:星空灰,尺寸:大",购买规格
+     *         "img": "http://api.retail.com/upload/images/goods/20190514155782540787289.png",商品图片
+     *     },
+     *     {
+     *         "cart_id": 1735,
+     *         "selected": 1,
+     *         "user_id": 76,
+     *         "groupon_id": 0,
+     *         "goods_id": 39,
+     *         "goods_sn": "",
+     *         "goods_name": "本草",
+     *         "market_price": "250.00",
+     *         "goods_price": "199.90",
+     *         "member_goods_price": "199.90",
+     *         "subtotal_price": "199.90",
+     *         "sku_id": 22,
+     *         "goods_num": 1,
+     *         "spec_key_name": "规格:颜色",
+     *         "img": "http://api.retail.com/upload/images/goods/20190514155782540787289.png"
+     *     },
+     *     {
+     *         "cart_id": 1653,
+     *         "selected": 1,
+     *         "user_id": 76,
+     *         "groupon_id": 0,
+     *         "goods_id": 18,
+     *         "goods_sn": "",
+     *         "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",
+     *         "market_price": "2588.00",
+     *         "goods_price": "2388.00",
+     *         "member_goods_price": "2388.00",
+     *         "subtotal_price": "2388.00",
+     *         "sku_id": 2,
+     *         "goods_num": 1,
+     *         "spec_key_name": "规格:升级版,颜色:星空灰,尺寸:大",
+     *         "img": "http://api.retail.com/upload/images/goods/20190514155782540787289.png"
+     *     }
+     *     ]
+     * }
+     * //错误返回结果
+     * {
+     *   "status": 301,
+     *   "msg": "token不存在！",
+     *   "data": [
+     *       
+     *   ]
+     *   }
      */
     public function cartlist()
     {
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
-        }
 
         $cart_where['user_id'] = $user_id;
         $cartM = model('Cart');
         $cart_res = $cartM->cartList1($cart_where);
+        if($cart_res){
+            foreach($cart_res as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') . $value['img'];
+            }
+        }
         
-        $this->ajaxReturn(['status' => 1 , 'msg'=>'成功','data'=>$cart_res]);
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'成功','data'=>$cart_res]);
     }
 
     /**
-     * 购物车总数
+     * @api {GET} /cart/cart_sum 购物车总数
+     * @apiGroup cart
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     "token":"", 
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *     "status": 200,
+     *     "msg": "成功",
+     *     "data": 3
+     * }
+     * //错误返回结果
+     * {
+     *   "status": 301,
+     *   "msg": "token不存在！",
+     *   "data": [
+     *       
+     *   ]
+     *   }
      */
     public function cart_sum(){
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
-        }
 
         $cart_where['user_id'] = $user_id;
         $cart_where['groupon_id'] = 0;
         $num = Db::table('cart')->where($cart_where)->sum('goods_num');
 
-        $this->ajaxReturn(['status' => 1 , 'msg'=>'成功','data'=>$num]);
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'成功','data'=>$num]);
     }
 
     /**
-     * 加入 | 修改 购物车
+     * @api {GET} /cart/addCart 加入|修改购物车
+     * @apiGroup cart
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     "token":"", 
+     *     "sku_id":"14",规格ID
+     *     "cart_number":"1",购买数量
+     *     "edit":"1",修改购物车数量，参数传1，cart_number参数传实际要修改成的数量
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *     "status": 200,
+     *     "msg": "成功",
+     *     "data": 3,购物车ID
+     * }
+     * //错误返回结果
+     * status:301
      */
     public function addCart()
     {   
 
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
-        }
+        
 
         // input('sku_id/d',0)
 
@@ -64,23 +178,23 @@ class Cart extends ApiBase
         $act = Request::instance()->param('act');
 
         if( !$sku_id || !$cart_number ){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'该商品不存在！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'该商品不存在！','data'=>'']);
         }
 
         $sku_res = Db::name('goods_sku')->where('sku_id', $sku_id)->field('price,groupon_price,inventory,frozen_stock,goods_id')->find();
 
         if (empty($sku_res)) {
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'该商品不存在！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'该商品不存在！','data'=>'']);
         }
 
         if ($cart_number > ($sku_res['inventory']-$sku_res['frozen_stock'])) {
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'该商品库存不足！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'该商品库存不足！','data'=>'']);
         }
 
         $goods = Db::table('goods')->where('goods_id',$sku_res['goods_id'])->field('single_number,most_buy_number')->find();
 
         if( $cart_number > $goods['single_number'] ){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>"超过单次购买数量！同类商品单次只能购买{$goods['single_number']}个",'data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>"超过单次购买数量！同类商品单次只能购买{$goods['single_number']}个",'data'=>'']);
         }
 
         $order_goods_num = Db::table('order_goods')->alias('og')
@@ -92,7 +206,7 @@ class Cart extends ApiBase
         
         $num =  $cart_number + $order_goods_num;
         if( $num > $goods['most_buy_number'] ){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'超过最多购买量！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'超过最多购买量！','data'=>'']);
         }
 
         $cart_where = array();
@@ -108,45 +222,12 @@ class Cart extends ApiBase
 
         $num = $cart_number + $cart_goods_num;
         if( $num > $goods['single_number'] ){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>"超过单次购买数量！同类商品单次只能购买{$goods['single_number']}个",'data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>"超过单次购买数量！同类商品单次只能购买{$goods['single_number']}个",'data'=>'']);
         }
         if( $num > $goods['most_buy_number'] ){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'超过最多购买量！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'超过最多购买量！','data'=>'']);
         }
 
-        if($groupon_id){
-            $groupon = Db::table('goods_groupon')->where('groupon_id',$groupon_id)->where('goods_id',$sku_res['goods_id'])->where('is_show',1)->where('is_delete',0)->find();
-            if($groupon){
-                if( $groupon['status'] != 2 && $groupon['status'] != 0 ){
-                    $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团已结束，请前往最新一期拼团！','data'=>$sku_res['goods_id']]);
-                }else if( $groupon['status'] == 2 ){
-                    if( ($groupon['target_number'] - $groupon['sold_number']) <= 0 ){
-                        $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团已结束，请前往最新一期拼团！','data'=>$sku_res['goods_id']]);
-                    }
-                    if( $groupon['end_time'] < time() ){
-                        $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团已结束，请前往最新一期拼团！','data'=>$sku_res['goods_id']]);
-                    }
-                    $group_order = Db::table('order')->where('groupon_id',$groupon_id)->where('user_id',$user_id)->value('order_id');
-                    if($group_order){
-                        $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团您已参与，请勿重复参与！','data'=>'']);
-                    }
-                    $group_cart = Db::table('cart')->where('groupon_id',$groupon_id)->where('user_id',$user_id)->value('sku_id');
-                }else{
-                    $this->ajaxReturn(['status' => -2 , 'msg'=>'该商品没有拼团！','data'=>'']);
-                }
-            }else{
-                $this->ajaxReturn(['status' => -2 , 'msg'=>'该商品没有拼团！','data'=>'']);
-            }
-        }
-
-        if($groupon_id){
-            if($group_cart){
-                if($sku_id != $group_cart){
-                    $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团商品已存在购物！','data'=>'']);
-                }
-            }
-        }
-        
         $cart_where['groupon_id'] = $groupon_id;
         $cart_where['sku_id'] = $sku_id;
         $cart_res = Db::table('cart')->where($cart_where)->field('id,goods_num')->find();
@@ -160,7 +241,7 @@ class Cart extends ApiBase
 
             if ($new_number <= 0) {
                 $result = Db::table('cart')->where('id',$cart_res['id'])->delete();
-                $this->ajaxReturn(['status' => -2 , 'msg'=>'该购物车商品已删除！','data'=>'']);
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'该购物车商品已删除！','data'=>'']);
             }
 
             if ($sku_res['inventory'] >= $new_number) {
@@ -175,7 +256,7 @@ class Cart extends ApiBase
                 $result = Db::table('cart')->update($update_data);
                 $cart_id = $cart_res['id'];
             } else {
-                $this->ajaxReturn(['status' => -2 , 'msg'=>'该商品库存不足！','data'=>'']);
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'该商品库存不足！','data'=>'']);
             }
         } else {
             $cartData = array();
@@ -205,21 +286,35 @@ class Cart extends ApiBase
         }
 
         if($cart_id) {
-            $this->ajaxReturn(['status' => 1 , 'msg'=>'成功！','data'=>$cart_id]);
+            $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$cart_id]);
         } else {
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'系统异常！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'系统异常！','data'=>'']);
         }
     }
 
     /**
-     * 删除购物车
+     * @api {GET} /cart/delCart 删除购物车
+     * @apiGroup cart
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     "token":"", 
+     *     "cart_id":"14",购物车ID，多个逗号分开
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *     "status": 200,
+     *     "msg": "成功",
+     *     "data": ""
+     * }
+     * //错误返回结果
+     * status:301
      */
     public function delCart()
     {   
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
-        }
 
         $idStr = Request::instance()->param("cart_id", '', 'htmlspecialchars');
         
@@ -227,31 +322,45 @@ class Cart extends ApiBase
         $where['user_id'] = $user_id;
         $cart_res = Db::table('cart')->where($where)->column('id');
         if (empty($cart_res)) {
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'购物车不存在！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'购物车不存在！','data'=>'']);
         }
         
         $res = Db::table('cart')->delete($cart_res);
         if ($res) {
-            $this->ajaxReturn(['status' => 1 , 'msg'=>'成功！','data'=>'']);
+            $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>'']);
         } else {
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'系统异常！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'系统异常！','data'=>'']);
         }
     }
 
     /**
-     * 选中状态
+     * @api {GET} /cart/selected 选中状态
+     * @apiGroup cart
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     "token":"", 
+     *     "cart_id":"14",购物车ID
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *     "status": 200,
+     *     "msg": "成功",
+     *     "data": ""
+     * }
+     * //错误返回结果
+     * status:301
      */
     public function selected(){
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
-        }
 
         $cart_id = Request::instance()->param("cart_id", '', 'htmlspecialchars');
 
         $selected = Db::table('cart')->where('id',$cart_id)->value('selected');
         if(!$selected && $selected != 0){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'购物车不存在！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'购物车不存在！','data'=>'']);
         }
 
         if($selected){
@@ -261,9 +370,9 @@ class Cart extends ApiBase
         }
 
         if ($res) {
-            $this->ajaxReturn(['status' => 1 , 'msg'=>'成功！','data'=>'']);
+            $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>'']);
         } else {
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'系统异常！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'系统异常！','data'=>'']);
         }
 
     }

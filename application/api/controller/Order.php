@@ -3,21 +3,83 @@
  * 订单API
  */
 namespace app\api\controller;
+use app\common\controller\ApiBase;
 use think\Db;
+use think\Config;
 
 class Order extends ApiBase
 {
 
 
     /**
-     * 购物车提交订单
+     * @api {GET} /order/temporary 购物车提交订单
+     * @apiGroup order
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     "token":"", 
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *       "status": 200,
+     *       "msg": "成功",
+     *       "data": {
+     *           "goods_res": [
+     *           {
+     *               "cart_id": 1737,
+     *               "selected": 1,
+     *               "user_id": 76,
+     *               "groupon_id": 0,
+     *               "goods_id": 18,
+     *               "goods_sn": "",
+     *               "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",
+     *               "market_price": "2588.00",
+     *               "goods_price": "2388.00",
+     *               "member_goods_price": "2388.00",
+     *               "subtotal_price": "2388.00",
+     *               "sku_id": 2,
+     *               "goods_num": 1,
+     *               "spec_key_name": "规格:升级版,颜色:星空灰,尺寸:大",
+     *               "img": "http://api.retail.com/upload/images/goods/20190514155782540787289.png"
+     *           }
+     *           ],
+     *           "addr_res": [
+     *           
+     *           ],
+     *           "pay_type": [
+     *           {
+     *               "pay_type": 2,
+     *               "pay_name": "微信支付"
+     *           },
+     *           {
+     *               "pay_type": 1,
+     *               "pay_name": "余额支付"
+     *           },
+     *           {
+     *               "pay_type": 4,
+     *               "pay_name": "货到付款"
+     *           },
+     *           {
+     *               "pay_type": 3,
+     *               "pay_name": "支付宝支付"
+     *           }
+     *           ],
+     *           "shipping_price": "0.00",
+     *           "coupon": [
+     *           
+     *           ]
+     *       }
+     *       }
+     * //错误返回结果
+     * {
+     *   "status": 301,
+     * }
      */
     public function temporary()
     {
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'用户不存在','data'=>'']);
-        }
 
         //购物车商品
         $idStr = input('cart_id');
@@ -27,7 +89,7 @@ class Order extends ApiBase
         $cartM = model('Cart');
         $cart_res = $cartM->cartList1($cart_where);
         if(!$cart_res){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'购物车商品不存在！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'购物车商品不存在！','data'=>'']);
         }
         
         // 查询地址
@@ -48,7 +110,7 @@ class Order extends ApiBase
         $pay = Db::table('sysset')->value('sets');
         $pay = unserialize($pay)['pay'];
 
-        $pay_type = config('PAY_TYPE');
+        $pay_type = Config('PAY_TYPE');
         $arr = [];
         $i = 0;
         foreach($pay as $key=>$value){
@@ -66,30 +128,12 @@ class Order extends ApiBase
         $goods_ids = '';
         $goods_coupon = [];
         $cart_goods_arr = [];
-        $data['groupon'] = [];
-        foreach($data['goods_res'] as $key=>$value){
-
-            if($value['groupon_id']){
-                $groupon = Db::table('goods_groupon')->where('groupon_id',$value['groupon_id'])->where('goods_id',$value['goods_id'])->where('is_show',1)->where('is_delete',0)->where('status',2)->find();
-                if(!$groupon){
-                    Db::table('cart')->where('id',$value['id'])->delete();
-                    $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团已结束，请前往最新一期拼团！','data'=>$value['goods_id']]);
-                    unset($data['goods_res'][$key]);
-                }
-                if($groupon['end_time'] < time()){
-                    Db::table('cart')->where('id',$value['id'])->delete();
-                    $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团已结束，请前往最新一期拼团！','data'=>$value['goods_id']]);
-                    unset($data['goods_res'][$key]);
-                }
-                $count = count($cart_res);
-                if($count > 1){
-                    $this->ajaxReturn(['status' => -2 , 'msg'=>'不能和其他拼团一起下单！','data'=>'']);
-                }
-                $data['groupon'] = $groupon;
-            }
+        foreach($data['goods_res'] as $key=>&$value){
 
             if( !in_array($value['goods_id'],$cart_goods_arr) ){
                 $cart_goods_arr[] = $value['goods_id'];
+
+                $value['img'] = Config('c_pub.apiimg') . $value['img'];
             
                 //处理运费
                 $goods_res = Db::table('goods')->field('shipping_setting,shipping_price,delivery_id,less_stock_type')->where('goods_id',$value['goods_id'])->find();
@@ -123,7 +167,7 @@ class Order extends ApiBase
             }
         }
         $goods_ids = $goods_ids . 0;
-
+        
         $data['goods_res'] = array_values($data['goods_res']);
 
         $data['shipping_price'] = $shipping_price;  //该订单的物流费用
@@ -205,33 +249,6 @@ class Order extends ApiBase
         $goods_coupon = [];
         $groupon_id = 0;
         foreach($cart_res as $key=>$value){
-
-            if($value['groupon_id']){
-                $groupon = Db::table('goods_groupon')->where('groupon_id',$value['groupon_id'])->where('goods_id',$value['goods_id'])->where('is_show',1)->where('is_delete',0)->where('status',2)->find();
-                if(!$groupon){
-                    Db::table('cart')->where('id',$value['id'])->delete();
-                    $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团已结束，请前往最新一期拼团！','data'=>$value['goods_id']]);
-                    unset($data['goods_res'][$key]);
-                }
-                if($groupon['end_time'] < time()){
-                    Db::table('cart')->where('id',$value['id'])->delete();
-                    $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团已结束，请前往最新一期拼团！','data'=>$value['goods_id']]);
-                    unset($data['goods_res'][$key]);
-                }
-                $count = count($cart_res);
-                if($count > 1){
-                    $this->ajaxReturn(['status' => -2 , 'msg'=>'不能和其他拼团一起下单！','data'=>'']);
-                }
-                $groupon_id = $value['groupon_id'];
-                //redis团购队列
-                $redis = $this->getRedis();
-                if( !$redis->lpop("GROUP_GOODS_{$groupon_id}") ){
-                    Db::table('cart')->where('id',$value['id'])->delete();
-                    Db::table('goods_groupon')->where('groupon_id',$groupon_id)->update(['is_show'=>0,'status'=>1]);
-                    $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团已结束，请前往最新一期拼团！','data'=>$value['goods_id']]);
-                }
-
-            }
             
             $goods_ids .= $value['goods_id'] . ',';
             $goods_coupon[$value['goods_id']]['subtotal_price'] =  $value['subtotal_price'];

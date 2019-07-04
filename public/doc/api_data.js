@@ -39,6 +39,146 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/cart/addCart",
+    "title": "加入|修改购物车",
+    "group": "cart",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"sku_id\":\"14\",规格ID\n    \"cart_number\":\"1\",购买数量\n    \"edit\":\"1\",修改购物车数量，参数传1，cart_number参数传实际要修改成的数量\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n    \"status\": 200,\n    \"msg\": \"成功\",\n    \"data\": 3,购物车ID\n}\n//错误返回结果\nstatus:301",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Cart.php",
+    "groupTitle": "cart",
+    "name": "GetCartAddcart"
+  },
+  {
+    "type": "GET",
+    "url": "/cart/cart_sum",
+    "title": "购物车总数",
+    "group": "cart",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n    \"status\": 200,\n    \"msg\": \"成功\",\n    \"data\": 3\n}\n//错误返回结果\n{\n  \"status\": 301,\n  \"msg\": \"token不存在！\",\n  \"data\": [\n      \n  ]\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Cart.php",
+    "groupTitle": "cart",
+    "name": "GetCartCart_sum"
+  },
+  {
+    "type": "GET",
+    "url": "/cart/cartlist",
+    "title": "购物车列表",
+    "group": "cart",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n    \"status\": 200,\n    \"msg\": \"成功\",\n    \"data\": [\n    {\n        \"cart_id\": 1737,购物车ID\n        \"selected\": 1,是否选中状态 0：否，1：是\n        \"user_id\": 76,\n        \"groupon_id\": 0,\n        \"goods_id\": 18,商品ID\n        \"goods_sn\": \"\",\n        \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",商品名称\n        \"market_price\": \"2588.00\",市场价\n        \"goods_price\": \"2388.00\",现价\n        \"member_goods_price\": \"2388.00\",\n        \"subtotal_price\": \"2388.00\",该商品总价\n        \"sku_id\": 2,规格ID\n        \"goods_num\": 1,购买数量\n        \"spec_key_name\": \"规格:升级版,颜色:星空灰,尺寸:大\",购买规格\n        \"img\": \"http://api.retail.com/upload/images/goods/20190514155782540787289.png\",商品图片\n    },\n    {\n        \"cart_id\": 1735,\n        \"selected\": 1,\n        \"user_id\": 76,\n        \"groupon_id\": 0,\n        \"goods_id\": 39,\n        \"goods_sn\": \"\",\n        \"goods_name\": \"本草\",\n        \"market_price\": \"250.00\",\n        \"goods_price\": \"199.90\",\n        \"member_goods_price\": \"199.90\",\n        \"subtotal_price\": \"199.90\",\n        \"sku_id\": 22,\n        \"goods_num\": 1,\n        \"spec_key_name\": \"规格:颜色\",\n        \"img\": \"http://api.retail.com/upload/images/goods/20190514155782540787289.png\"\n    },\n    {\n        \"cart_id\": 1653,\n        \"selected\": 1,\n        \"user_id\": 76,\n        \"groupon_id\": 0,\n        \"goods_id\": 18,\n        \"goods_sn\": \"\",\n        \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",\n        \"market_price\": \"2588.00\",\n        \"goods_price\": \"2388.00\",\n        \"member_goods_price\": \"2388.00\",\n        \"subtotal_price\": \"2388.00\",\n        \"sku_id\": 2,\n        \"goods_num\": 1,\n        \"spec_key_name\": \"规格:升级版,颜色:星空灰,尺寸:大\",\n        \"img\": \"http://api.retail.com/upload/images/goods/20190514155782540787289.png\"\n    }\n    ]\n}\n//错误返回结果\n{\n  \"status\": 301,\n  \"msg\": \"token不存在！\",\n  \"data\": [\n      \n  ]\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Cart.php",
+    "groupTitle": "cart",
+    "name": "GetCartCartlist"
+  },
+  {
+    "type": "GET",
+    "url": "/cart/delCart",
+    "title": "删除购物车",
+    "group": "cart",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"cart_id\":\"14\",购物车ID，多个逗号分开\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n    \"status\": 200,\n    \"msg\": \"成功\",\n    \"data\": \"\"\n}\n//错误返回结果\nstatus:301",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Cart.php",
+    "groupTitle": "cart",
+    "name": "GetCartDelcart"
+  },
+  {
+    "type": "GET",
+    "url": "/cart/selected",
+    "title": "选中状态",
+    "group": "cart",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"cart_id\":\"14\",购物车ID\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n    \"status\": 200,\n    \"msg\": \"成功\",\n    \"data\": \"\"\n}\n//错误返回结果\nstatus:301",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Cart.php",
+    "groupTitle": "cart",
+    "name": "GetCartSelected"
+  },
+  {
+    "type": "GET",
     "url": "/goods/categoryList",
     "title": "分类",
     "group": "goods",
@@ -176,6 +316,34 @@ define({ "api": [
     "filename": "application/api/controller/Index.php",
     "groupTitle": "index",
     "name": "GetIndexIndex"
+  },
+  {
+    "type": "GET",
+    "url": "/order/temporary",
+    "title": "购物车提交订单",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n      \"status\": 200,\n      \"msg\": \"成功\",\n      \"data\": {\n          \"goods_res\": [\n          {\n              \"cart_id\": 1737,\n              \"selected\": 1,\n              \"user_id\": 76,\n              \"groupon_id\": 0,\n              \"goods_id\": 18,\n              \"goods_sn\": \"\",\n              \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",\n              \"market_price\": \"2588.00\",\n              \"goods_price\": \"2388.00\",\n              \"member_goods_price\": \"2388.00\",\n              \"subtotal_price\": \"2388.00\",\n              \"sku_id\": 2,\n              \"goods_num\": 1,\n              \"spec_key_name\": \"规格:升级版,颜色:星空灰,尺寸:大\",\n              \"img\": \"http://api.retail.com/upload/images/goods/20190514155782540787289.png\"\n          }\n          ],\n          \"addr_res\": [\n          \n          ],\n          \"pay_type\": [\n          {\n              \"pay_type\": 2,\n              \"pay_name\": \"微信支付\"\n          },\n          {\n              \"pay_type\": 1,\n              \"pay_name\": \"余额支付\"\n          },\n          {\n              \"pay_type\": 4,\n              \"pay_name\": \"货到付款\"\n          },\n          {\n              \"pay_type\": 3,\n              \"pay_name\": \"支付宝支付\"\n          }\n          ],\n          \"shipping_price\": \"0.00\",\n          \"coupon\": [\n          \n          ]\n      }\n      }\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "GetOrderTemporary"
   },
   {
     "type": "POST",
