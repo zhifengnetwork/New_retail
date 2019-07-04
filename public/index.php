@@ -29,6 +29,8 @@ if (preg_match("/(.*)\.zhifengwangluo\.com/i", HTTP_HOST, $matches)) {
         '127.0.0.1:10057' => 'sapi',
         '127.0.0.1:10056' => 'api',
         '127.0.0.1:20019' => 'admin',
+        'www.retail.com' => 'admin',
+        'api.retail.com' => 'api',
     ];
     if (!empty($terrace[HTTP_HOST])) {
         $module = $terrace[HTTP_HOST];
