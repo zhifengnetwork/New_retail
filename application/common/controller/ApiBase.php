@@ -31,9 +31,11 @@ class ApiBase extends ApiAbstract
         $action_array[] = strtolower('goods/category');
         $action_array[] = strtolower('goods/goodsDetail');
         $action_array[] = strtolower('pay/alipay_notify');
-        if (in_array($action, $action_array)) {
+        $action_array[] = strtolower('goods/categoryList');
+        if (in_array(strtolower($action), $action_array)) {
             return;
         }
+        
         $user_id = $this->decode_token(input('token'));
         if (empty($user_id)) exit(json_encode(['status' => 999, 'msg' => '您未登录，请登录！']));
         $this->userInfo = Db::name('member')->where(['id' => $user_id])->find();
