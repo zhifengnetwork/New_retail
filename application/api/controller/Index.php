@@ -135,22 +135,5 @@ class Index extends ApiBase
         $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>['banners'=>$banners,'announce'=>$announce,'hot_goods'=>$hot_goods,'recommend_goods'=>$recommend_goods]]);
     }
 
-    /***
-     * 首页ID
-     */
-    public function page(){
-        // $user_id = $this->get_user_id();
-        // if(!$user_id){
-        //     $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
-        // }
-        $ewei = Db::name('diy_ewei_shop')->where(['status' => 1])->find();
-
-        $this->ajaxReturn(['status' => 1 , 'msg'=>'获取首页成功！','data'=>$ewei['id']]);
-    }
-
-    
-
-    
-
     
 }
