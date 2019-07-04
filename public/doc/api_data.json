@@ -67,34 +67,6 @@
   },
   {
     "type": "GET",
-    "url": "/goods/hot_goods",
-    "title": "热门商品",
-    "group": "goods",
-    "version": "1.0.0",
-    "parameter": {
-      "examples": [
-        {
-          "title": "请求数据:",
-          "content": "无",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "返回数据：",
-          "content": "//正确返回结果\n{\n  \"status\": 200,\n  \"msg\": \"获取成功\",\n  \"data\": [\n      {\n      \"goods_id\": 39,\n      \"goods_name\": \"本草\",\n      \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n      \"price\": \"200.00\",\n      \"original_price\": \"250.00\"\n      },\n      {\n      \"goods_id\": 18,\n      \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",\n      \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n      \"price\": \"2188.00\",\n      \"original_price\": \"2588.00\"\n      }\n  ]\n  }\n//错误返回结果\n无",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "application/api/controller/Goods.php",
-    "groupTitle": "goods",
-    "name": "GetGoodsHot_goods"
-  },
-  {
-    "type": "GET",
     "url": "/goods/recommend_goods",
     "title": "推荐商品",
     "group": "goods",
@@ -176,6 +148,34 @@
     "filename": "application/api/controller/Goods.php",
     "groupTitle": "goods",
     "name": "PostGoodsGoodsdetail"
+  },
+  {
+    "type": "GET",
+    "url": "/index/index",
+    "title": "首页",
+    "group": "index",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n      \"status\": 200,\n      \"msg\": \"获取成功\",\n      \"data\": {\n          \"banners\": [\n          {\n              \"picture\": \"http://api.retail.com\\\\uploads\\\\fixed_picture\\\\20190529\\\\bce5780d314bb3bfd3921ffefc77fcdd.jpeg\",\n              \"title\": \"个人中心个人资料和设置\",\n              \"url\": \"www.cctvhong.com\"\n          },\n          {\n              \"picture\": \"http://api.retail.com\\\\uploads\\\\fixed_picture\\\\20190529\\\\94cbe33d1e15a5ebdd92cd0e3a4f4f19.jpeg\",\n              \"title\": \"13.2 我的钱包-提现记录\",\n              \"url\": \"www.ceshi.com\"\n          },\n          {\n              \"picture\": \"http://api.retail.com\\\\uploads\\\\fixed_picture\\\\20190529\\\\414eac4f30c011288ae42e822cb637cc.jpeg\",\n              \"title\": \"钱包转换\",\n              \"url\": \"www.ceshi.com\"\n          }\n          ],banner轮播图\n          \"announce\": [\n          \n          ],公告\n          \"hot_goods\": [\n          {\n              \"goods_id\": 39,\n              \"goods_name\": \"本草\",\n              \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n              \"price\": \"200.00\",\n              \"original_price\": \"250.00\"\n          },\n          {\n              \"goods_id\": 18,\n              \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",\n              \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n              \"price\": \"2188.00\",\n              \"original_price\": \"2588.00\"\n          }\n          ],热门商品\n          \"recommend_goods\": {\n          \"total\": 2,\n          \"per_page\": 4,\n          \"current_page\": 1,\n          \"last_page\": 1,\n          \"data\": [\n              {\n              \"goods_id\": 39,\n              \"goods_name\": \"本草\",\n              \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n              \"price\": \"200.00\",\n              \"original_price\": \"250.00\"\n              },\n              {\n              \"goods_id\": 36,\n              \"goods_name\": \"美的（Midea） 三门冰箱 \",\n              \"img\": \"http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png\",\n              \"price\": \"50.00\",\n              \"original_price\": \"40.00\"\n              }\n          ]\n          }推荐商品\n      }\n      }\n//错误返回结果\n无",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Index.php",
+    "groupTitle": "index",
+    "name": "GetIndexIndex"
   },
   {
     "type": "POST",
