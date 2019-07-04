@@ -1098,5 +1098,44 @@
     "filename": "application/api/controller/User.php",
     "groupTitle": "user",
     "name": "PostUserTeam_list"
+  },
+  {
+    "type": "POST",
+    "url": "/user/user_info",
+    "title": "我的",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token*（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n\"status\": 200,\n\"msg\": \"success\",\n\"data\": {\n\"id\": \"12\",  用户id\n\"mobile\": 12.20 手机号\n\"realname\": \"20.00\", 用户名称\n\"remainder_money\": \"20.00\",  余额\n\"distribut_money\": \"20.00\",  佣金累计收益\n\"estimate_money\": \"20.00\",   预计收益\n\"createtime\": \"\",  注册时间\n\"avatar\": \"\",  头像\n\"collection\": \"20\",  收藏\n\"not_pay\" : 0 ,待付款\n\"not_delivery\" : 0 ,待发货\n\"not_receiving\" : 0 ,待收货\n\"not_evaluate\" : 0 ,待评价\n\"refund\" : 0 ,退款\n\n}\n}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"验证码错误！\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/User.php",
+    "groupTitle": "user",
+    "name": "PostUserUser_info"
   }
 ]

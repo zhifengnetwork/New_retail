@@ -18,8 +18,6 @@ use think\Request;
 
 class User extends ApiBase
 {
-
-
     /**
      * @api {POST} /user/login 用户登录
      * @apiGroup user
@@ -474,9 +472,21 @@ class User extends ApiBase
      * "status": 200,
      * "msg": "success",
      * "data": {
-     * "team_count": "12",  团队人数
-     * "distribut_money": 12.20 佣金总收益
-     * "estimate_money": "20.00",  预计收益
+     * "id": "12",  用户id
+     * "mobile": 12.20 手机号
+     * "realname": "20.00", 用户名称
+     * "remainder_money": "20.00",  余额
+     * "distribut_money": "20.00",  佣金累计收益
+     * "estimate_money": "20.00",   预计收益
+     * "createtime": "",  注册时间
+     * "avatar": "",  头像
+     * "collection": "20",  收藏
+     * "not_pay" : 0 ,待付款
+     * "not_delivery" : 0 ,待发货
+     * "not_receiving" : 0 ,待收货
+     * "not_evaluate" : 0 ,待评价
+     * "refund" : 0 ,退款
+     * 
      * }
      * }
      * //错误返回结果
@@ -493,9 +503,29 @@ class User extends ApiBase
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
-        $info  = Member::get($user_id);
+        $info     = Db::name('member')->where(['id' => $user_id])->field('realname,mobile,id,remainder_money,distribut_money,createtime,avatar')->find();
+        //退款
+        $refund   = Db::name('order_refund')->where(['user_id' => $user_id,'refund_status' => 2])->field('*')->count();
+        //待付款
+        $not_pay  = Db::name('order')->where(['user_id' => $user_id,'pay_status' => 0])->field('*')->count();
+        //待发货
+        $not_delivery   = Db::name('order')->where(['user_id' => $user_id,'pay_status' =>1,'shipping_status' => 0])->field('*')->count();
+        //待收货
+        $not_receiving  = Db::name('order')->where(['user_id' => $user_id,'pay_status' =>1,'shipping_status' => 1])->field('*')->count();
+        //待评价
+        $not_evaluate   = Db::name('order')->where(['user_id' => $user_id,'comment' =>0,'pay_status' => 1,'shipping_status' => 3])->field('*')->count();
+        //收藏
+        $collection     = Db::name('collection')->where(['user_id' => $user_id])->field('*')->count();
         
-        return $this->successResult($data);
+        $info['estimate_money'] = '0.01'; //预计收益
+        $info['refund']         = $refund;
+        $info['not_pay']        = $not_pay;
+        $info['not_delivery']   = $not_delivery;
+        $info['not_receiving']  = $not_receiving;
+        $info['not_evaluate']   = $not_evaluate;
+        $info['collection']     = $collection;
+        
+        return $this->successResult($info);
     }
 
 

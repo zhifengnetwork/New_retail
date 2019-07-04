@@ -14,7 +14,7 @@ use app\common\util\Redis;
 
 class ApiBase extends ApiAbstract
 {
-    protected $uid;
+    protected $user_id;
     protected $user_name;
     protected $is_bing_mobile;
     public $userInfo;
@@ -39,11 +39,8 @@ class ApiBase extends ApiAbstract
             return 76;
         }
 
-        $user_id = $this->decode_token(input('token'));
-        if (empty($user_id)) exit(json_encode(['status' => 999, 'msg' => '您未登录，请登录！']));
-        $this->userInfo = Db::name('member')->where(['id' => $user_id])->find();
-        unset($this->userInfo['password']);
-
+        $this->user_id = $this->decode_token(input('token'));
+        // if (empty($user_id)) exit(json_encode(['status' => 999, 'msg' => '您未登录，请登录！']));
     }
 
     /*获取redis对象*/
