@@ -457,7 +457,7 @@ class User extends ApiBase
 
 
          /**
-     * @api {POST} /user/user_info 我的
+     * @api {POST} /user/user_info 我的信息
      * @apiGroup user
      * @apiVersion 1.0.0
      *
@@ -524,7 +524,7 @@ class User extends ApiBase
         $info['not_receiving']  = $not_receiving;
         $info['not_evaluate']   = $not_evaluate;
         $info['collection']     = $collection;
-        
+
         return $this->successResult($info);
     }
 
