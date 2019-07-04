@@ -12,53 +12,127 @@ class Index extends ApiBase
 {
 
 
-   /**
-    * 首页接口
-    */
     /**
-     * @apiDefine userLoginStatus 必须用户登录.
-     * 用户必须在登录之后才能访问
-     *
+     * @api {GET} /index/index 首页
+     * @apiGroup index
      * @apiVersion 1.0.0
-     */
-    /**
-     * @apiDefine Page
-     * @apiParam {int}    page        当前页*（必填）
-     * @apiParam {int}    size        每页行数*（必填）
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *       "status": 200,
+     *       "msg": "获取成功",
+     *       "data": {
+     *           "banners": [
+     *           {
+     *               "picture": "http://api.retail.com\\uploads\\fixed_picture\\20190529\\bce5780d314bb3bfd3921ffefc77fcdd.jpeg",
+     *               "title": "个人中心个人资料和设置",
+     *               "url": "www.cctvhong.com"
+     *           },
+     *           {
+     *               "picture": "http://api.retail.com\\uploads\\fixed_picture\\20190529\\94cbe33d1e15a5ebdd92cd0e3a4f4f19.jpeg",
+     *               "title": "13.2 我的钱包-提现记录",
+     *               "url": "www.ceshi.com"
+     *           },
+     *           {
+     *               "picture": "http://api.retail.com\\uploads\\fixed_picture\\20190529\\414eac4f30c011288ae42e822cb637cc.jpeg",
+     *               "title": "钱包转换",
+     *               "url": "www.ceshi.com"
+     *           }
+     *           ],banner轮播图
+     *           "announce": [
+     *           
+     *           ],公告
+     *           "hot_goods": [
+     *           {
+     *               "goods_id": 39,
+     *               "goods_name": "本草",
+     *               "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *               "price": "200.00",
+     *               "original_price": "250.00"
+     *           },
+     *           {
+     *               "goods_id": 18,
+     *               "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",
+     *               "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *               "price": "2188.00",
+     *               "original_price": "2588.00"
+     *           }
+     *           ],热门商品
+     *           "recommend_goods": {
+     *           "total": 2,
+     *           "per_page": 4,
+     *           "current_page": 1,
+     *           "last_page": 1,
+     *           "data": [
+     *               {
+     *               "goods_id": 39,
+     *               "goods_name": "本草",
+     *               "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *               "price": "200.00",
+     *               "original_price": "250.00"
+     *               },
+     *               {
+     *               "goods_id": 36,
+     *               "goods_name": "美的（Midea） 三门冰箱 ",
+     *               "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *               "price": "50.00",
+     *               "original_price": "40.00"
+     *               }
+     *           ]
+     *           }推荐商品
+     *       }
+     *       }
+     * //错误返回结果
+     * 无
      */
     public function index()
     {
-        // $redis = $this->getRedis();
-        // for($i=1;$i<=10;$i++){
-        //     $redis->rpush('ss',1);
-        // }
-
-        // $n = 12;
-        // for($i=0;$i<$n;$i++){
-        //     if( $redis->lpop('ss') <= 0 ){
-        //         for($j=1;$j<=$i;$j++){
-        //             $redis->rpush('ss',1);
-        //             continue;
-        //         }
-        //         echo "还有{$i}件可购买";die;
-        //         continue;
-        //     }
-        // }
-
-
-        // die;
-        echo 1111;
-        exit;
-        $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
+        $banners=Db::name('advertisement')->field('picture,title,url')->where(['type'=>0,'state'=>1])->order('sort','desc')->limit(3)->select();
+        if($banners){
+            foreach($banners as $bk=>$bv){
+                $banners[$bk]['picture']=SITE_URL.$bv['picture'];
+            }
         }
-
-
-        $data = '首页数据';
         
+        $announce=Db::name('announce')->field('id,title,urllink as link,desc')->where(['status'=>1])->order('create_time','desc')->limit(3)->select();
 
-        $this->ajaxReturn(['status' => 0 , 'msg'=>'获取成功','data'=>$data]);
+        $hot_goods = Db::table('goods')->alias('g')
+                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
+                ->where('gi.main',1)
+                ->where('g.is_show',1)
+                ->where('FIND_IN_SET(3,g.goods_attr)')
+                ->order('g.goods_id DESC')
+                ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
+                ->limit(4)
+                ->select();
+        
+        if($hot_goods){
+            foreach($hot_goods as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') .$value['img'];
+            }
+        }
+        
+        $recommend_goods = Db::table('goods')->alias('g')
+                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
+                ->where('gi.main',1)
+                ->where('g.is_show',1)
+                ->where('FIND_IN_SET(1,g.goods_attr)')
+                ->order('g.goods_id DESC')
+                ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
+                ->paginate(4);
+
+        if($recommend_goods){
+            foreach($recommend_goods as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') .$value['img'];
+            }
+        }
+        
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>['banners'=>$banners,'announce'=>$announce,'hot_goods'=>$hot_goods,'recommend_goods'=>$recommend_goods]]);
     }
 
     /***

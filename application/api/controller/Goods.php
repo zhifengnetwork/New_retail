@@ -67,52 +67,6 @@ class Goods extends ApiBase
 
 
     /**
-     * @api {GET} /goods/hot_goods 热门商品
-     * @apiGroup goods
-     * @apiVersion 1.0.0
-     *
-     * @apiParamExample {json} 请求数据:
-     * 无
-     * @apiSuccessExample {json} 返回数据：
-     * //正确返回结果
-     * {
-     *   "status": 200,
-     *   "msg": "获取成功",
-     *   "data": [
-     *       {
-     *       "goods_id": 39,
-     *       "goods_name": "本草",
-     *       "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
-     *       "price": "200.00",
-     *       "original_price": "250.00"
-     *       },
-     *       {
-     *       "goods_id": 18,
-     *       "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",
-     *       "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
-     *       "price": "2188.00",
-     *       "original_price": "2588.00"
-     *       }
-     *   ]
-     *   }
-     * //错误返回结果
-     * 无
-     */
-    public function hot_goods(){
-        $list = Db::table('goods')->alias('g')
-                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
-                ->where('gi.main',1)
-                ->where('g.is_show',1)
-                ->where('FIND_IN_SET(3,g.goods_attr)')
-                ->order('g.goods_id DESC')
-                ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
-                ->limit(4)
-                ->select();
-
-        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$list]);
-    }
-
-    /**
      * @api {GET} /goods/recommend_goods 推荐商品
      * @apiGroup goods
      * @apiVersion 1.0.0
@@ -156,6 +110,12 @@ class Goods extends ApiBase
                 ->order('g.goods_id DESC')
                 ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
                 ->paginate(4);
+
+        if($list){
+            foreach($list as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') .$value['img'];
+            }
+        }
 
         $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$list]);
     }
@@ -241,6 +201,8 @@ class Goods extends ApiBase
                         $list[$key]['goods'][$k]['attr_name'] = array();
                     }
 
+                    $list[$key]['goods'][$k]['img'] = Config('c_pub.apiimg') .$v['img'];
+
                     $list[$key]['goods'][$k]['comment'] = Db::table('goods_comment')->where('goods_id',$v['goods_id'])->count();
                 }
             }
@@ -249,7 +211,7 @@ class Goods extends ApiBase
         $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$list]);
     }
 
-    public function category(){
+    /*public function category(){
         $cat_id = input('cat_id');
         $cat_id2 = 'cat_id1';
         $sort = input('sort');
@@ -304,7 +266,7 @@ class Goods extends ApiBase
         
         $this->ajaxReturn(['status' => 1 , 'msg'=>'获取成功','data'=>['cate_list'=>$cate_list,'goods_list'=>$goods_list['data']]]);
 
-    }
+    }*/
 
     /**
      * @api {POST} /goods/goodsDetail 商品详情
@@ -548,6 +510,11 @@ class Goods extends ApiBase
         
         //组图
         $goodsRes['img'] = Db::table('goods_img')->where('goods_id',$goods_id)->field('picture')->order('main DESC')->select();
+        if($goodsRes['img']){
+            foreach($goodsRes['img'] as $key=>&$value){
+                $value['picture'] = Config('c_pub.apiimg') .$value['picture'];
+            }
+        }
         
         //收藏
         $goodsRes['collection'] = Db::table('collection')->where('user_id',$user_id)->where('goods_id',$goods_id)->find();
@@ -646,6 +613,9 @@ class Goods extends ApiBase
 
             if($value['img']){
                 $comment[$key]['img'] = explode(',',$value['img']);
+                foreach($comment[$key]['img'] as $k=>&$v){
+                    $comment[$key]['img'][$k] = Config('c_pub.apiimg') .$v;
+                }
             }else{
                 $comment[$key]['img'] = [];
             }

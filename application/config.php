@@ -136,6 +136,7 @@ return [
 
     'c_pub'       => [
         'img'    =>   '/public/upload/images/',
+        'apiimg'    => SITE_URL . '/upload/images/',
     ],
 
     // 视图输出字符串内容替换
