@@ -78,6 +78,17 @@ class Goods extends Common
         ]);
     }
 
+    public function ts(){
+        $url = SITE_URL;
+        
+        return $this->fetch('goods/ts',['url'=>$url]);
+    }
+
+    public function goods_attr(){
+        $data = '{"status":200,"msg":"获取成功","data":{"goods_id":18,"goods_name":"美的（Midea） 三门冰箱 风冷无霜家","type_id":0,"desc":"宽幅变温；铂金净味；雷达感温；风冷无霜；","content":null,"goods_attr":"2,3","limited_start":1559318400,"limited_end":1559577600,"add_time":1557417600,"goods_spec":"[{\"key\":\"规格\",\"value\":\"默认;升级版;超级版\"},{\"key\":\"颜色\",\"value\":\"阳光米;星空灰;天空黑\"},{\"key\":\"尺寸\",\"value\":\"中;大;小;加大\"}]","price":"2188.00","original_price":"2588.00","cost_price":"10.00","cat_id1":13,"cat_id2":14,"stock":1189,"stock1":1193,"less_stock_type":2,"shipping_setting":1,"shipping_price":"0.00","delivery_id":0,"is_hdfk":0,"is_distribution":1,"most_buy_number":10000,"gift_points":"10%","number_sales":66,"single_number":10000,"distributor_level":0,"is_full_return":0,"is_arrange_all":0,"shopping_all_return":0,"is_show":1,"dividend_agent_level":0,"is_del":0,"is_puls":0,"province_proportion":0,"tow_proportion":0,"infinite_proportion":0,"puls_discount":0,"share_discount":0,"attr_name":["新上","热卖"],"spec":{"spec_attr":[{"spec_id":1,"spec_name":"规格","res":[{"attr_id":34478,"attr_name":"默认"},{"attr_id":34480,"attr_name":"升级版"},{"attr_id":34494,"attr_name":"超级版"}]},{"spec_id":2,"spec_name":"颜色","res":[{"attr_id":34479,"attr_name":"阳光米"},{"attr_id":34481,"attr_name":"星空灰"},{"attr_id":34495,"attr_name":"天空黑"}]},{"spec_id":4,"spec_name":"尺寸","res":[{"attr_id":34484,"attr_name":"中"},{"attr_id":34485,"attr_name":"大"},{"attr_id":34486,"attr_name":"小"},{"attr_id":34496,"attr_name":"加大"}]}],"goods_sku":[{"sku_id":1,"goods_id":18,"sku_attr":"{\"1\":34478,\"2\":34479,\"4\":34484}","price":"2199.00","groupon_price":"1999.00","img":"","inventory":0,"frozen_stock":2,"sales":0,"virtual_sales":559,"sku_attr1":"34478,34479,34484"},{"sku_id":2,"goods_id":18,"sku_attr":"{\"1\":34480,\"2\":34481,\"4\":34485}","price":"2388.00","groupon_price":"2288.00","img":"","inventory":492,"frozen_stock":1,"sales":0,"virtual_sales":472,"sku_attr1":"34480,34481,34485"},{"sku_id":4,"goods_id":18,"sku_attr":"{\"1\":34480,\"2\":34479,\"4\":34486}","price":"1988.00","groupon_price":"1799.00","img":"","inventory":298,"frozen_stock":1,"sales":0,"virtual_sales":538,"sku_attr1":"34480,34479,34486"},{"sku_id":10,"goods_id":18,"sku_attr":"{\"1\":34494,\"2\":34495,\"4\":34496}","price":"2500.00","groupon_price":"2300.00","img":"","inventory":199,"frozen_stock":0,"sales":0,"virtual_sales":443,"sku_attr1":"34494,34495,34496"},{"sku_id":11,"goods_id":18,"sku_attr":"{\"1\":34494,\"2\":34481,\"4\":34485}","price":"2488.00","groupon_price":"2388.00","img":"","inventory":200,"frozen_stock":0,"sales":0,"virtual_sales":450,"sku_attr1":"34494,34481,34485"}]},"groupon_price":"1799.00","img":[{"picture":"http://api.retail.com/upload/images/goods/20190704156222261239875.png"}],"collection":0,"comment_count":18,"coupon":[]}}';
+        exit($data);
+    }
+
     /*
      * 添加商品
      */
