@@ -432,6 +432,52 @@
   },
   {
     "type": "POST",
+    "url": "/user/estimate_list",
+    "title": "预计收益明细",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token*（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>页数*（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"page\":\"1\"  页数 默认1,\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n\"status\": 200,\n\"msg\": \"success\",\n\"data\":[\n{\n      \"user_id\"  : 123132, 用户ID\n      \"realname\":'张三', 用户名称\n      \"order_sn\":'RC20190116110509664542', 订单号\n      \"money\":\"8.00\", 金额\n},\n{\n     \"user_id\"  : 123132, 用户ID\n      \"realname\":'张三', \n      \"order_sn\":'RC20190116110509282892',\n      \"money\":\"8.00\",\n},\n\n]\n}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"验证码错误！\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/User.php",
+    "groupTitle": "user",
+    "name": "PostUserEstimate_list"
+  },
+  {
+    "type": "POST",
     "url": "/user/login",
     "title": "用户登录",
     "group": "user",
@@ -595,45 +641,6 @@
     "filename": "application/api/controller/User.php",
     "groupTitle": "user",
     "name": "PostUserSendverifycode"
-  },
-  {
-    "type": "POST",
-    "url": "/user/sharePoster",
-    "title": "我的分享",
-    "group": "user",
-    "version": "1.0.0",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "token",
-            "description": "<p>token*（必填）</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "请求数据:",
-          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "返回数据：",
-          "content": "//正确返回结果\n{\n\"status\": 200,\n\"msg\": \"success\",\n\"data\": {\n\"my_poster_src\": \"http:\\/\\/127.0.0.1:20019\\/shareposter\\/123-share.png\",  图片路径\n}\n}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"验证码错误！\",\n\"data\": false\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "application/api/controller/User.php",
-    "groupTitle": "user",
-    "name": "PostUserShareposter"
   },
   {
     "type": "POST",
