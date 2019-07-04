@@ -179,6 +179,45 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/address/addressList",
+    "title": "地址列表",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token*（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\"status\":200,\n\"msg\":\"success\",\n\"data\":[{\n     \"address_id\":1055,\n     \"consignee\":\"等奖\",\n     \"mobile\":\"15181112455\",\n     \"address\":\"啊实打实的\",\n     \"is_default\":1,\n     \"p_cn\":\"北京市\",\n      \"c_cn\":\"北京市\",\n     \"d_cn\":\"东城区\",\n     \"s_cn\":null\n}]}\n* //错误返回结果\n{\n\"status\": 301,\n\"msg\": \"暂无地址信息\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Address.php",
+    "groupTitle": "user",
+    "name": "PostAddressAddresslist"
+  },
+  {
+    "type": "POST",
     "url": "/user/distribut_list",
     "title": "佣金明细",
     "group": "user",

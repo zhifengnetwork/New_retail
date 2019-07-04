@@ -8,7 +8,7 @@
 
 namespace app\api\controller;
 
-use app\common\controller\ApiAbstract;
+use app\common\controller\ApiBase;
 use app\common\model\Users;
 use app\common\logic\UsersLogic;
 use app\common\util\jwt\JWT;
@@ -17,7 +17,7 @@ use think\Db;
 use think\Exception;
 use think\Request;
 
-class User extends ApiAbstract
+class User extends ApiBase
 {
 
 
@@ -271,7 +271,7 @@ class User extends ApiAbstract
         $result = [];
         try {
             if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
-            $user_id = get_user_id();
+            $user_id = $this->get_user_id();
             if(!$user_id){
                 return $this->failResult('用户不存在', 301);
             }
@@ -356,7 +356,7 @@ class User extends ApiAbstract
     public function team()
     {
         if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
-        $user_id = get_user_id();
+        $user_id = $this->get_user_id();
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
@@ -409,11 +409,13 @@ class User extends ApiAbstract
      */
     public function team_list()
     {
-        if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
+        // if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
         $user_id = $this->get_user_id();
+    
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
+     
         $all_lower = get_all_lower($user_id);
        
         $all_lower = implode(',',$all_lower);
@@ -469,6 +471,7 @@ class User extends ApiAbstract
     public function distribut_list()
     {
         if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
+        
         $user_id = $this->get_user_id();
         $page    = input('page',1);
         if(!$user_id){
