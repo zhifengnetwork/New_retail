@@ -15,9 +15,6 @@ class Index extends Common
 {
     public function index()
     {
-        $image_path =  SITE_URL.'/shareposter/load/qr_backgroup.png';
-        var_dump($image_path);
-        die;
         $where= [];
         $where['status'] = ['>=',0];
         $list       = Db::table('diy_ewei_shop')

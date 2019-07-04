@@ -9,8 +9,7 @@
 namespace app\api\controller;
 
 use app\common\controller\ApiBase;
-use app\common\model\Users;
-use app\common\logic\UsersLogic;
+use app\common\model\Member;
 use app\common\util\jwt\JWT;
 use think\Config;
 use think\Db;
@@ -269,8 +268,8 @@ class User extends ApiBase
      */
     public function team()
     {
-        // if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
-        $user_id = 1;
+        if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
+        $user_id = $this->get_user_id();
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
@@ -323,7 +322,7 @@ class User extends ApiBase
      */
     public function team_list()
     {
-        // if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
+        if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
         $user_id = $this->get_user_id();
     
         if(!$user_id){
@@ -457,6 +456,48 @@ class User extends ApiBase
         
         return $this->successResult($list);
     }
+
+
+         /**
+     * @api {POST} /user/user_info 我的
+     * @apiGroup user
+     * @apiVersion 1.0.0
+     *
+     * @apiParam {string}    token              token*（必填）
+     * @apiParamExample {json} 请求数据:
+     * {
+     *      "token":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     * "status": 200,
+     * "msg": "success",
+     * "data": {
+     * "team_count": "12",  团队人数
+     * "distribut_money": 12.20 佣金总收益
+     * "estimate_money": "20.00",  预计收益
+     * }
+     * }
+     * //错误返回结果
+     * {
+     * "status": 301,
+     * "msg": "验证码错误！",
+     * "data": false
+     * }
+     */
+    public function user_info()
+    {
+        if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+        $info  = Member::get($user_id);
+        
+        return $this->successResult($data);
+    }
+
 
 
 

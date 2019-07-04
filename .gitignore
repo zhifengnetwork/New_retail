@@ -7,3 +7,5 @@ upload
 /application/database.php
 /public/index.php
 /public/uploads/fixed_picture
+/public/doc/api_project.js
+/public/doc/api_project.json
