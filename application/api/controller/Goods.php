@@ -3,6 +3,7 @@
  * 用户API
  */
 namespace app\api\controller;
+use app\common\controller\ApiAbstract;
 use app\common\model\Users;
 use app\common\logic\UsersLogic;
 use app\common\logic\GoodsLogic;
@@ -12,7 +13,7 @@ use think\AjaxPage;
 use think\Page;
 use think\Db;
 
-class Goods extends ApiBase
+class Goods extends ApiAbstract
 {
 
     /**
@@ -66,8 +67,37 @@ class Goods extends ApiBase
 
 
     /**
-    * 热门商品
-    */
+     * @api {GET} /goods/hot_goods 热门商品
+     * @apiGroup goods
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * 无
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *   "status": 200,
+     *   "msg": "获取成功",
+     *   "data": [
+     *       {
+     *       "goods_id": 39,
+     *       "goods_name": "本草",
+     *       "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *       "price": "200.00",
+     *       "original_price": "250.00"
+     *       },
+     *       {
+     *       "goods_id": 18,
+     *       "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",
+     *       "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *       "price": "2188.00",
+     *       "original_price": "2588.00"
+     *       }
+     *   ]
+     *   }
+     * //错误返回结果
+     * 无
+     */
     public function hot_goods(){
         $list = Db::table('goods')->alias('g')
                 ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
@@ -83,8 +113,39 @@ class Goods extends ApiBase
     }
 
     /**
-    * 推荐商品
-    */
+     * @api {GET} /goods/recommend_goods 推荐商品
+     * @apiGroup goods
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     "page":"1", 请求页数
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *   "status": 200,
+     *   "msg": "获取成功",
+     *   "data": [
+     *       {
+     *       "goods_id": 39,
+     *       "goods_name": "本草",
+     *       "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *       "price": "200.00",
+     *       "original_price": "250.00"
+     *       },
+     *       {
+     *       "goods_id": 18,
+     *       "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",
+     *       "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *       "price": "2188.00",
+     *       "original_price": "2588.00"
+     *       }
+     *   ]
+     *   }
+     * //错误返回结果
+     * 无
+     */
     public function recommend_goods(){
 
         $list = Db::table('goods')->alias('g')
@@ -101,9 +162,61 @@ class Goods extends ApiBase
 
 
 
-   /**
-    * 商品分类接口
-    */
+    /**
+     * @api {GET} /goods/categoryList 分类
+     * @apiGroup goods
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * 无
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *   "status": 200,
+     *   "msg": "获取成功",
+     *   "data": [
+     *       {
+     *       "cat_id": 13,
+     *       "cat_name": "化妆品",
+     *       "pid": 0,
+     *       "level": 1,
+     *       "img": "category/20190516155797968450728.png",
+     *       "is_show": 1,
+     *       "desc": "",
+     *       "sort": 1,
+     *       "goods": [
+     *           {
+     *           "goods_id": 39,
+     *           "goods_name": "本草",
+     *           "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *           "price": "200.00",
+     *           "original_price": "250.00",
+     *           "attr_name": [
+     *               "精选",
+     *               "限时卖",
+     *               "热卖"
+     *           ],
+     *           "comment": 0
+     *           },
+     *           {
+     *           "goods_id": 18,
+     *           "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",
+     *           "img": "http://zfwl.zhifengwangluo.c3w.cc/upload/images/goods/20190514155782540787289.png",
+     *           "price": "2188.00",
+     *           "original_price": "2588.00",
+     *           "attr_name": [
+     *               "热卖",
+     *               "新上"
+     *           ],
+     *           "comment": 18
+     *           }
+     *       ]
+     *       }
+     *   ]
+     *   }
+     * //错误返回结果
+     * 无
+     */
     public function categoryList()
     {
         
