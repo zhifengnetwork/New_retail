@@ -16,13 +16,9 @@
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",
   "generator": {
-    "name": "apidoc",
-<<<<<<< HEAD
-    "time": "2019-07-04T10:10:24.299Z",
-=======
+    "name": "apidoc", 
     "time": "2019-07-04T10:05:39.684Z",
->>>>>>> a1a58c009c70d2f28d90720c087b11d1472f616d
     "url": "http://apidocjs.com",
-    "version": "0.17.7"
+    "version": "0.17.7" 
   }
 }
