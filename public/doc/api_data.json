@@ -561,7 +561,7 @@
   },
   {
     "type": "POST",
-    "url": "/address/addAddress",
+    "url": "/address/add_address",
     "title": "地址添加和编辑",
     "group": "user",
     "version": "1.0.0",
@@ -608,7 +608,7 @@
             "type": "string",
             "optional": false,
             "field": "mobile",
-            "description": "<p>地址（必填）</p>"
+            "description": "<p>电话号码（必填）</p>"
           },
           {
             "group": "Parameter",
@@ -616,13 +616,41 @@
             "optional": false,
             "field": "is_default",
             "description": "<p>默认地址（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "poiaddress",
+            "description": "<p>定位地址（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "poiname",
+            "description": "<p>定位名称（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>lat（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "lnt",
+            "description": "<p>lnt（必填）</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "请求数据:",
-          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address_id\":\"xxxxxxxx\",\n     \"consignee\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"district\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"mobile\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"is_default\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \n}",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address_id\":\"xxxxxxxx\",\n     \"consignee\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"district\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"address\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"mobile\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"is_default\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"poiaddress\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"poiname\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"lat\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"lnt\"：\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \n}",
           "type": "json"
         }
       ]
@@ -638,7 +666,7 @@
     },
     "filename": "application/api/controller/Address.php",
     "groupTitle": "user",
-    "name": "PostAddressAddaddress"
+    "name": "PostAddressAdd_address"
   },
   {
     "type": "POST",
