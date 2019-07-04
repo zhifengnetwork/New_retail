@@ -10,15 +10,15 @@ use think\Config;
 class Order extends ApiBase
 {
 
-
     /**
-     * @api {GET} /order/temporary 购物车提交订单
+     * @api {POST} /order/temporary 购物车提交订单
      * @apiGroup order
      * @apiVersion 1.0.0
      *
      * @apiParamExample {json} 请求数据:
      * {
      *     "token":"", 
+     *     "cart_id":"12,13"购物车ID，多个逗号分开
      * }
      * @apiSuccessExample {json} 返回数据：
      * //正确返回结果
@@ -28,26 +28,26 @@ class Order extends ApiBase
      *       "data": {
      *           "goods_res": [
      *           {
-     *               "cart_id": 1737,
+     *               "cart_id": 1737,购物车ID
      *               "selected": 1,
      *               "user_id": 76,
      *               "groupon_id": 0,
-     *               "goods_id": 18,
+     *               "goods_id": 18,商品ID
      *               "goods_sn": "",
-     *               "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",
-     *               "market_price": "2588.00",
-     *               "goods_price": "2388.00",
+     *               "goods_name": "美的（Midea） 三门冰箱 风冷无霜家",商品名称
+     *               "market_price": "2588.00",市场价
+     *               "goods_price": "2388.00",现价
      *               "member_goods_price": "2388.00",
      *               "subtotal_price": "2388.00",
-     *               "sku_id": 2,
-     *               "goods_num": 1,
-     *               "spec_key_name": "规格:升级版,颜色:星空灰,尺寸:大",
-     *               "img": "http://api.retail.com/upload/images/goods/20190514155782540787289.png"
+     *               "sku_id": 2,规格ID
+     *               "goods_num": 1,购买数量
+     *               "spec_key_name": "规格:升级版,颜色:星空灰,尺寸:大",购买规格
+     *               "img": "http://api.retail.com/upload/images/goods/20190514155782540787289.png"商品图片
      *           }
      *           ],
      *           "addr_res": [
      *           
-     *           ],
+     *           ],地址
      *           "pay_type": [
      *           {
      *               "pay_type": 2,
@@ -65,11 +65,11 @@ class Order extends ApiBase
      *               "pay_type": 3,
      *               "pay_name": "支付宝支付"
      *           }
-     *           ],
-     *           "shipping_price": "0.00",
+     *           ],支付类型
+     *           "shipping_price": "0.00",物流费用
      *           "coupon": [
      *           
-     *           ]
+     *           ],可用优惠券
      *       }
      *       }
      * //错误返回结果
@@ -198,20 +198,41 @@ class Order extends ApiBase
         }
 
         $data['coupon'] = $coupon_arr;
-        
+        pred($data);
         $this->ajaxReturn(['status' => 1 , 'msg'=>'成功','data'=>$data]);
     }
 
 
     /**
-     * 提交订单
+     * @api {POST} /order/submitOrder 提交订单
+     * @apiGroup order
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     "token":"", 
+     *     "cart_id":"12,13",购物车ID，多个逗号分开
+     *     "address_id":"13",地址ID
+     *     "coupon_id":"",优惠券ID（没有可不传）
+     *     "pay_type":"",支付类型
+     *     "user_note":"",下单备注
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *       "status": 200,
+     *       "msg": "成功",
+     *       "data": 21,订单ID
+     * }
+     * //错误返回结果
+     * {
+     *   "status": 301,
+     * }
      */
     public function submitOrder()
     {   
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'用户不存在','data'=>'']);
-        }
+        
         $cart_str = input("cart_id");
         $addr_id = input("address_id");
         $coupon_id = input("coupon_id");
@@ -226,8 +247,12 @@ class Order extends ApiBase
         $addrWhere['user_id'] = $user_id;
         $addr_res = $AddressM->getAddressFind($addrWhere);
         
+        if (empty($pay_type)) {
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'请选择支付方式！','data'=>'']);
+        }
+
         if (empty($addr_res)) {
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'该地址不存在！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'该地址不存在！','data'=>'']);
         }
         
         //购物车商品
@@ -236,9 +261,8 @@ class Order extends ApiBase
         $cartM = model('Cart');
         $cart_res = $cartM->cartList($cart_where);
         if(!$cart_res){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'购物车商品不存在！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'购物车商品不存在！','data'=>'']);
         }
-        
         $order_amount = '0'; //订单价格
         $order_goods = [];  //订单商品
         $sku_goods = [];  //去库存
@@ -289,31 +313,17 @@ class Order extends ApiBase
                 }
 
             }
-
+            
             $cart_ids .= ',' . $value['cart_id'];
             $order_amount = sprintf("%.2f",$order_amount + $value['subtotal_price']);   //计算该订单的总价
             $cat_id = Db::table('goods')->where('goods_id',$value['goods_id'])->value('cat_id1');
             foreach($value['spec'] as $k=>$v){
 
-                if($is_limited){
-                    //限时购redis
-                    $redis = $this->getRedis();
-                    for($i=0;$i<$v['goods_num'];$i++){
-                        if( !$redis->lpop("GOODS_LIMITED_{$v['sku_id']}") ){
-                            for($j=1;$j<=$i;$j++){
-                                $redis->rpush("GOODS_LIMITED_{$v['sku_id']}",1);
-                                continue;
-                            }
-                            $this->ajaxReturn(['status' => -2 , 'msg'=>"商品：{$v['goods_name']}，规格：{$v['spec_key_name']}，数量：剩余{$i}件可购买！",'data'=>'']);
-                            continue;
-                        }
-                    }
-                }else{
-                    $sku = Db::table('goods_sku')->where('sku_id',$v['sku_id'])->field('inventory,frozen_stock')->find();
-                    $sku_num = $sku['inventory'] - $sku['frozen_stock'];
-                    if( $v['goods_num'] > $sku_num ){
-                        $this->ajaxReturn(['status' => -2 , 'msg'=>"商品：{$v['goods_name']}，规格：{$v['spec_key_name']}，数量：剩余{$sku_num}件可购买！",'data'=>'']);
-                    }
+                
+                $sku = Db::table('goods_sku')->where('sku_id',$v['sku_id'])->field('inventory,frozen_stock')->find();
+                $sku_num = $sku['inventory'] - $sku['frozen_stock'];
+                if( $v['goods_num'] > $sku_num ){
+                    $this->ajaxReturn(['status' => 301 , 'msg'=>"商品：{$v['goods_name']}，规格：{$v['spec_key_name']}，数量：剩余{$sku_num}件可购买！",'data'=>'']);
                 }
 
                 $order_goods[$i]['goods_id'] = $v['goods_id'];
@@ -421,16 +431,39 @@ class Order extends ApiBase
             Db::table('cart')->where('id','in',$cart_str)->delete();
             
             Db::commit();
-            $this->ajaxReturn(['status' => 1 ,'msg'=>'提交成功！','data'=>$order_id]);
+            $this->ajaxReturn(['status' => 200 ,'msg'=>'提交成功！','data'=>$order_id]);
         } else {
             Db::rollback();
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'提交订单失败！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'提交订单失败！','data'=>'']);
         }
     }
 
-   /**
-    * 订单列表
-    */
+    /**
+     * @api {POST} /order/order_list 订单列表
+     * @apiGroup order
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     "token":"", 
+     *     "cart_id":"12,13",购物车ID，多个逗号分开
+     *     "address_id":"13",地址ID
+     *     "coupon_id":"",优惠券ID（没有可不传）
+     *     "pay_type":"",支付类型
+     *     "user_note":"",下单备注
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     *       "status": 200,
+     *       "msg": "成功",
+     *       "data": 21,订单ID
+     * }
+     * //错误返回结果
+     * {
+     *   "status": 301,
+     * }
+     */
     public function order_list()
     {   
         $user_id = $this->get_user_id();

@@ -38,7 +38,7 @@ define({ "api": [
     "name": "GetBannerBanner"
   },
   {
-    "type": "GET",
+    "type": "POST",
     "url": "/cart/addCart",
     "title": "加入|修改购物车",
     "group": "cart",
@@ -63,10 +63,10 @@ define({ "api": [
     },
     "filename": "application/api/controller/Cart.php",
     "groupTitle": "cart",
-    "name": "GetCartAddcart"
+    "name": "PostCartAddcart"
   },
   {
-    "type": "GET",
+    "type": "POST",
     "url": "/cart/cart_sum",
     "title": "购物车总数",
     "group": "cart",
@@ -91,10 +91,10 @@ define({ "api": [
     },
     "filename": "application/api/controller/Cart.php",
     "groupTitle": "cart",
-    "name": "GetCartCart_sum"
+    "name": "PostCartCart_sum"
   },
   {
-    "type": "GET",
+    "type": "POST",
     "url": "/cart/cartlist",
     "title": "购物车列表",
     "group": "cart",
@@ -119,10 +119,10 @@ define({ "api": [
     },
     "filename": "application/api/controller/Cart.php",
     "groupTitle": "cart",
-    "name": "GetCartCartlist"
+    "name": "PostCartCartlist"
   },
   {
-    "type": "GET",
+    "type": "POST",
     "url": "/cart/delCart",
     "title": "删除购物车",
     "group": "cart",
@@ -147,10 +147,10 @@ define({ "api": [
     },
     "filename": "application/api/controller/Cart.php",
     "groupTitle": "cart",
-    "name": "GetCartDelcart"
+    "name": "PostCartDelcart"
   },
   {
-    "type": "GET",
+    "type": "POST",
     "url": "/cart/selected",
     "title": "选中状态",
     "group": "cart",
@@ -175,7 +175,7 @@ define({ "api": [
     },
     "filename": "application/api/controller/Cart.php",
     "groupTitle": "cart",
-    "name": "GetCartSelected"
+    "name": "PostCartSelected"
   },
   {
     "type": "GET",
@@ -318,16 +318,16 @@ define({ "api": [
     "name": "GetIndexIndex"
   },
   {
-    "type": "GET",
-    "url": "/order/temporary",
-    "title": "购物车提交订单",
+    "type": "POST",
+    "url": "/order/submitOrder",
+    "title": "提交订单",
     "group": "order",
     "version": "1.0.0",
     "parameter": {
       "examples": [
         {
           "title": "请求数据:",
-          "content": "{\n    \"token\":\"\", \n}",
+          "content": "{\n    \"token\":\"\", \n    \"cart_id\":\"12,13\",购物车ID，多个逗号分开\n    \"address_id\":\"13\",地址ID\n    \"coupon_id\":\"\",优惠券ID（没有可不传）\n    \"pay_type\":\"\",支付类型\n    \"user_note\":\"\",下单备注\n}",
           "type": "json"
         }
       ]
@@ -336,14 +336,42 @@ define({ "api": [
       "examples": [
         {
           "title": "返回数据：",
-          "content": "//正确返回结果\n{\n      \"status\": 200,\n      \"msg\": \"成功\",\n      \"data\": {\n          \"goods_res\": [\n          {\n              \"cart_id\": 1737,\n              \"selected\": 1,\n              \"user_id\": 76,\n              \"groupon_id\": 0,\n              \"goods_id\": 18,\n              \"goods_sn\": \"\",\n              \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",\n              \"market_price\": \"2588.00\",\n              \"goods_price\": \"2388.00\",\n              \"member_goods_price\": \"2388.00\",\n              \"subtotal_price\": \"2388.00\",\n              \"sku_id\": 2,\n              \"goods_num\": 1,\n              \"spec_key_name\": \"规格:升级版,颜色:星空灰,尺寸:大\",\n              \"img\": \"http://api.retail.com/upload/images/goods/20190514155782540787289.png\"\n          }\n          ],\n          \"addr_res\": [\n          \n          ],\n          \"pay_type\": [\n          {\n              \"pay_type\": 2,\n              \"pay_name\": \"微信支付\"\n          },\n          {\n              \"pay_type\": 1,\n              \"pay_name\": \"余额支付\"\n          },\n          {\n              \"pay_type\": 4,\n              \"pay_name\": \"货到付款\"\n          },\n          {\n              \"pay_type\": 3,\n              \"pay_name\": \"支付宝支付\"\n          }\n          ],\n          \"shipping_price\": \"0.00\",\n          \"coupon\": [\n          \n          ]\n      }\n      }\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "content": "//正确返回结果\n{\n      \"status\": 200,\n      \"msg\": \"成功\",\n      \"data\": 21,订单ID\n}\n//错误返回结果\n{\n  \"status\": 301,\n}",
           "type": "json"
         }
       ]
     },
     "filename": "application/api/controller/Order.php",
     "groupTitle": "order",
-    "name": "GetOrderTemporary"
+    "name": "PostOrderSubmitorder"
+  },
+  {
+    "type": "POST",
+    "url": "/order/temporary",
+    "title": "购物车提交订单",
+    "group": "order",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\", \n    \"cart_id\":\"12,13\"购物车ID，多个逗号分开\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n      \"status\": 200,\n      \"msg\": \"成功\",\n      \"data\": {\n          \"goods_res\": [\n          {\n              \"cart_id\": 1737,购物车ID\n              \"selected\": 1,\n              \"user_id\": 76,\n              \"groupon_id\": 0,\n              \"goods_id\": 18,商品ID\n              \"goods_sn\": \"\",\n              \"goods_name\": \"美的（Midea） 三门冰箱 风冷无霜家\",商品名称\n              \"market_price\": \"2588.00\",市场价\n              \"goods_price\": \"2388.00\",现价\n              \"member_goods_price\": \"2388.00\",\n              \"subtotal_price\": \"2388.00\",\n              \"sku_id\": 2,规格ID\n              \"goods_num\": 1,购买数量\n              \"spec_key_name\": \"规格:升级版,颜色:星空灰,尺寸:大\",购买规格\n              \"img\": \"http://api.retail.com/upload/images/goods/20190514155782540787289.png\"商品图片\n          }\n          ],\n          \"addr_res\": [\n          \n          ],地址\n          \"pay_type\": [\n          {\n              \"pay_type\": 2,\n              \"pay_name\": \"微信支付\"\n          },\n          {\n              \"pay_type\": 1,\n              \"pay_name\": \"余额支付\"\n          },\n          {\n              \"pay_type\": 4,\n              \"pay_name\": \"货到付款\"\n          },\n          {\n              \"pay_type\": 3,\n              \"pay_name\": \"支付宝支付\"\n          }\n          ],支付类型\n          \"shipping_price\": \"0.00\",物流费用\n          \"coupon\": [\n          \n          ],可用优惠券\n      }\n      }\n//错误返回结果\n{\n  \"status\": 301,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Order.php",
+    "groupTitle": "order",
+    "name": "PostOrderTemporary"
   },
   {
     "type": "POST",

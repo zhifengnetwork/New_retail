@@ -15,7 +15,7 @@ class Cart extends ApiBase
 {
     
     /**
-     * @api {GET} /cart/cartlist 购物车列表
+     * @api {POST} /cart/cartlist 购物车列表
      * @apiGroup cart
      * @apiVersion 1.0.0
      *
@@ -108,7 +108,7 @@ class Cart extends ApiBase
     }
 
     /**
-     * @api {GET} /cart/cart_sum 购物车总数
+     * @api {POST} /cart/cart_sum 购物车总数
      * @apiGroup cart
      * @apiVersion 1.0.0
      *
@@ -143,7 +143,7 @@ class Cart extends ApiBase
     }
 
     /**
-     * @api {GET} /cart/addCart 加入|修改购物车
+     * @api {POST} /cart/addCart 加入|修改购物车
      * @apiGroup cart
      * @apiVersion 1.0.0
      *
@@ -293,7 +293,7 @@ class Cart extends ApiBase
     }
 
     /**
-     * @api {GET} /cart/delCart 删除购物车
+     * @api {POST} /cart/delCart 删除购物车
      * @apiGroup cart
      * @apiVersion 1.0.0
      *
@@ -334,7 +334,7 @@ class Cart extends ApiBase
     }
 
     /**
-     * @api {GET} /cart/selected 选中状态
+     * @api {POST} /cart/selected 选中状态
      * @apiGroup cart
      * @apiVersion 1.0.0
      *
