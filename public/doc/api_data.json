@@ -560,6 +560,45 @@
     "name": "PostOrderTemporary"
   },
   {
+    "type": "GET",
+    "url": "/address/get_region",
+    "title": "获取地区下级",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "code",
+            "description": "<p>地址code（选填  如果没有参数会返回所有的省份）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"code\":\"xxxxxxxx\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\"status\":200,\n\"msg\":\"success\",\n\"data\":[{\"area_id\":3,\"code\":\"1101\",\"parent_id\":\"11\",\"area_name\":\"北京市\",\"area_type\":2}]\n}\n* //错误返回结果\n{\n\"status\": 301,\n\"msg\": \"没有数据\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Address.php",
+    "groupTitle": "user",
+    "name": "GetAddressGet_region"
+  },
+  {
     "type": "POST",
     "url": "/address/addAddress",
     "title": "地址添加和编辑",
@@ -925,6 +964,73 @@
   },
   {
     "type": "POST",
+    "url": "/user/resetPassword",
+    "title": "修改密码",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>手机号码*（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "type",
+            "description": "<p>1 登录密码；2 支付密码*（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "verify_code",
+            "description": "<p>验证码（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "user_password",
+            "description": "<p>用户密码（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "confirm_password",
+            "description": "<p>用户确认密码（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"phone\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"type\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"verify_code\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"user_password\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n     \"confirm_password\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n\"status\": 200,\n\"msg\": \"success\",\n\"data\": \"修改成功\"\n}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"验证码错误！\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/User.php",
+    "groupTitle": "user",
+    "name": "PostUserResetpassword"
+  },
+  {
+    "type": "POST",
     "url": "/user/sendVerifyCode",
     "title": "发送验证码",
     "group": "user",
@@ -944,7 +1050,7 @@
             "type": "string",
             "optional": false,
             "field": "temp",
-            "description": "<p>发送模板类型注册（sms_reg）（必填）</p>"
+            "description": "<p>发送模板类型：注册 sms_reg；忘记密码 sms_forget（必填）</p>"
           },
           {
             "group": "Parameter",
@@ -958,7 +1064,7 @@
             "type": "string",
             "optional": false,
             "field": "type",
-            "description": "<p>默认1（必填）</p>"
+            "description": "<p>1登录密码 2支付密码（必填）</p>"
           }
         ]
       },
