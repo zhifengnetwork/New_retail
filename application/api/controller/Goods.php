@@ -112,6 +112,7 @@ class Goods extends ApiBase
                 ->paginate(4);
 
         if($list){
+            $list = $list->all();
             foreach($list as $key=>&$value){
                 $value['img'] = Config('c_pub.apiimg') .$value['img'];
             }
