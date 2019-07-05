@@ -17,6 +17,7 @@ use think\Db;
 use think\Exception;
 use think\Request;
 use app\api\Model\UserAddr;
+use think\Cache;
 
 class Address extends ApiAbstract
 {
@@ -174,5 +175,42 @@ class Address extends ApiAbstract
         }
     }
 
+       /**
+     * @api {GET} /address/get_region 获取地区下级
+     * @apiGroup user
+     * @apiVersion 1.0.0
+     *
+     * @apiParam {string}    code                     地址code（选填  如果没有参数会返回所有的省份）
+   
+     * @apiParamExample {json} 请求数据:
+     * {
+     *      "code":"xxxxxxxx",
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {"status":200,
+     * "msg":"success",
+     * "data":[{"area_id":3,"code":"1101","parent_id":"11","area_name":"北京市","area_type":2}]
+     * }
+     * * //错误返回结果
+     * {
+     * "status": 301,
+     * "msg": "没有数据",
+     * "data": false
+     * }
+     */
+    public function get_region(){
+        $codeid=input('get.code');
+        if(is_null($codeid)||empty($codeid)){
+            $res=Db::name('region')->where('parent_id',1)->select();
+        }else{
+            $res=Db::name('region')->where('parent_id',$codeid)->select();
+        }
+        if($res){
+            return $this->successResult($res);
+        }else{
+            return $this->failResult('没有数据');
+        }
+    }
 
 }
