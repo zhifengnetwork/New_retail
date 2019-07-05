@@ -766,6 +766,34 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/pay/set_payment",
+    "title": "设置收款",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n    \"token\":\"\",           token\n     \"type\":''            当前操作的类型 1:码云  2:微信   3:支付宝\n     \"my_name\":\"\"         码云闪付昵称\n     \"my_pic\":\"\"           码云闪付收款码图片路径\n     \"wx_name\":\"\"          微信昵称\n     \"wx_pic\":\"\"           微信收款码图片路径\n      \"zfb_account\":\"\"     支付宝账户\n      \"zfb_pic\":\"\"         支付宝收款图片路径\n         \n    操作对应的类型,填写对应的昵称和图片路径\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\"status\":200,\"msg\":\"success\",\"data\":\"操作成功\"}\n//错误返回结果\n{\"status\":301,\"msg\":\"fail\",\"data\":\"操作失败\"}\n无",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Pay.php",
+    "groupTitle": "user",
+    "name": "PostPaySet_payment"
+  },
+  {
+    "type": "POST",
     "url": "/user/distribut_list",
     "title": "佣金明细",
     "group": "user",
