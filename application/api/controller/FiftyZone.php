@@ -12,7 +12,7 @@ class FiftyZone extends ApiBase
         $user_id = $this->get_user_id();
 
         $release = '1';
-
+        echo $release;
     }
     
 
