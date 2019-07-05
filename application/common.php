@@ -119,6 +119,46 @@ function send_zhangjun($mobile,$code){//掌骏
     return $ret;
 }
 
+/**
+ * 发送给卖方的撮合交易短信
+ * @param $mobile
+ * @return mixed
+ */
+function send_zhangjun_seller($mobile){
+    $content = "【ETH】您发布的商品有用户已购买，请在5分钟内确认订单！";
+    $time=date('ymdhis',time());
+    $arr=array('uname'=>"hsxx40",'pwd'=>"hsxx40",'time'=>$time);
+    $signPars='';
+    foreach($arr as $v) {
+        $signPars .=$v;
+    }
+    $sign = strtolower(md5($signPars));
+    $arrs=array('userid'=>"9795",'timestamp'=>$time,'sign'=>$sign,'mobile'=>$mobile,'content'=>$content,'action'=>'send');
+    $url='http://120.77.14.55:8888/v2sms.aspx';
+    $ret=call($url, $arrs);
+    return $ret;
+}
+
+/**
+ * 发送给买方的撮合交易短信
+ * @param $mobile
+ * @return mixed
+ */
+function send_zhangjun_buyer($mobile){
+    $content = "【ETH】您提交的支付凭证已发送给商家，系统会在5分钟确认订单支付！";
+    $time=date('ymdhis',time());
+    $arr=array('uname'=>"hsxx40",'pwd'=>"hsxx40",'time'=>$time);
+    $signPars='';
+    foreach($arr as $v) {
+        $signPars .=$v;
+    }
+    $sign = strtolower(md5($signPars));
+    $arrs=array('userid'=>"9795",'timestamp'=>$time,'sign'=>$sign,'mobile'=>$mobile,'content'=>$content,'action'=>'send');
+    $url='http://120.77.14.55:8888/v2sms.aspx';
+    $ret=call($url, $arrs);
+    return $ret;
+}
+
 function call($url,$arr,$second = 30){
     $ch = curl_init();
     //设置超时

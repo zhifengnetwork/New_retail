@@ -110,6 +110,49 @@ class ApiAbstract extends Controller
     }
 
     /**
+     * 发送撮合交易短信
+     * @param $mobile   手机号
+     * @param $temp     sms_transaction
+     * @param $auth     md5($mobile . $temp)
+     * @param $type     0 发送给卖方；1 发送给买方
+     * @return array    'status' => 1 , 'msg'=>'发送成功！'   status 1:表示发送成功；-2 表示发送失败；
+     */
+    public function sendTransactionPhoneCode($mobile,$type){
+        if( !$mobile ){
+            return ['status'=>-1,'msg'=>'参数错误'];
+        }
+
+        $res = Db::name('phone_auth')->field('exprie_time')->where('mobile','=',$mobile)->order('id DESC')->find();
+
+        if( $res['exprie_time'] > time() ){
+            return ['status' => -2 , 'msg'=>'请求频繁请稍后重试！'];
+        }
+
+        $code = mt_rand(111111,999999);
+
+        $data['mobile'] = $mobile;
+        $data['auth_code'] = $code;
+        $data['start_time'] = time();
+        $data['exprie_time'] = time() + 60;
+
+        $res = Db::table('phone_auth')->insert($data);
+        if(!$res){
+            return ['status' => -2 , 'msg'=>'发送失败，请重试！'];
+        }
+//      测试默认通过  zgp
+        $ret['message'] = 'ok';
+        if($type==1){//发送给买方
+//            $ret = send_zhangjun_buyer($mobile);
+        }else{//发送给卖方
+//            $ret = send_zhangjun_seller($mobile);
+        }
+        if($ret['message'] == 'ok'){
+            return ['status' => 1 , 'msg'=>'发送成功！'];
+        }
+        return ['status' => -2 , 'msg'=>'发送失败，请重试！'];
+    }
+
+    /**
      * 校验验证码是否过期
      * @param $mobile
      * @param $auth_code
