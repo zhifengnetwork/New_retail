@@ -5,7 +5,7 @@
  */
 namespace app\api\controller;
 use app\api\controller\TestNotify;
-
+use app\common\controller\ApiBase;
 use Payment\Common\PayException;
 use Payment\Notify\PayNotifyInterface;
 use Payment\Notify\AliNotify;
@@ -29,6 +29,91 @@ class Pay extends ApiBase
     public function  __construct() {           
         require_once ROOT_PATH.'vendor/riverslei/payment/autoload.php';
     }    
+
+
+    
+    /**
+     * @api {POST} /pay/set_payment 设置收款
+     * @apiGroup user
+     * @apiVersion 1.0.0
+     *
+     * @apiParamExample {json} 请求数据:
+     * {
+     *     "token":"",           token
+     *      "type":''            当前操作的类型 1:码云  2:微信   3:支付宝
+     *      "my_name":""         码云闪付昵称
+     *      "my_pic":""           码云闪付收款码图片路径
+     *      "wx_name":""          微信昵称
+     *      "wx_pic":""           微信收款码图片路径
+     *       "zfb_account":""     支付宝账户
+     *       "zfb_pic":""         支付宝收款图片路径
+     *          
+     *     操作对应的类型,填写对应的昵称和图片路径
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {"status":200,"msg":"success","data":"操作成功"}
+     * //错误返回结果
+     * {"status":301,"msg":"fail","data":"操作失败"}
+     * 无
+     */
+    public function set_payment()
+    {
+        $userid=$this->get_user_id();
+        // $userid=42;
+        if(!Request()->isPost()){
+            return $this->failResult("请求方式错误");
+        }
+        $type=input('type');
+        if(!$type){
+            return $this->failResult("没有选择收款方式");
+        }
+
+        $data=input();
+        if($type==1){
+            if(empty($data['my_name'])||empty($data['my_pic'])){
+                return $this->failResult("参数不足");
+            }else{
+                $data['pay_default']=3;
+                $data['my_status']=1;
+            }
+        }
+        if($type==2){
+            if(empty($data['wx_name'])||empty($data['wx_pic'])){
+                return $this->failResult("参数不足");
+            }else{
+                $data['pay_default']=2;
+                $data['wx_status']=1;
+            }
+        }
+        if($type==3){
+            if(empty($data['zfb_account'])||empty($data['zfb_pic'])){
+                return $this->failResult("参数不足");
+            }else{
+                $data['pay_default']=1;
+                $data['zfb_status']=1;
+            }
+        }
+        $data['user_id']=$userid;
+        $data['create_time']=time();
+        unset($data['type']);
+        $one=Db::name('member_payment')->where('user_id',$userid)->find();
+        if($one){
+            $res=Db::name("member_payment")->where('user_id',$userid)->update($data);
+        }else{
+            $res=Db::name("member_payment")->insert($data);
+        }
+        if($res){
+            return $this->successResult("操作成功");
+        }else{
+            return $this->failResult("操作失败");
+        }
+
+    }
+
+
+
+
 
     /***
      * 支付
