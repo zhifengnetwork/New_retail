@@ -200,6 +200,8 @@ class Order extends ApiBase
         }else{
             $user['pwd'] = 1;
         }
+        $data['remainder_money'] = $user['remainder_money'];
+        $data['pwd'] = $user['pwd'];
         
         $this->ajaxReturn(['status' => 200 , 'msg'=>'成功','data'=>$data]);
     }
