@@ -235,6 +235,7 @@ class Order extends ApiBase
         $coupon_id = input("coupon_id");
         $pay_type = input("pay_type");
         $user_note = input("user_note", '', 'htmlspecialchars');
+        $pwd = input("pwd", '', 'htmlspecialchars');
 
         // 查询地址是否存在
         $AddressM = model('UserAddr');
@@ -260,6 +261,15 @@ class Order extends ApiBase
         if(!$cart_res){
             $this->ajaxReturn(['status' => 301 , 'msg'=>'购物车商品不存在！','data'=>'']);
         }
+        
+        if($pay_type==1){
+            $member = Db::table('member')->field('pwd,salt')->find($user_id);
+            $pwd = md5($member['salt'] . $pwd);
+            if ($pwd != $member['pwd']) {
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'支付密码错误！','data'=>'']);
+            }
+        }
+
         $order_amount = '0'; //订单价格
         $order_goods = [];  //订单商品
         $sku_goods = [];  //去库存
