@@ -270,11 +270,11 @@ class Order extends ApiBase
         }
         
         if($pay_type==1){
-            $member = Db::table('member')->field('pwd,salt')->find($user_id);
-            $pwd = md5($member['salt'] . $pwd);
-            if ($pwd != $member['pwd']) {
-                $this->ajaxReturn(['status' => 301 , 'msg'=>'支付密码错误！','data'=>'']);
-            }
+            // $member = Db::table('member')->field('pwd,salt')->find($user_id);
+            // $pwd = md5($member['salt'] . $pwd);
+            // if ($pwd != $member['pwd']) {
+            //     $this->ajaxReturn(['status' => 301 , 'msg'=>'支付密码错误！','data'=>'']);
+            // }
         }
 
         $order_amount = '0'; //订单价格

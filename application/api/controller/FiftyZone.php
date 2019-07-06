@@ -112,4 +112,6 @@ class FiftyZone extends ApiBase
         $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$data]);
     }
 
+    
+
 }
