@@ -193,6 +193,8 @@ class Order extends ApiBase
         }
 
         $data['coupon'] = $coupon_arr;
+
+        $data['remainder_money'] = Db::table('member')->where('id',$user_id)->value('remainder_money');
         
         $this->ajaxReturn(['status' => 1 , 'msg'=>'成功','data'=>$data]);
     }

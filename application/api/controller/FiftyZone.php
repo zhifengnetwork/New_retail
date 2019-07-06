@@ -35,6 +35,7 @@ class FiftyZone extends ApiBase
 
         $where['g.goods_id'] = $goods_id;
         $where['gi.main'] = 1;
+        $where['fzs.stock'] = ['neq',0];
 
         $list = Db::table('fifty_zone_shop')->alias('fzs')
                 ->join('goods g','g.goods_id=fzs.goods_id','LEFT')
@@ -74,11 +75,8 @@ class FiftyZone extends ApiBase
                 $value['pay_code'] = $info['default_pay_code'];
             }
         }
-
-
-        pred($list);
-
-
+        
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$list]);
     }
     
 
