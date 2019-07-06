@@ -194,7 +194,12 @@ class Order extends ApiBase
 
         $data['coupon'] = $coupon_arr;
 
-        $data['remainder_money'] = Db::table('member')->where('id',$user_id)->value('remainder_money');
+        $user = Db::table('member')->where('id',$user_id)->field('remainder_money,pwd')->find();
+        if(!$user['pwd']){
+            $user['pwd'] = 0;
+        }else{
+            $user['pwd'] = 1;
+        }
         
         $this->ajaxReturn(['status' => 200 , 'msg'=>'成功','data'=>$data]);
     }
