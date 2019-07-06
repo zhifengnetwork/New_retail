@@ -73,6 +73,13 @@
                 <div class="ibox-content">
                     <form method="post" class="form-horizontal" action="">
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">发布信息费用</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="release_money" value="{if condition='isset($info.release_money)'}{$info.release_money}{else /}30{/if}" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">出售区展示商家数量</label>
                             <div class="col-sm-9">
                                 <input type="text" name="show_num" value="{if condition='isset($info.show_num)'}{$info.show_num}{else /}20{/if}" class="form-control">
@@ -151,6 +158,13 @@
                                 <label>
                                     <input type="radio" value="3" name="default_type" {if condition='isset($info.default_type) and $info.default_type eq 3'} checked {/if} /> 码云闪付
                                 </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">商家联系方式</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="shop_mobile" value="{if condition='isset($info.shop_mobile)'}{$info.shop_mobile}{else /}110{/if}" class="form-control">
                             </div>
                         </div>
 

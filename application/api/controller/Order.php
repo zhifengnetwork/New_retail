@@ -198,7 +198,7 @@ class Order extends ApiBase
         }
 
         $data['coupon'] = $coupon_arr;
-        pred($data);
+        
         $this->ajaxReturn(['status' => 1 , 'msg'=>'成功','data'=>$data]);
     }
 
@@ -930,6 +930,11 @@ class Order extends ApiBase
                             ->where('og.order_id',$order_id)
                             ->field('og.goods_id,og.sku_id,og.goods_name,og.goods_num,og.spec_key_name,gi.picture img')
                             ->select();
+
+            foreach($order_goods as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') . $value['img'];
+            }
+
             $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$order_goods]);
         }else{
             $this->ajaxReturn(['status' => 301 , 'msg'=>'参数错误！','data'=>'']);

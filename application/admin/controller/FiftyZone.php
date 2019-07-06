@@ -19,7 +19,6 @@ class FiftyZone extends Common
         if( request()->isPost() ){
             $data = input('post.');
             
-            
             if($info){
                 if(isset($data['ailicode'])) $data['ailicode'] = $this->base_img($data['ailicode'],'fifty_zone','ailicode');
                 if(isset($data['wechatcode'])) $data['wechatcode'] = $this->base_img($data['wechatcode'],'fifty_zone','wechatcode');
@@ -49,7 +48,6 @@ class FiftyZone extends Common
 
         return $this->fetch('',[
             'info'          =>  $info,
-            
             'meta_title'    =>  '50元专区设置',
         ]);
     }
