@@ -94,15 +94,10 @@ class Order extends ApiBase
         
         // 查询地址
         $addr_data['ua.user_id'] = $user_id;
+        $addr_data['ua.is_default'] = 1;
         $addressM = Model('UserAddr');
-        $addr_res = $addressM->getAddressList($addr_data);
-        if($addr_res){
-            foreach($addr_res as $key=>$value){
-                $addr = $value['p_cn'] . $value['c_cn'] . $value['d_cn'] . $value['s_cn'];
-                $addr_res[$key]['address'] = $addr . $addr_res[$key]['address'];
-                unset($addr_res[$key]['p_cn'],$addr_res[$key]['c_cn'],$addr_res[$key]['d_cn'],$addr_res[$key]['s_cn']);
-            }
-        }
+        $addr_res = $addressM->getAddressFind($addr_data);
+        $addr_res['address'] = $addr_res['p_cn'] . $addr_res['c_cn'] . $addr_res['d_cn'] . $addr_res['s_cn'] . $addr_res['address'];
         
         $data['goods_res'] = $cart_res;
         $data['addr_res'] = $addr_res;
@@ -198,8 +193,17 @@ class Order extends ApiBase
         }
 
         $data['coupon'] = $coupon_arr;
-        pred($data);
-        $this->ajaxReturn(['status' => 1 , 'msg'=>'成功','data'=>$data]);
+
+        $user = Db::table('member')->where('id',$user_id)->field('remainder_money,pwd')->find();
+        if(!$user['pwd']){
+            $user['pwd'] = 0;
+        }else{
+            $user['pwd'] = 1;
+        }
+        $data['remainder_money'] = $user['remainder_money'];
+        $data['pwd'] = $user['pwd'];
+        
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'成功','data'=>$data]);
     }
 
 
@@ -238,6 +242,7 @@ class Order extends ApiBase
         $coupon_id = input("coupon_id");
         $pay_type = input("pay_type");
         $user_note = input("user_note", '', 'htmlspecialchars');
+        $pwd = input("pwd", '', 'htmlspecialchars');
 
         // 查询地址是否存在
         $AddressM = model('UserAddr');
@@ -263,6 +268,15 @@ class Order extends ApiBase
         if(!$cart_res){
             $this->ajaxReturn(['status' => 301 , 'msg'=>'购物车商品不存在！','data'=>'']);
         }
+        
+        if($pay_type==1){
+            // $member = Db::table('member')->field('pwd,salt')->find($user_id);
+            // $pwd = md5($member['salt'] . $pwd);
+            // if ($pwd != $member['pwd']) {
+            //     $this->ajaxReturn(['status' => 301 , 'msg'=>'支付密码错误！','data'=>'']);
+            // }
+        }
+
         $order_amount = '0'; //订单价格
         $order_goods = [];  //订单商品
         $sku_goods = [];  //去库存
@@ -534,7 +548,7 @@ class Order extends ApiBase
                         ->where($where)
                         ->group('og.order_id')
                         ->order('o.order_id DESC')
-                        ->field('o.order_id,o.order_sn,og.goods_name,gi.picture img,og.spec_key_name,og.goods_price,g.original_price,og.goods_num,o.order_status,o.pay_status,o.shipping_status,pay_type')
+                        ->field('o.order_id,o.order_sn,og.goods_name,gi.picture img,og.spec_key_name,og.goods_price,g.original_price,og.goods_num,o.order_status,o.pay_status,o.shipping_status,pay_type,o.add_time')
                         ->paginate(10,false,$pageParam)
                         ->toArray();
                         
@@ -930,6 +944,11 @@ class Order extends ApiBase
                             ->where('og.order_id',$order_id)
                             ->field('og.goods_id,og.sku_id,og.goods_name,og.goods_num,og.spec_key_name,gi.picture img')
                             ->select();
+
+            foreach($order_goods as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') . $value['img'];
+            }
+
             $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$order_goods]);
         }else{
             $this->ajaxReturn(['status' => 301 , 'msg'=>'参数错误！','data'=>'']);

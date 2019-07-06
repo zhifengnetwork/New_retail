@@ -127,6 +127,7 @@ class Index extends ApiBase
                 ->paginate(4);
 
         if($recommend_goods){
+            $recommend_goods = $recommend_goods->all();
             foreach($recommend_goods as $key=>&$value){
                 $value['img'] = Config('c_pub.apiimg') .$value['img'];
             }

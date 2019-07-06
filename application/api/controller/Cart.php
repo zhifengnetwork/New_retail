@@ -101,6 +101,7 @@ class Cart extends ApiBase
         if($cart_res){
             foreach($cart_res as $key=>&$value){
                 $value['img'] = Config('c_pub.apiimg') . $value['img'];
+                $value['inventory'] = Db::name('goods_sku')->where('sku_id',$value['sku_id'])->value('(inventory-frozen_stock) inventory');
             }
         }
         
@@ -175,7 +176,7 @@ class Cart extends ApiBase
         $sku_id       = Request::instance()->param("sku_id", 0, 'intval');
         $groupon_id   = Request::instance()->param("groupon_id", 0, 'intval');
         $cart_number  = Request::instance()->param("cart_number", 1, 'intval');
-        $act = Request::instance()->param('act');
+        $act = Request::instance()->param('edit');
 
         if( !$sku_id || !$cart_number ){
             $this->ajaxReturn(['status' => 301 , 'msg'=>'该商品不存在！','data'=>'']);
@@ -286,7 +287,7 @@ class Cart extends ApiBase
         }
 
         if($cart_id) {
-            $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$cart_id]);
+            $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>['cart_id'=>$cart_id,'single_number'=>$goods['single_number'],'inventory'=>$sku_res['inventory']-$sku_res['frozen_stock']]]);
         } else {
             $this->ajaxReturn(['status' => 301 , 'msg'=>'系统异常！','data'=>'']);
         }
