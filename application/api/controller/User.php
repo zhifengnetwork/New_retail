@@ -662,7 +662,6 @@ class User extends ApiBase
      * }
      */
     public function sharePoster(){
-        $result = [];
         try {
             if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
             $user_id = $this->get_user_id();
@@ -675,7 +674,8 @@ class User extends ApiBase
             $my_poster = $save_dir.$user_id.'-share.png';
             $my_poster_src = SITE_URL.'/shareposter/'.$user_id.'-share.png';
             if( !file_exists($my_poster) ){
-                    $imgUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/index.php?dfc5b='.$user_id;
+                    $qianurl = '前端注册登录url';
+                    $imgUrl  = $qianurl.'?uid='.$user_id;
                     vendor('phpqrcode.phpqrcode');
                     \QRcode::png($imgUrl, $save_dir.$filename, QR_ECLEVEL_M);
                     $image_path =  ROOT_PATH.'public/shareposter/load/qr_backgroup.png';
@@ -701,7 +701,6 @@ class User extends ApiBase
                         }else{
                             $water = 5;
                         }
-                        
                         # 图片合成
                         $image = \think\Image::open($image_path);
                         $image->water($qrcode_temp_path, $water)->save($my_poster);
@@ -709,12 +708,12 @@ class User extends ApiBase
                         @unlink($save_dir.$filename);
                     }
             }
-            $data['my_poster_src'] = $my_poster_src;
-            return $this->successResult($data);
-    } catch (Exception $e) {
-            $result = $this->failResult($e->getMessage(), 301);
-    }
-           return $result;
+                $data['my_poster_src'] = $my_poster_src;
+                return $this->successResult($data);
+        } catch (Exception $e) {
+                return $this->failResult($e->getMessage(), 301);
+        }
+         
     }
 
 
