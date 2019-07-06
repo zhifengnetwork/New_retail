@@ -838,3 +838,20 @@ function check_mobile($mobile){
     return false;
 }
 
+
+/**
+ * 单图上传
+ * @param $image 图片字段名
+ */
+function uploadOne($image){
+    $file = request()->file($image);
+    if($file){
+        $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads'. DS . 'pay_picture');
+        if($info){
+            return $info->getFilename(); 
+        }else{
+            // 上传失败获取错误信息
+            return false;
+        }
+    }
+}
