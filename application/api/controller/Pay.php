@@ -296,11 +296,12 @@ class Pay extends ApiBase
 
     public function release_wx_pay(){
         $user_id = $this->get_user_id();
+        $pay_type     = input('pay_type');//支付方式
+        $pwd = input('pwd');
 
         $ss = Db::table('config')->where('module',5)->where('name','release_money')->value('value');
 
         $user = MemberModel::where('id',$user_id)->field('release,residue_release,release_ci,release_time,remainder_money')->find();
-
         
         if(!$user['residue_release'] && $user['release'] == $user['release_ci'] ){
             $this->ajaxReturn(['status' => 301 , 'msg'=>'今天发布次数已用完！','data'=>'']);
@@ -315,37 +316,44 @@ class Pay extends ApiBase
             $this->ajaxReturn(['status' => 301 , 'msg'=>'今天发布次数还未用！','data'=>'']);
         }
 
-        if($user['remainder_money'] < $ss){
-            $this->ajaxReturn(['status' => 301 , 'msg'=>'余额不足！','data'=>'']);
+        if($pay_type==1){
+            $pwd = md5($user['salt'] . $pwd);
+            if ($pwd != $user['pwd']) {
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'支付密码错误！','data'=>'']);
+            }
+
+            if($user['remainder_money'] < $ss){
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'余额不足！','data'=>'']);
+            }
+
+            // 启动事务
+            Db::startTrans();
+
+            $res = Db::table('member')->where('id',$user_id)->setDec('remainder_money',$ss);
+            $res1 = Db::table('member')->where('id',$user_id)->setInc('residue_release');
+
+            if($res && $res1){
+
+                //记录
+                $log['user_id'] = $user_id;
+                $log['balance'] = $ss;
+                $log['source_type'] = 5;
+                $log['log_type'] = 0;
+                $log['source_id'] = $ss;
+                $log['note'] = '发布费用';
+                $log['create_time'] = time();
+
+                Db::table('menber_balance_log')->insert($log);
+
+                Db::commit();
+                $this->ajaxReturn(['status' => 200 , 'msg'=>'付款成功!','data'=>'']);
+            }
+            Db::rollback();
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'付款失败!','data'=>'']);
         }
-
-        
-        // 启动事务
-        Db::startTrans();
-
-        $res = Db::table('member')->where('id',$user_id)->setDec('remainder_money',$ss);
-        $res1 = Db::table('member')->where('id',$user_id)->setInc('residue_release');
-
-        if($res && $res1){
-
-            //记录
-            $log['user_id'] = $user_id;
-            $log['balance'] = $ss;
-            $log['source_type'] = 5;
-            $log['log_type'] = 0;
-            $log['source_id'] = $ss;
-            $log['note'] = '发布费用';
-            $log['create_time'] = time();
-
-            Db::table('menber_balance_log')->insert($log);
-
-            Db::commit();
-            $this->ajaxReturn(['status' => 200 , 'msg'=>'付款成功!','data'=>'']);
-        }
-        Db::rollback();
-        $this->ajaxReturn(['status' => 301 , 'msg'=>'付款失败!','data'=>'']);
         
     }
+    
 
     /**
      * 打卡余额支付接口

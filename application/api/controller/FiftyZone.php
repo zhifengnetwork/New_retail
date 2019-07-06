@@ -79,5 +79,37 @@ class FiftyZone extends ApiBase
         $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$list]);
     }
     
+    public function get_release(){
+        $user_id = $this->get_user_id();
+
+        $data = Db::table('member')->where('id',$user_id)->field('remainder_money,pwd')->find();
+        if(!$data['pwd']){
+            $data['pwd'] = 0;
+        }else{
+            $data['pwd'] = 1;
+        }
+
+        $data['release_money'] = Db::table('config')->where('module',5)->where('name','release_money')->value('value');
+
+        $pay = Db::table('sysset')->value('sets');
+        $pay = unserialize($pay)['pay'];
+
+        $pay_type = Config('PAY_TYPE');
+        $arr = [];
+        $i = 0;
+        foreach($pay as $key=>$value){
+            
+            if($value){
+                if( $pay_type[$key]['pay_type'] == 4 ) continue;
+                $arr[$i]['pay_type'] = $pay_type[$key]['pay_type'];
+                $arr[$i]['pay_name'] = $pay_type[$key]['pay_name'];
+                $i++;
+            }
+        }
+
+        $data['pay_type'] = $arr;
+
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$data]);
+    }
 
 }
