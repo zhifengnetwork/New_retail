@@ -135,7 +135,7 @@ class FiftyZone extends ApiBase
 
         $num = 10;
         
-        $fz_ids = input('fz_id','23,24,25,26,27,28,29,30,31,32');
+        $fz_ids = input('fz_id');
 
         if(!$fz_ids){
             $this->ajaxReturn(['status' => 301 , 'msg'=>'请选择商品！','data'=>'']);
@@ -209,6 +209,8 @@ class FiftyZone extends ApiBase
     public function fifty_order($status=0){
         $user_id = $this->get_user_id();
 
+        $goods_id = 50;
+
         $list = Db::table('fifty_zone_order')->where('user_id',$user_id)->where('user_confirm',0)->field('fz_order_id,order_id,shop_user_id,goods_id')->select();
 
         if($list){
@@ -237,6 +239,9 @@ class FiftyZone extends ApiBase
                     $value['zfb_pic'] = $temp['ailicode'];
                     $value['mobile'] = Db::name('member')->where('id',$user_id)->value('mobile');
                 }
+                $goods = Db::table('goods')->alias('g')->join('goods_img gi','g.goods_id=gi.goods_id','LEFT')->where('gi.main',1)->where('g.goods_id',$goods_id)->field('g.goods_name,gi.picture img')->find();
+                $value['goods_name'] = $goods['goods_name'];
+                $value['img'] = Config('c_pub.apiimg') . $goods['img'];
             }
         }
 
