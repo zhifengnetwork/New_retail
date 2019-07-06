@@ -175,7 +175,7 @@ class Cart extends ApiBase
         $sku_id       = Request::instance()->param("sku_id", 0, 'intval');
         $groupon_id   = Request::instance()->param("groupon_id", 0, 'intval');
         $cart_number  = Request::instance()->param("cart_number", 1, 'intval');
-        $act = Request::instance()->param('act');
+        $act = Request::instance()->param('edit');
 
         if( !$sku_id || !$cart_number ){
             $this->ajaxReturn(['status' => 301 , 'msg'=>'该商品不存在！','data'=>'']);
