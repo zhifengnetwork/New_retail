@@ -67,6 +67,7 @@ class Address extends ApiBase
         }
         // $user_id = 42;  //userid为42 测试用
         $useraddr=new UserAddr();
+        
         $addlist=$useraddr->getAddressList(['user_id'=>$user_id]);
         if($addlist){
             return $this->successResult($addlist);
