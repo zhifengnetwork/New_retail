@@ -3,191 +3,274 @@
  * +---------------------------------
  * 商品搜索API
  * +---------------------------------
-*/
+ */
 namespace app\api\controller;
+
+use app\common\controller\ApiBase;
 use think\Db;
 
 class Search extends ApiBase
 {
 
     /**
-     * +---------------------------------
-     * 搜索列表页
-     * +---------------------------------
-    */
-    public function get_search(){
+     * @api {POST} /search/get_search 搜索页面
+     * @apiGroup search
+     * @apiVersion 1.0.0
+     *
+     * @apiParam {string}    token              token值*（必填）
+     * @apiParamExample {json} 请求数据:
+     * {
+     *      "token":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     * "status": 200,
+     * "msg": "成功！",
+     * "data": {
+     * "hot": [   热搜
+     * {
+     * "keywords": "补水",    关键字
+     * "cat_id": 15           分类ID
+     * },
+     * {
+     * "keywords": "美柔柔弱",
+     * "cat_id": 0
+     * }
+     * ],
+     * "history": [    最近搜索
+     * {
+     * "keywords": "补水",   关键字
+     * "cat_id": 15          分类ID
+     * },
+     * {
+     * "keywords": "美柔柔弱",
+     * "cat_id": 0
+     * }
+     * ]
+     * }
+     * }
+     * }
+     * //错误返回结果
+     * {
+     * "status": 301,
+     * "msg": "用户不存在",
+     * "data": false
+     * }
+     */
+    public function get_search()
+    {
 
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
+        if (!$user_id) {
+            $this->ajaxReturn(['status' => 301, 'msg' => '用户不存在', 'data' => '']);
         }
 
-        $hot = Db::table('search')->where('cat_id','>',0)->order('add_time DESC,number DESC')->field('keywords,cat_id')->limit(10)->select();
-        $data['hot'] = array_unique($hot,SORT_REGULAR);
-        $data['history'] = Db::table('search')->where('user_id',$user_id)->order('add_time DESC,number DESC')->field('keywords,cat_id')->limit(10)->select();
+//        $hot = Db::table('search')->where('cat_id','>',0)->order('add_time DESC,number DESC')->field('keywords,cat_id')->limit(10)->select();
+        $hot = Db::table('search')->order('add_time DESC,number DESC')->field('keywords,cat_id')->limit(10)->select();
+        $data['hot'] = array_unique($hot, SORT_REGULAR);
+        $data['history'] = Db::table('search')->where('user_id', $user_id)->order('add_time DESC,number DESC')->field('keywords,cat_id')->limit(10)->select();
 
-        $like = Db::table('search')->where('user_id',$user_id)->where('cat_id','>',0)->order('add_time DESC,number DESC')->field('keywords,cat_id')->limit(10)->select();
-        $like = array_unique($like,SORT_REGULAR);
-        if(isset($like['cat_id'])){
-            $cat_ids = implode(',',$like['cat_id']);
-            $cat = Db::table('category')->where('cat_id','in',$cat_ids)->field('cat_id,pid')->select();
-
-            $pid = [];
-            if($cat){
-                foreach($cat as $key=>$value){
-                    if($value['pid']){
-                        $pid[] = Db::table('category')->where('cat_id',$value['pid'])->value('pid');
-                    }else{
-                        $pid[] = $value['cat_id'];
-                    }
-                }
-            }
-            $pid = implode(',',$pid);
-
-            $like = Db::table('category')->where('pid','in',$pid)->field('cat_id,cat_name')->limit(10)->select();
-            $data['like'] = shuffle($like);
-        }else{
-            $data['like'] = [];
-        }
-
-        $this->ajaxReturn(['status' => 1 , 'msg'=>'成功！','data'=>$data]);
+        $this->ajaxReturn(['status' => 200, 'msg' => '成功！', 'data' => $data]);
     }
 
 
-    public function search(){
+    /**
+     * @api {POST} /search/search 点击搜索
+     * @apiGroup search
+     * @apiVersion 1.0.0
+     *
+     * @apiParam {string}    token              token值*（必填）
+     * @apiParamExample {json} 请求数据:
+     * {
+     *      "token":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     * "status": 200,
+     * "msg": "获取成功",
+     * "data": {
+     * "cate_list": [],
+     * "goods_list": [  //商品列表
+     * {
+     * "goods_id": 22,      商品ID
+     * "img": "goods/20190704156222264985070.png",      图片地址
+     * "goods_name": "美的（Midea）333",    名称
+     * "desc": "",
+     * "price": "3455.00",
+     * "original_price": "4566.00",
+     * "goods_attr": "商品属性",
+     * "comment": 0,
+     * "attr_name": []
+     * },
+     * {
+     * "goods_id": 19,
+     * "img": "goods/20190704156222271022686.png",
+     * "goods_name": "美的（Midea） 三门冰箱1",
+     * "desc": "燃气热水器16L 水气双调变频恒温 智能变升随温感 六重安防 ECO节能JSQ30-TC5（天然气）                        ",
+     * "price": "2000.00",
+     * "original_price": "2500.00",
+     * "goods_attr": "2",
+     * "comment": 4,
+     * "attr_name": [
+     * "新上"
+     * ]
+     * }
+     * ]
+     * }
+     * }
+     * //错误返回结果
+     * {
+     * "status": 301,
+     * "msg": "用户不存在",
+     * "data": false
+     * }
+     */
+    public function search()
+    {
 
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
+        if (!$user_id) {
+            $this->ajaxReturn(['status' => 301, 'msg' => '用户不存在', 'data' => '']);
         }
 
         $keywords = input('keywords');
 
         $keywords = trim($keywords);
-        if(!$keywords){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'搜索关键字不能为空！','data'=>'']);
+        if (!$keywords) {
+            $this->ajaxReturn(['status' => 301, 'msg' => '搜索关键字不能为空！', 'data' => '']);
         }
 
-        $cat_id = Db::table('category')->where('cat_name',"$keywords")->value('cat_id');
+        $cat_id = Db::table('category')->where('cat_name', "$keywords")->value('cat_id');
         $cat_id2 = 'cat_id1';
         $sort = input('sort');
         $goods_attr = input('goods_attr');
-        $page = input('page',1);
+        $page = input('page', 1);
 
         $where = [];
         $whereRaw = [];
         $pageParam = ['query' => []];
-        if($cat_id){
-            $cate_list = Db::name('category')->where('is_show',1)->where('cat_id',$cat_id)->value('pid');
-            if($cate_list){
-                $cate_list = Db::name('category')->where('is_show',1)->where('pid',$cate_list)->select();
+        if ($cat_id) {
+            $cate_list = Db::name('category')->where('is_show', 1)->where('cat_id', $cat_id)->value('pid');
+            if ($cate_list) {
+                $cate_list = Db::name('category')->where('is_show', 1)->where('pid', $cate_list)->select();
                 $cat_id2 = 'cat_id2';
-            }else{
-                $cate_list = Db::name('category')->where('is_show',1)->where('pid',$cat_id)->select();
+            } else {
+                $cate_list = Db::name('category')->where('is_show', 1)->where('pid', $cat_id)->select();
             }
             $where[$cat_id2] = $cat_id;
             $pageParam['query'][$cat_id2] = $cat_id;
 
-            $cate_list  = getTree1($cate_list);
+            $cate_list = getTree1($cate_list);
 
-            if($goods_attr){
+            if ($goods_attr) {
                 $whereRaw = "FIND_IN_SET($goods_attr,goods_attr)";
                 $pageParam['query']['goods_attr'] = $goods_attr;
             }
 
-            if($sort){
+            if ($sort) {
                 $order['price'] = $sort;
-            }else{
+            } else {
                 $order['goods_id'] = 'DESC';
             }
-            
+
             $goods_list = Db::name('goods')->alias('g')
-                            ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
-                            ->where('gi.main',1)
-                            ->where('is_show',1)
-                            ->where($where)
-                            ->where($whereRaw)
-                            ->order($order)
-                            ->field('g.goods_id,gi.picture img,goods_name,desc,price,original_price,g.goods_attr')
-                            ->paginate(10,false,$pageParam)
-                            ->toArray();
-            if($goods_list['data']){
-                foreach($goods_list['data'] as $key=>&$value){
-                    $value['comment'] = Db::table('goods_comment')->where('goods_id',$value['goods_id'])->count();
-                    $value['attr_name'] = Db::table('goods_attr')->where('attr_id','in',$value['goods_attr'])->column('attr_name');
+                ->join('goods_img gi', 'gi.goods_id=g.goods_id', 'LEFT')
+                ->where('gi.main', 1)
+                ->where('is_show', 1)
+                ->where($where)
+                ->where($whereRaw)
+                ->order($order)
+                ->field('g.goods_id,gi.picture img,goods_name,desc,price,original_price,g.goods_attr')
+                ->paginate(10, false, $pageParam)
+                ->toArray();
+            if ($goods_list['data']) {
+                foreach ($goods_list['data'] as $key => &$value) {
+                    $value['comment'] = Db::table('goods_comment')->where('goods_id', $value['goods_id'])->count();
+                    $value['attr_name'] = Db::table('goods_attr')->where('attr_id', 'in', $value['goods_attr'])->column('attr_name');
                 }
             }
-            
+
             //添加搜索记录
             $where = [];
-            $where['user_id']   =   $user_id;
-            $where['keywords']  =   $keywords;
-            $where['cat_id']    =   $cat_id;
+            $where['user_id'] = $user_id;
+            $where['keywords'] = $keywords;
+            $where['cat_id'] = $cat_id;
             $id = Db::table('search')->where($where)->value('id');
-            if($id){
-                Db::table('search')->where('id',$id)->setInc('number',1);
-                Db::table('search')->where('id',$id)->update(['add_time'=>time()]);
-            }else{
+            if ($id) {
+                Db::table('search')->where('id', $id)->setInc('number', 1);
+                Db::table('search')->where('id', $id)->update(['add_time' => time()]);
+            } else {
                 $where['number'] = 1;
                 $where['add_time'] = time();
                 Db::table('search')->insert($where);
             }
 
-            $this->ajaxReturn(['status' => 1 , 'msg'=>'获取成功','data'=>['cate_list'=>$cate_list,'goods_list'=>$goods_list['data']]]);
-        }else{
+            foreach($goods_list['data'] as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') .$value['img'];
+            }
 
-            if($sort){
+            $this->ajaxReturn(['status' => 200, 'msg' => '获取成功', 'data' => ['cate_list' => $cate_list, 'goods_list' => $goods_list['data']]]);
+        } else {
+
+            if ($sort) {
                 $order['price'] = $sort;
-            }else{
+            } else {
                 $order['goods_id'] = 'DESC';
             }
 
             $goods_list = Db::table('goods')->alias('g')
-                        ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
-                        ->where('gi.main',1)
-                        ->where('is_show',1)
-                        ->where('g.goods_name','like',"%{$keywords}%")
-                        ->field('g.goods_id,gi.picture img,goods_name,desc,price,original_price,g.goods_attr')
-                        ->order($order)
-                        ->paginate(10,false,$pageParam)
-                        ->toArray();
-            if($goods_list['data']){
-                foreach($goods_list['data'] as $key=>&$value){
-                    $value['comment'] = Db::table('goods_comment')->where('goods_id',$value['goods_id'])->count();
-                    $value['attr_name'] = Db::table('goods_attr')->where('attr_id','in',$value['goods_attr'])->column('attr_name');
+                ->join('goods_img gi', 'gi.goods_id=g.goods_id', 'LEFT')
+                ->where('gi.main', 1)
+                ->where('is_show', 1)
+                ->where('g.goods_name', 'like', "%{$keywords}%")
+                ->field('g.goods_id,gi.picture img,goods_name,desc,price,original_price,g.goods_attr')
+                ->order($order)
+                ->paginate(10, false, $pageParam)
+                ->toArray();
+            if ($goods_list['data']) {
+                foreach ($goods_list['data'] as $key => &$value) {
+                    $value['comment'] = Db::table('goods_comment')->where('goods_id', $value['goods_id'])->count();
+                    $value['attr_name'] = Db::table('goods_attr')->where('attr_id', 'in', $value['goods_attr'])->column('attr_name');
                 }
             }
-            
+
             //添加搜索记录
             $where = [];
-            $where['user_id']   =   $user_id;
-            $where['keywords']  =   $keywords;
-            $where['cat_id']    =   0;
+            $where['user_id'] = $user_id;
+            $where['keywords'] = $keywords;
+            $where['cat_id'] = 0;
             $id = Db::table('search')->where($where)->value('id');
-            if($id){
-                Db::table('search')->where('id',$id)->setInc('number',1);
-            }else{
+            if ($id) {
+                Db::table('search')->where('id', $id)->setInc('number', 1);
+            } else {
                 $where['number'] = 1;
                 $where['add_time'] = time();
                 Db::table('search')->insert($where);
             }
 
-            $this->ajaxReturn(['status' => 1 , 'msg'=>'获取成功','data'=>['cate_list'=>[],'goods_list'=>$goods_list['data']]]);
+            foreach($goods_list['data'] as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') .$value['img'];
+            }
+
+            $this->ajaxReturn(['status' => 200, 'msg' => '获取成功', 'data' => ['cate_list' => [], 'goods_list' => $goods_list['data']]]);
         }
     }
 
-    public function del_search(){
+    public function del_search()
+    {
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
+        if (!$user_id) {
+            $this->ajaxReturn(['status' => -1, 'msg' => '用户不存在', 'data' => '']);
         }
 
-        $res = Db::table('search')->where('user_id',$user_id)->delete();
+        $res = Db::table('search')->where('user_id', $user_id)->delete();
 
-        if($res){
-            $this->ajaxReturn(['status' => 1 , 'msg'=>'清除成功！','data'=>'']);
-        }else{
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'清除失败！','data'=>'']);
+        if ($res) {
+            $this->ajaxReturn(['status' => 1, 'msg' => '清除成功！', 'data' => '']);
+        } else {
+            $this->ajaxReturn(['status' => -2, 'msg' => '清除失败！', 'data' => '']);
         }
     }
 
