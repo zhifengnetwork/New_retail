@@ -42,7 +42,7 @@ class Sales extends Model
 		
 	}
 
-	public function reward_leve($user_id,$order_id,$order_sn,$good_num,$num = 0,$state = 0){
+	public function reward_leve($user_id,$order_id,$order_sn,$state = 0,$num = 0){
 
 		$num++;
 
@@ -68,7 +68,10 @@ class Sales extends Model
 					'remainder_money'        => Db::raw('remainder_money+' . $money),
 					'distribut_money'        => Db::raw('distribut_money+'. $money),
 				];
-				Member::where(['id' => $first_leader])->update($moneyUpdate);
+				$res = Member::where(['id' => $first_leader])->update($moneyUpdate);
+				if($res == false){
+					return false;
+				}
 
 				$balance = [
 					'user_id'     => $first_leader,
@@ -81,8 +84,10 @@ class Sales extends Model
 					'create_time' => time(),
 				];
 
-				Db::name('menber_balance_log')->insert($balance);
-
+			  $res	= Db::name('menber_balance_log')->insert($balance);
+			  if($res == false){
+				return false;
+			  }
 			}else{
 				//预计收益
 				$distrbut = [
@@ -91,19 +96,22 @@ class Sales extends Model
 					'money'       => $money,
 					'order_sn'    => $order_sn,
 					'order_id'    => $order_id,
-					'num'         => $good_num,
+					'num'         => 0,
 					'distribut_type'        => 0,
 					'status'                => 1,
 					'desc'                  => $num.'级分佣奖励',
 					'create_time'           => time(),
 					'distrbut_state'        => $state,
 				]; 
-				Db::name('distrbut_commission_log')->insert($distrbut);
+				$res = Db::name('distrbut_commission_log')->insert($distrbut);
+				if($res == false){
+					return false;
+				}
 			}
 
 			
 		}
-		$this->reward_leve($first_leader,$order_id,$order_sn,$good_num,$num,$state);
+		$this->reward_leve($first_leader,$order_id,$order_sn,$state,$num);
 	}
 
 

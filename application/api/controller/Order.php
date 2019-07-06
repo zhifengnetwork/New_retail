@@ -4,6 +4,7 @@
  */
 namespace app\api\controller;
 use app\common\controller\ApiBase;
+use app\common\model\Sales;
 use think\Db;
 use think\Config;
 
@@ -804,11 +805,33 @@ class Order extends ApiBase
         }else if( $order['order_status'] == 1 && $order['pay_status'] == 1 && $order['shipping_status'] == 1 ){
             //确认收货
             if($status != 3) $this->ajaxReturn(['status' => 301 , 'msg'=>'参数错误！','data'=>'']);
+            Db::startTrans();
+
             $res = Db::table('order')->update(['order_id'=>$order_id,'order_status'=>4,'shipping_status'=>3]);
+
+            if($res == false){
+                Db::rollback();
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'修改订单状态失败！','data'=>'']);
+            }
+
+            $Sales = new Sales($user_id,$order_id,0);
+
+            $rest = $Sales->reward_leve($user_id,$order_id,$order['order_sn'],1);
+
+            if($rest == false){
+                Db::rollback();
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'订单分佣失败！','data'=>'']);
+            }
+            
+            Db::commit();
+
+            
         }else if( ($order['order_status'] == 4 && $order['pay_status'] == 1 && $order['shipping_status'] == 3) || $order['order_status'] == 3 ){
             //删除订单
             if($status != 4 && $status != 5) $this->ajaxReturn(['status' => 301 , 'msg'=>'参数错误！','data'=>'']);
             $res = Db::table('order')->update(['order_id'=>$order_id,'deleted'=>1]);
+
+           
         }
 
         $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>'']);
