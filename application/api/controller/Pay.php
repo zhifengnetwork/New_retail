@@ -31,8 +31,10 @@ class Pay extends ApiBase
     }    
 
 
+
+
     
-    /**
+      /**
      * @api {POST} /pay/set_payment 设置收款
      * @apiGroup user
      * @apiVersion 1.0.0
@@ -41,12 +43,9 @@ class Pay extends ApiBase
      * {
      *     "token":"",           token
      *      "type":''            当前操作的类型 1:码云  2:微信   3:支付宝
-     *      "my_name":""         码云闪付昵称
-     *      "my_pic":""           码云闪付收款码图片路径
-     *      "wx_name":""          微信昵称
-     *      "wx_pic":""           微信收款码图片路径
-     *       "zfb_account":""     支付宝账户
-     *       "zfb_pic":""         支付宝收款图片路径
+     *      "name":""              昵称
+     *      "image":""           收款码图片
+     *     
      *          
      *     操作对应的类型,填写对应的昵称和图片路径
      * }
@@ -70,33 +69,40 @@ class Pay extends ApiBase
         }
 
         $data=input();
+
+        if(empty($data['name'])){    //提供name
+            return $this->failResult("缺少姓名参数");
+        }
+                                  
+        $imgPath=uploadOne('image');    //提供image
+
+        if(!$imgPath){
+            return $this->failResult('缺少图片参数');
+        }
+        $imgPath=DS.'uploads'. DS . 'pay_picture\\'.$imgPath;
         if($type==1){
-            if(empty($data['my_name'])||empty($data['my_pic'])){
-                return $this->failResult("参数不足");
-            }else{
+                $data['my_name']=$data['name'];
+                $data['my_pic']=$imgPath;
                 $data['pay_default']=3;
                 $data['my_status']=1;
-            }
         }
         if($type==2){
-            if(empty($data['wx_name'])||empty($data['wx_pic'])){
-                return $this->failResult("参数不足");
-            }else{
+                $data['wx_pic']=$imgPath;
+                $data['wx_name']=$data['name'];
                 $data['pay_default']=2;
                 $data['wx_status']=1;
-            }
         }
         if($type==3){
-            if(empty($data['zfb_account'])||empty($data['zfb_pic'])){
-                return $this->failResult("参数不足");
-            }else{
+                $data['zfb_pic']=$imgPath;
+                $data['zfb_account']=$data['name'];
                 $data['pay_default']=1;
                 $data['zfb_status']=1;
-            }
         }
+
         $data['user_id']=$userid;
         $data['create_time']=time();
         unset($data['type']);
+        unset($data['name']);
         $one=Db::name('member_payment')->where('user_id',$userid)->find();
         if($one){
             $res=Db::name("member_payment")->where('user_id',$userid)->update($data);
@@ -110,7 +116,6 @@ class Pay extends ApiBase
         }
 
     }
-
 
 
 
