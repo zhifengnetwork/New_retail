@@ -8,7 +8,7 @@
 
 namespace app\api\controller;
 
-use app\common\controller\ApiAbstract;
+use app\common\controller\ApiBase;
 use app\common\model\Users;
 use app\common\logic\UsersLogic;
 use app\common\util\jwt\JWT;
@@ -19,7 +19,7 @@ use think\Request;
 use app\api\Model\UserAddr;
 use think\Cache;
 
-class Address extends ApiAbstract
+class Address extends ApiBase
 {
 
     
@@ -60,6 +60,7 @@ class Address extends ApiAbstract
         if(!Request::instance()->isPost()){
             return $this->getResult(301, 'error', '请求方式有误');
         }
+
         $user_id = $this->get_user_id();
         if(!$user_id||is_array($user_id)){
             return $this->failResult("用户不存在");
