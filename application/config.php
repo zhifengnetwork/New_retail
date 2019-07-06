@@ -335,7 +335,7 @@ return [
         'cash'   => ['pay_type'=>4,'pay_name'=>'货到付款'],
     ),
 
-    'pay_weixin' => [
+    'wx_config' => [
         'use_sandbox'       =>  false,// 是否使用 微信支付仿真测试系统
         'app_secret'        => '8b8f8785150c527505691475a697080c',
         'app_id'            => 'wx6e2f9c8990881bdf',  // 公众账号ID
