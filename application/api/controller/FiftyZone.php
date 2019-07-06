@@ -5,6 +5,7 @@
 namespace app\api\controller;
 use app\common\controller\ApiBase;
 use think\Db;
+use think\Config;
 
 class FiftyZone extends ApiBase
 {
@@ -23,6 +24,59 @@ class FiftyZone extends ApiBase
             $this->ajaxReturn(['status' => 302 , 'msg'=>'是否缴纳30元服务费！','data'=>'']);
         }
 
+        $goods_id = 50;
+        $info = Db::table('config')->where('module',5)->column('value','name');
+        if(isset($info['ailicode'])) $info['ailicode'] = Config('c_pub.apiimg') . $info['ailicode'];
+        if(isset($info['wechatcode'])) $info['wechatcode'] = Config('c_pub.apiimg') . $info['wechatcode'];
+        if(isset($info['mayuncode'])) $info['mayuncode'] = Config('c_pub.apiimg') . $info['mayuncode'];
+        if($info['default_type']==1) $info['default_pay_code'] = $info['ailicode'];
+        if($info['default_type']==2) $info['default_pay_code'] = $info['wechatcode'];
+        if($info['default_type']==3) $info['default_pay_code'] = $info['mayuncode'];
+
+        $where['g.goods_id'] = $goods_id;
+        $where['gi.main'] = 1;
+
+        $list = Db::table('fifty_zone_shop')->alias('fzs')
+                ->join('goods g','g.goods_id=fzs.goods_id','LEFT')
+                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
+                ->join('member m','m.id=fzs.user_id','LEFT')
+                ->field('fzs.*,g.goods_name,gi.picture img')
+                ->where($where)
+                ->order('fzs.add_time DESC')
+                ->limit($info['show_num'])
+                ->select();
+
+        if(empty($list)){
+            $arr = [];
+            for($i=0;$i<20;$i++){
+                $arr[$i]['user_id'] = 0;
+                $arr[$i]['goods_id'] = $goods_id;
+                $arr[$i]['stock'] = 11;
+                $arr[$i]['frozen_stock'] = 0;
+                $arr[$i]['add_time'] = time();
+            }
+            Db::table('fifty_zone_shop')->insertAll($arr);
+            $list = Db::table('fifty_zone_shop')->alias('fzs')
+                ->join('goods g','g.goods_id=fzs.goods_id','LEFT')
+                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
+                ->join('member m','m.id=fzs.user_id','LEFT')
+                ->field('fzs.*,g.goods_name,gi.picture img')
+                ->where($where)
+                ->order('fzs.add_time DESC')
+                ->limit($info['show_num'])
+                ->select();
+        }
+
+        foreach($list as $key=>&$value){
+            $value['img'] = Config('c_pub.apiimg') . $value['img'];
+            if(!$value['user_id']){
+                $value['mobile'] = $info['shop_mobile'];
+                $value['pay_code'] = $info['default_pay_code'];
+            }
+        }
+
+
+        pred($list);
 
 
     }
