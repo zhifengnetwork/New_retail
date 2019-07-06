@@ -28,16 +28,33 @@ class UserAddr extends Model
     {   
         $result = $this->alias('ua')
             ->field('user_id,province,city,district,twon,address,consignee,mobile')
-            // ->field('ua.address_id,ua.consignee,ua.mobile,ua.address,ua.is_default')
-            // ->field('p.area_name as p_cn,c.area_name as c_cn,d.area_name as d_cn,s.area_name as s_cn')
-            // ->join('region p', 'p.area_id = ua.province', 'left')
-            // ->join('region c', 'c.area_id = ua.city', 'left')
-            // ->join('region d', 'd.area_id = ua.district', 'left')
-            // ->join('region s', 's.area_id = ua.twon', 'left')
+            ->field('ua.address_id,ua.consignee,ua.mobile,ua.address,ua.is_default')
+            ->field('p.area_name as p_cn,c.area_name as c_cn,d.area_name as d_cn,s.area_name as s_cn')
+            ->join('region p', 'p.area_id = ua.province', 'left')
+            ->join('region c', 'c.area_id = ua.city', 'left')
+            ->join('region d', 'd.area_id = ua.district', 'left')
+            ->join('region s', 's.area_id = ua.twon', 'left')
             ->where($where)
             ->order('ua.is_default desc, ua.address_id asc')
             ->find();
         $result = ota($result);
+
+        if(empty($result)){
+            $where['ua.is_default'] = 0;
+            $result = $this->alias('ua')
+            ->field('user_id,province,city,district,twon,address,consignee,mobile')
+            ->field('ua.address_id,ua.consignee,ua.mobile,ua.address,ua.is_default')
+            ->field('p.area_name as p_cn,c.area_name as c_cn,d.area_name as d_cn,s.area_name as s_cn')
+            ->join('region p', 'p.area_id = ua.province', 'left')
+            ->join('region c', 'c.area_id = ua.city', 'left')
+            ->join('region d', 'd.area_id = ua.district', 'left')
+            ->join('region s', 's.area_id = ua.twon', 'left')
+            ->where($where)
+            ->order('ua.is_default desc, ua.address_id asc')
+            ->find();
+            $result = ota($result);
+        }
+
         return $result;
     }
 

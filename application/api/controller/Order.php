@@ -94,15 +94,10 @@ class Order extends ApiBase
         
         // 查询地址
         $addr_data['ua.user_id'] = $user_id;
+        $addr_data['ua.is_default'] = 1;
         $addressM = Model('UserAddr');
-        $addr_res = $addressM->getAddressList($addr_data);
-        if($addr_res){
-            foreach($addr_res as $key=>$value){
-                $addr = $value['p_cn'] . $value['c_cn'] . $value['d_cn'] . $value['s_cn'];
-                $addr_res[$key]['address'] = $addr . $addr_res[$key]['address'];
-                unset($addr_res[$key]['p_cn'],$addr_res[$key]['c_cn'],$addr_res[$key]['d_cn'],$addr_res[$key]['s_cn']);
-            }
-        }
+        $addr_res = $addressM->getAddressFind($addr_data);
+        $addr_res['address'] = $addr_res['p_cn'] . $addr_res['c_cn'] . $addr_res['d_cn'] . $addr_res['s_cn'] . $addr_res['address'];
         
         $data['goods_res'] = $cart_res;
         $data['addr_res'] = $addr_res;
