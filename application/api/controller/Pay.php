@@ -122,9 +122,6 @@ class Pay extends ApiBase
         $order_id     = input('order_id');
         $pay_type     = input('pay_type');//支付方式
         $user_id      = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
-        }
 
         $order_info   = Db::name('order')->where(['order_id' => $order_id])->field('order_id,groupon_id,order_sn,order_amount,pay_type,pay_status,user_id')->find();//订单信息
         if($order_info){
@@ -134,31 +131,16 @@ class Pay extends ApiBase
         $member       = MemberModel::get($user_id);
         //验证是否本人的
         if(!$order_info){
-            $this->ajaxReturn(['status' => -3 , 'msg'=>'订单不存在','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'订单不存在','data'=>'']);
         }
         if($order_info['user_id'] != $user_id){
-            $this->ajaxReturn(['status' => -2 , 'msg'=>'非本人订单','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'非本人订单','data'=>'']);
         }
 
     	if($order_info['pay_status'] == 1){
-			$this->ajaxReturn(['status' => -4 , 'msg'=>'此订单，已完成支付!','data'=>'']);
+			$this->ajaxReturn(['status' => 301 , 'msg'=>'此订单，已完成支付!','data'=>'']);
         }
         
-        //团购
-        if($order_info['groupon_id']){
-            $groupon = Db::table('goods_groupon')->where('groupon_id',$order_info['groupon_id'])->where('is_show',1)->where('is_delete',0)->where('status',2)->find();
-            if(!$groupon){
-                Db::table('order')->where('order_id',$order_info['order_id'])->delete();
-                Db::table('order_goods')->where('order_id',$order_info['order_id'])->delete();
-                $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团已结束，请前往最新一期拼团！','data'=>'']);
-            }
-            if(($groupon['target_number'] - $groupon['sold_number']) <= 0){
-                Db::table('order')->where('order_id',$order_info['order_id'])->delete();
-                Db::table('order_goods')->where('order_id',$order_info['order_id'])->delete();
-                $this->ajaxReturn(['status' => -2 , 'msg'=>'该期拼团已结束，请前往最新一期拼团！','data'=>$groupon['goods_id']]);
-            }
-        }
-
         // $sysset       = Db::name('sysset')->find();
         // $config       = unserialize($sysset['sets']);
         $amount       = $order_info['order_amount'];
@@ -243,21 +225,10 @@ class Pay extends ApiBase
                     $jifen = sprintf("%.2f",$jifen + ($value['goods_num'] * $goods['gift_points']));
                 }
             }
-            //团购
-            Db::table('goods_groupon')->where('groupon_id',$order_info['groupon_id'])->setInc('sold_number',1);
            
             $res = Db::table('member')->update(['id'=>$user_id,'gouwujifen'=>$jifen]);
 
-            //判断用户是否是puls会员
-            $is_puls = model('Member')->is_puls($user_id);
-            if (empty($is_puls)){
-                //不是puls会员
-                $update_ispuls = model('Member')->create_puls($user_id,$order_id,1);
-            }else{
-                $update_ispuls = 1;
-            }
-
-            if($reult && $update_ispuls){
+            if($reult){
                 // 提交事务
                 Db::commit();
                 $this->ajaxReturn(['status' => 200 , 'msg'=>'余额支付成功!','data'=>['order_id' =>$order_info['order_id'],'order_amount' =>$order_info['order_amount'],'goods_name' => getPayBody($order_info['order_id']),'order_sn' => $order_info['order_sn'] ]]);
