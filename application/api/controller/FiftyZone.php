@@ -12,6 +12,10 @@ class FiftyZone extends ApiBase
     public function shop_list(){
         $user_id = $this->get_user_id();
 
+        if($this->fifty_order(1)){
+            $this->ajaxReturn(['status' => 303 , 'msg'=>'还有未付款的订单！','data'=>'']);
+        }
+
         $user = Db::table('member')->field('release,residue_release,release_ci,release_time')->find($user_id);
 
         $time = strtotime(date("Y-m-d"),time());
@@ -208,6 +212,10 @@ class FiftyZone extends ApiBase
         $list = Db::table('fifty_zone_order')->where('user_id',$user_id)->where('user_confirm',0)->field('fz_order_id,order_id,shop_user_id,goods_id')->select();
 
         if($list){
+            if($status){
+                return 1;
+            }
+
             $info = Db::table('config')->where('module',5)->column('value','name');
             if(isset($info['ailicode'])) $info['ailicode'] = Config('c_pub.apiimg') . $info['ailicode'];
             if(isset($info['wechatcode'])) $info['wechatcode'] = Config('c_pub.apiimg') . $info['wechatcode'];
@@ -230,6 +238,10 @@ class FiftyZone extends ApiBase
                     $value['mobile'] = Db::name('member')->where('id',$user_id)->value('mobile');
                 }
             }
+        }
+
+        if($status){
+            return 0;
         }
 
         $this->ajaxReturn(['status' => 200 , 'msg'=>"成功！",'data'=>$list]);

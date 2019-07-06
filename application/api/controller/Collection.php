@@ -13,9 +13,6 @@ class Collection extends ApiBase
      */
     public function collection_list(){
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
-        }
 
         $list = Db::table('collection')->alias('c')
                 ->join('goods g','g.goods_id=c.goods_id','LEFT')
@@ -24,7 +21,7 @@ class Collection extends ApiBase
                 ->where('user_id',$user_id)
                 ->where('gi.main',1)
                 ->select();
-        $this->ajaxReturn(['status' => 1 , 'msg'=>'成功！','data'=>$list]);
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$list]);
     }
 
     /**
@@ -32,9 +29,6 @@ class Collection extends ApiBase
      */
     public function collection(){
         $user_id = $this->get_user_id();
-        if(!$user_id){
-            $this->ajaxReturn(['status' => -1 , 'msg'=>'用户不存在','data'=>'']);
-        }
 
         $goods_id = input('goods_id');
         if(!$goods_id) $this->ajaxReturn(['status' => -2 , 'msg'=>'参数错误！','data'=>'']);
@@ -49,10 +43,10 @@ class Collection extends ApiBase
 
         if($res){
             $res = Db::table('collection')->where($where)->delete();
-            $this->ajaxReturn(['status' => 1 , 'msg'=>'取消收藏！','data'=>'']);
+            $this->ajaxReturn(['status' => 200 , 'msg'=>'取消收藏！','data'=>'']);
         }else{
             $res = Db::table('collection')->insert($where);
-            $this->ajaxReturn(['status' => 1 , 'msg'=>'收藏成功！','data'=>'']);
+            $this->ajaxReturn(['status' => 200 , 'msg'=>'收藏成功！','data'=>'']);
         }
     }
 
