@@ -286,7 +286,7 @@ class Cart extends ApiBase
         }
 
         if($cart_id) {
-            $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$cart_id]);
+            $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>['cart_id'=>$cart_id,'single_number'=>$goods['single_number'],'stock'=>$sku_res['inventory']-$sku_res['frozen_stock']]]);
         } else {
             $this->ajaxReturn(['status' => 301 , 'msg'=>'系统异常！','data'=>'']);
         }
