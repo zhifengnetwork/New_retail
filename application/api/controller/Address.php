@@ -16,7 +16,7 @@ use think\Config;
 use think\Db;
 use think\Exception;
 use think\Request;
-use app\api\Model\UserAddr;
+use app\api\model\UserAddr;
 use think\Cache;
 
 class Address extends ApiBase
@@ -57,9 +57,9 @@ class Address extends ApiBase
      */
     public function addressList()
     {
-        if(!Request::instance()->isPost()){
-            return $this->getResult(301, 'error', '请求方式有误');
-        }
+//        if(!Request::instance()->isPost()){
+//            return $this->getResult(301, 'error', '请求方式有误');
+//        }
 
         $user_id = $this->get_user_id();
         if(!$user_id||is_array($user_id)){
