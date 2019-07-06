@@ -27,8 +27,8 @@ if (preg_match("/(.*)\.zhifengwangluo\.com/i", HTTP_HOST, $matches)) {
         '127.0.0.1:10059' => 'agent',
         '127.0.0.1:10058' => 'home',
         '127.0.0.1:10057' => 'sapi',
-        '127.0.0.1:10056' => 'api',
-        '127.0.0.1:20019' => 'admin',
+        'api.myxls.com' => 'api',
+        'www.myxls.com' => 'admin',
     ];
     if (!empty($terrace[HTTP_HOST])) {
         $module = $terrace[HTTP_HOST];

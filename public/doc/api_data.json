@@ -560,6 +560,84 @@
     "name": "PostOrderTemporary"
   },
   {
+    "type": "POST",
+    "url": "/search/get_search",
+    "title": "搜索页面",
+    "group": "search",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token值*（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n\"status\": 200,\n\"msg\": \"成功！\",\n\"data\": {\n\"hot\": [   热搜\n{\n\"keywords\": \"补水\",    关键字\n\"cat_id\": 15           分类ID\n},\n{\n\"keywords\": \"美柔柔弱\",\n\"cat_id\": 0\n}\n],\n\"history\": [    最近搜索\n{\n\"keywords\": \"补水\",   关键字\n\"cat_id\": 15          分类ID\n},\n{\n\"keywords\": \"美柔柔弱\",\n\"cat_id\": 0\n}\n]\n}\n}\n}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"用户不存在\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Search.php",
+    "groupTitle": "search",
+    "name": "PostSearchGet_search"
+  },
+  {
+    "type": "POST",
+    "url": "/search/search",
+    "title": "点击搜索",
+    "group": "search",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token值*（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n\"status\": 200,\n\"msg\": \"获取成功\",\n\"data\": {\n\"cate_list\": [],\n\"goods_list\": [  //商品列表\n{\n\"goods_id\": 22,      商品ID\n\"img\": \"goods/20190704156222264985070.png\",      图片地址\n\"goods_name\": \"美的（Midea）333\",    名称\n\"desc\": \"\",\n\"price\": \"3455.00\",\n\"original_price\": \"4566.00\",\n\"goods_attr\": \"商品属性\",\n\"comment\": 0,\n\"attr_name\": []\n},\n{\n\"goods_id\": 19,\n\"img\": \"goods/20190704156222271022686.png\",\n\"goods_name\": \"美的（Midea） 三门冰箱1\",\n\"desc\": \"燃气热水器16L 水气双调变频恒温 智能变升随温感 六重安防 ECO节能JSQ30-TC5（天然气）                        \",\n\"price\": \"2000.00\",\n\"original_price\": \"2500.00\",\n\"goods_attr\": \"2\",\n\"comment\": 4,\n\"attr_name\": [\n\"新上\"\n]\n}\n]\n}\n}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"用户不存在\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/Search.php",
+    "groupTitle": "search",
+    "name": "PostSearchSearch"
+  },
+  {
     "type": "GET",
     "url": "/address/get_region",
     "title": "获取地区下级",
@@ -1116,6 +1194,45 @@
     "filename": "application/api/controller/User.php",
     "groupTitle": "user",
     "name": "PostUserSendverifycode"
+  },
+  {
+    "type": "POST",
+    "url": "/user/sharePoster",
+    "title": "我的推广码",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token*（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n\"status\": 200,\n\"msg\": \"success\",\n\"data\": {\n\"my_poster_src\": \"http:\\/\\/127.0.0.1:20019\\/shareposter\\/123-share.png\",  图片路径\n}\n}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"验证码错误！\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/User.php",
+    "groupTitle": "user",
+    "name": "PostUserShareposter"
   },
   {
     "type": "POST",
