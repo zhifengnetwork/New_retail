@@ -34,21 +34,7 @@ class Member extends Model
         $Leve = Db::table('member_level')->order('level')->select();
         return $Leve;
     }
-    function getLevel($dephp_0){
-        global $_W;
-        if (empty($dephp_0)){
-            return false;
-        }
-        $dephp_7 = m('member') -> getMember($dephp_0);
-        if (empty($dephp_7['level'])){
-            return array('discount' => 10);
-        }
-        $dephp_17 = pdo_fetch('select * from ' . tablename('sz_yi_member_level') . ' where id=:id and uniacid=:uniacid order by level asc', array(':uniacid' => $_W['uniacid'], ':id' => $dephp_7['level']));
-        if (empty($dephp_17)){
-            return array('discount' => 10);
-        }
-        return $dephp_17;
-    }
+
   
     public static function getGroups(){
         $Group = Db::table('member_group')->order('id')->select();
@@ -61,44 +47,55 @@ class Member extends Model
         $dephp_7 = self::getMember($dephp_0);
         return $dephp_7['groupid'];
     }
-
     /**
-     *  判断是否是puls会员
+     * 绑定上下级关系
      */
-    public function is_puls ($id = 0) {
-        $sql = "select is_puls from member where id=$id";
-        $is_puls = Db::query($sql);
-        if ($is_puls['is_puls'] == 1){
-            return true;
-        }else{
-            return false;
+    public static function doLeader($first_leader){
+         // 如果找到他老爸还要找他爷爷他祖父等
+         if ($first_leader) {
+            $info = Db::name('users')->where(['user_id' => $first_leader])->find();
+            $map['first_leader']   = $first_leader;
+            $map['second_leader']  = $info['first_leader']; //  第一级推荐人
+            $map['third_leader']   = $info['second_leader']; // 第二级推荐人
+        } else {
+            $map['first_leader'] = 0;
         }
     }
 
-    /**
-     *  成为puls会员
-     * $type    渠道 1：订单渠道，2：直接支付渠道
-     */
-    public function create_puls ($id = 0,$order_id = 0,$type = 2) {
-        if ($id && $type ==1 && $order_id){
-            $get_order_goods_goodsid = Db::table('order_goods')->where('order_id',$order_id)->column('goods_id');
-            $get_goods_ispuls_sum = Db::table('goods')->where(['id',['in',$get_order_goods_goodsid]])->sum('is_puls');
-            if ($get_goods_ispuls_sum == 0){
-                //订单没有商品开启升级puls会员选项
-                return true;
-            }
-        }elseif ($id && $type == 2){
 
-        }else{
-            return false;
-        }
-        $update_sql = "update member set is_puls=1 where id=$id";
-        $update = Db::query($update_sql);
-        if ($update){
-            return true;
-        }else{
-            return false;
-        }
+     /**
+     * 用户一级下线数
+     * @param $value
+     * @param $data
+     * @return mixed
+     */
+    public function getFisrtLeaderNumAttr($value, $data){
+        $fisrt_leader = $this->where(['first_leader'=>$data['user_id']])->count();
+        return  $fisrt_leader;
     }
 
+    /**
+     * 用户二级下线数
+     * @param $value
+     * @param $data
+     * @return mixed
+     */
+    public function getSecondLeaderNumAttr($value, $data){
+        $second_leader = $this->where(['second_leader'=>$data['user_id']])->count();
+        return  $second_leader;
+    }
+
+    /**
+     * 用户三级下线数
+     * @param $value
+     * @param $data
+     * @return mixed
+     */
+    public function getThirdLeaderNumAttr($value, $data){
+        $third_leader = $this->where(['third_leader'=>$data['user_id']])->count();
+        return  $third_leader;
+    }
+ 
+
+    
 }

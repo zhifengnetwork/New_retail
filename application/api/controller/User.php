@@ -199,10 +199,17 @@ class User extends ApiBase
                 return $this->failResult('此手机号已注册，请直接登录！', 301);
             }
             if ($uid) {
-                $uid = Db::table('member')->where('mobile', $phone)->value('id');
-                if (!$uid) {
+                $info = Db::table('member')->where('id', $uid)->find();
+                if (!$info) {
                     return $this->failResult('邀请人账号不存在！', 301);
                 }
+               //绑定上下级关系
+               $info = Member::where(['user_id' => $uid])->find();
+               $insert['first_leader']   = $uid;
+               $insert['second_leader']  = $info['first_leader']; //  第一级推荐人
+               $insert['third_leader']   = $info['second_leader']; // 第二级推荐人
+            }else{
+               $insert['first_leader']   = 0;
             }
             //验证码判断
             $res = $this->phoneAuth($phone, $verify_code);
@@ -211,24 +218,19 @@ class User extends ApiBase
             } else if (!$res) {
                 return $this->failResult('验证码错误！', 301);
             }
-
-            $agenttime = 0;
-            $agentid = 0;
-            if ($uid) {
-                $agentid = $uid;
-                $agenttime = time();
-            }
-            $salt = create_salt();
+            $salt     = create_salt();
             $password = md5($salt . $password);
-
-            $id = Db::table('member')->insertGetId(['mobile' => $phone, 'uid' => $uid, 'agentid' => $agentid, 'agenttime' => $agenttime, 'isagent' => 1, 'salt' => $salt, 'password' => $password, 'createtime' => time()]);
+            $insert['mobile']     = $phone;
+            $insert['salt']       = $salt;
+            $insert['password']   = $password;
+            $insert['createtime'] = time();
+            $id = Db::table('member')->insertGetId($insert);
             if (!$id) {
                 return $this->failResult('注册失败，请重试！', 301);
             }
-
-            $data['token'] = $this->create_token($id);
-            $data['mobile'] = $phone;
-            $data['id'] = $id;
+            $data['token']   = $this->create_token($id);
+            $data['mobile']  = $phone;
+            $data['id']      = $id;
             return $this->successResult($data);
         } catch (Exception $e) {
             $result = $this->failResult($e->getMessage(), 301);
@@ -272,9 +274,9 @@ class User extends ApiBase
             return $this->failResult('用户不存在', 301);
         }
         //佣金总收益
-        $distribut_money  = Db::name('member')->where('id',$user_id)->value('distribut_money');
+        $distribut_money    = Db::name('member')->where('id',$user_id)->value('distribut_money');
         //团队人数
-        $team_count        = Db::query("SELECT count(*) as count FROM parents_cache where find_in_set('$user_id',`parents`)");
+        $team_count         = Db::query("SELECT count(*) as count FROM parents_cache where find_in_set('$user_id',`parents`)");
         //预计收益
         $estimate_money     = Db::name('distrbut_commission_log')->where(['to_user_id' => $user_id,'distrbut_state' => 0])->field('sum(money) as money')->find();
         $data['estimate_money']  = $estimate_money['money'];//预计收入
@@ -282,8 +284,6 @@ class User extends ApiBase
         $data['team_count']      = $team_count[0]['count'] ? $team_count[0]['count'] : 0;
         return $this->successResult($data);
     }
-
-
       /**
      * @api {POST} /user/team_list 团队列表
      * @apiGroup user
@@ -456,10 +456,10 @@ class User extends ApiBase
         $where['to_user_id']     = $user_id;
         $where['distrbut_state'] = 0;
         $list = Db::name('distrbut_commission_log')->alias('d')
-        ->join('member m','m.id=d.user_id','LEFT')
-        ->where($where)
-        ->field('d.user_id,d.order_sn,d.money,m.realname')
-        ->paginate(20,false,['page'=>$page]);
+                ->join('member m','m.id=d.user_id','LEFT')
+                ->where($where)
+                ->field('d.user_id,d.order_sn,d.money,m.realname')
+                ->paginate(20,false,['page'=>$page]);
      
         $data['list'] = $list;
         
@@ -509,8 +509,8 @@ class User extends ApiBase
      */
     public function user_info()
     {
-        //if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
-        $user_id = 76;
+        if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
+        $user_id = $this->get_user_id();
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
@@ -528,7 +528,7 @@ class User extends ApiBase
         //收藏
         $collection     = Db::name('collection')->where(['user_id' => $user_id])->field('*')->count();
         //预计收益
-        $estimate_money     = Db::name('distrbut_commission_log')->where(['to_user_id' => $user_id,'distrbut_state' => 0])->field('sum(money) as money')->find();
+        $estimate_money = Db::name('distrbut_commission_log')->where(['to_user_id' => $user_id,'distrbut_state' => 0])->field('sum(money) as money')->find();
         
         $info['estimate_money'] = $estimate_money['money']; //预计收益
         $info['refund']         = $refund;
@@ -541,9 +541,87 @@ class User extends ApiBase
         return $this->successResult($info);
     }
 
-
-
-
+        /**
+     * @api {POST} /user/sharePoster 我的推广码
+     * @apiGroup user
+     * @apiVersion 1.0.0
+     *
+     * @apiParam {string}    token              token*（必填）
+     * @apiParamExample {json} 请求数据:
+     * {
+     *      "token":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     * "status": 200,
+     * "msg": "success",
+     * "data": {
+     * "my_poster_src": "http:\/\/127.0.0.1:20019\/shareposter\/123-share.png",  图片路径
+     * }
+     * }
+     * //错误返回结果
+     * {
+     * "status": 301,
+     * "msg": "验证码错误！",
+     * "data": false
+     * }
+     */
+    public function sharePoster(){
+        $result = [];
+        try {
+            if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
+            $user_id = $this->get_user_id();
+            if(!$user_id){
+                return $this->failResult('用户不存在', 301);
+            }
+            $share_error = 0;
+            $filename = $user_id.'-qrcode.png';
+            $save_dir = ROOT_PATH.'public/shareposter/';
+            $my_poster = $save_dir.$user_id.'-share.png';
+            $my_poster_src = SITE_URL.'/shareposter/'.$user_id.'-share.png';
+            if( !file_exists($my_poster) ){
+                    $imgUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/index.php?dfc5b='.$user_id;
+                    vendor('phpqrcode.phpqrcode');
+                    \QRcode::png($imgUrl, $save_dir.$filename, QR_ECLEVEL_M);
+                    $image_path =  ROOT_PATH.'public/shareposter/load/qr_backgroup.png';
+                    if(!file_exists($image_path)){
+                        $share_error = 1;
+                    }
+                    # 分享海报
+                    if(!file_exists($my_poster) && !$share_error){
+                        # 海报配置
+                        $conf = Db::name('config')->where(['name' => 'shareposter'])->find();
+                        $config = json_decode($conf['value'],true);
+                        $image_w = $config['w'] ? $config['w'] : 75;
+                        $image_h = $config['h'] ? $config['h'] : 75;
+                        $image_x = $config['x'] ? $config['x'] : 0;
+                        $image_y = $config['y'] ? $config['y'] : 0;
+                        # 根据设置的尺寸，生成缓存二维码
+                        $qr_image = \think\Image::open($save_dir.$filename);
+                        $qrcode_temp_path = $save_dir.$user_id.'-poster.png';
+                        $qr_image->thumb($image_w,$image_h,\think\Image::THUMB_SOUTHEAST)->save($qrcode_temp_path);
+                        
+                        if($image_x > 0 || $image_y > 0){
+                            $water = [$image_x, $image_y];
+                        }else{
+                            $water = 5;
+                        }
+                        
+                        # 图片合成
+                        $image = \think\Image::open($image_path);
+                        $image->water($qrcode_temp_path, $water)->save($my_poster);
+                        @unlink($qrcode_temp_path);
+                        @unlink($save_dir.$filename);
+                    }
+            }
+            $data['my_poster_src'] = $my_poster_src;
+            return $this->successResult($data);
+    } catch (Exception $e) {
+            $result = $this->failResult($e->getMessage(), 301);
+    }
+           return $result;
+    }
 
 
 
