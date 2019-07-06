@@ -132,41 +132,47 @@ class Member extends Common
      * 会员详情
      */
     public function member_edit(){
-        $uid     = input('id');
-        $member  = MemberModel::get($uid);
+        $uid=input('id');
+        // if(request()->isPost()){
+
+
+        // }
+
+        $memberOrder=Db::name('member m')
+        ->join('order o','o.user_id=m.id','LEFT')
+        ->field('count(o.order_id) as ordercount,m.realname,m.mobile,m.distribut_money,m.remainder_money,m.createtime,m.gender,m.pay_points,m.status,count(total_amount) as totalamount,m.id,m.avatar,m.id')
+        ->where('m.id',$uid)
+        ->where('o.order_status',4)
+        ->find();
+        
         if (Request::instance()->isPost()){
             $data = input('data/a');
-            if( !empty(input('password')) && !empty($uid) ){
-                //修改密码
-                $data['pwd'] = md5(input('password'));
-            }
-            
-            $res = MemberModel::where(['id' => $uid])->update($data);
+            $member=Db::name('member')->find($data['id']);
 
-            if($res !== false ){
-                $this->success('编辑成功', url('member/index'));
+
+            $memberRes=Db::name('member')->update($data);
+            if($memberRes!==false){
+                $this->success("编辑成功","member/index");
+            }else{
+                $this->error("编辑失败");
             }
-                $this->error('编辑失败');
 
         }
-       
-       
-        $order_info        = Db::table('order')->where(['user_id' =>$member['id'],'order_status' => 3])->field('count(order_id) as order_count,sum(goods_price) as ordermoney')->find();
-        $member['self_ordercount'] = $order_info['order_count'];
-        $member['self_ordermoney'] = empty($order_info['ordermoney'])?0:$order_info['ordermoney'];
-        $member['balance']         = MemberModel::getBalance($member['id'],0);//余额
-        $member['balance1']        = MemberModel::getBalance($member['id'],1);//积分
-        // //更新数据
-        // $member && $this->dataupdate($uid);
-        $groups  =  MemberModel::getGroups();
-        $levels  =  MemberModel::getLevels();
-        $this->assign('followed', 1);
-        $this->assign('groups', $groups);
-        $this->assign('levels', $levels);
-        $this->assign('member', $member);
-        $this->assign('meta_title', '会员详情');
+        $this->assign('memberOrder',$memberOrder);
         return $this->fetch();
+    }
 
+    public function set_free()
+    {
+        $data['id']=input('uid');
+        $status=Db::name('member')->where('id',$data['id'])->value('status');
+        $status==1?$data['status']=0:$data['status']=1;
+        $freeRes=Db::name('member')->update($data);
+        if($freeRes){
+            echo 1;
+        }else{
+            echo 2;
+        }
     }
 
     /***
@@ -201,12 +207,6 @@ class Member extends Common
         if(empty($member)){
             $this->error('会员不存在，无法删除!');
         }
-        $agentcount = MemberModel::where(['agentid' => $uid])->count();
-
-        if ($agentcount > 0) {
-            $this->error('此会员有下线存在，无法删除!');
-        }
-
         $res = MemberModel::where(['id' => $uid])->delete();
 
         if($res !== false){
