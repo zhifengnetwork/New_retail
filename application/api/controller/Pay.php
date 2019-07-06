@@ -260,10 +260,10 @@ class Pay extends ApiBase
             if($reult && $update_ispuls){
                 // 提交事务
                 Db::commit();
-                $this->ajaxReturn(['status' => 1 , 'msg'=>'余额支付成功!','data'=>['order_id' =>$order_info['order_id'],'order_amount' =>$order_info['order_amount'],'goods_name' => getPayBody($order_info['order_id']),'order_sn' => $order_info['order_sn'] ]]);
+                $this->ajaxReturn(['status' => 200 , 'msg'=>'余额支付成功!','data'=>['order_id' =>$order_info['order_id'],'order_amount' =>$order_info['order_amount'],'goods_name' => getPayBody($order_info['order_id']),'order_sn' => $order_info['order_sn'] ]]);
             }else{
                  Db::rollback();
-                $this->ajaxReturn(['status' => -2 , 'msg'=>'余额支付失败','data'=>'']);
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'余额支付失败','data'=>'']);
             }
         }
         //支付方式不同
