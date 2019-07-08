@@ -568,7 +568,7 @@ class Order extends ApiBase
                         ->where($where)
                         ->group('og.order_id')
                         ->order('o.order_id DESC')
-                        ->field('o.order_id,o.order_sn,o.comment,og.goods_name,gi.picture img,og.spec_key_name,og.goods_price,g.original_price,og.goods_num,o.order_status,o.pay_status,o.shipping_status,pay_type,o.add_time')
+                        ->field('o.order_id,o.order_sn,g.goods_id,o.comment,og.goods_name,gi.picture img,og.spec_key_name,og.goods_price,g.original_price,og.goods_num,o.order_status,o.pay_status,o.shipping_status,pay_type,o.add_time')
                         ->paginate(10,false,$pageParam);
                         
         if($order_list){
@@ -1156,7 +1156,7 @@ class Order extends ApiBase
         $data['img']   = $img;
         $data['refund_status'] = 1;
         Db::startTrans();
-        $res = Db::table('order_refund')->insert($data);
+        $res = Db::table('order_refund')->strict(false)->insert($data);
 
         Db::table('order')->update(['order_id'=>$order_id,'order_status'=>6]);
 
