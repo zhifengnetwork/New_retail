@@ -184,7 +184,7 @@ class Address extends ApiBase
         if($my_address){
             return $this->successResult($my_address);
         }else{
-            return $this->failResult("操作失败")；
+            return $this->failResult("操作失败");
         }
     }
 
