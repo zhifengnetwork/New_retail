@@ -179,13 +179,13 @@ class Address extends ApiBase
 
     public function my_address()
     {
-        $address_id=input('post.address_id');
-        $my_address=Db::name('user_address')->where('address_id',$address_id)->find();
-        if($my_address){
+        $address_id=input("post.address_id");
+        $my_address=Db::name('user_address')->where("address_id",$address_id)->find();
+       if(!empty($my_address)){
             return $this->successResult($my_address);
-        }else{
-            return $this->failResult("操作失败");
-        }
+       }else{
+           return $this->failResult("操作失败");
+       }
     }
 
        /**
