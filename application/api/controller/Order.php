@@ -1151,7 +1151,7 @@ class Order extends ApiBase
         $data['refund_sn'] = 'ZF' . date('YmdHis',time()) . mt_rand(100000,999999);
         $data['refund_type']   = $refund_type;
         $data['refund_reason'] = $refund_reason;
-        $data['cancel_remark'] = $cancel_remark;
+        // $data['cancel_remark'] = $cancel_remark;
         $data['create_time']   = $create_time;
         $data['img']   = $img;
         $data['refund_status'] = 1;
