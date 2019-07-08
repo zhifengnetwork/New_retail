@@ -237,7 +237,7 @@ class Pay extends ApiBase
                 }
             }
            
-            $res = Db::table('member')->update(['id'=>$user_id,'gouwujifen'=>$jifen]);
+            // $res = Db::table('member')->update(['id'=>$user_id,'gouwujifen'=>$jifen]);
 
             if($reult){
                 // 提交事务
