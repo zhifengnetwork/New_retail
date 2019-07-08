@@ -292,4 +292,32 @@ class FiftyZone extends ApiBase
         }
     }
 
+    public function stay_upload_proof(){
+        $user_id = $this->get_user_id();
+
+        $goods_id = 50;
+
+        $where['fzo.user_id'] = $user_id;
+        $where['g.goods_id'] = $goods_id;
+        $where['gi.main'] = 1;
+
+
+        $list = Db::table('fifty_zone_order')->alias('fzo')
+                ->join('goods g','g.goods_id=fzo.goods_id','LEFT')
+                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
+                ->where($where)
+                ->field('fzo.fz_order_id,g.goods_name,gi.picture img')
+                ->order('fzo.fz_order_id DESC')
+                ->paginate(10);
+        
+        if($list){
+            $list = $list->all();
+
+            foreach($list as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') . $value['img'];
+            }
+        }
+
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$list]);
+    }
 }
