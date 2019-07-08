@@ -14,7 +14,7 @@ class FiftyZone extends ApiBase
 
     public function shop_list(){
         $user_id = $this->get_user_id();
-        pred($user_id);
+
        if($this->fifty_order(1)){
            $this->ajaxReturn(['status' => 304 , 'msg'=>'还有未付款的订单！','data'=>'']);
        }
