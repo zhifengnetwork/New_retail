@@ -122,7 +122,7 @@ class User extends ApiBase
               $address_list['county_list'][$v['code']]=  $v['area_name'];
            }
         }
-        $this->ajaxReturn(['status'=>1,'msg'=>'获取地址成功','data'=>$address_list]);
+        $this->ajaxReturn(['status'=>200,'msg'=>'获取地址成功','data'=>$address_list]);
     }
 
     /**
