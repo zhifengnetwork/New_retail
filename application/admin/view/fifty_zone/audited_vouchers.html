@@ -33,7 +33,7 @@
                                 <td>{if condition="$vo.shop_confirm"}已确认{else /}未确认{/if}</td>
                                 <td>{$vo.add_time|date="Y-m-d",###}</td>
                                 <td>
-                                    {if condition="!$vo.shop_confirm"}<a class="btn btn-default delete" >通过审核 </i></a>{/if}
+                                    {if condition="!$vo.shop_confirm"}<a class="btn btn-default delete" onclick="pass_proof(this,{$vo.fz_order_id})" href="javascript:;" _href="{:url('FiftyZone/pass_proof',['fz_order_id'=>$vo.fz_order_id],false)}" >通过审核 </i></a>{/if}
                                 </td>
                             </tr>
                             {/volist}
@@ -58,11 +58,6 @@
 {/block}
 {block name='script'}
 <script>
-    // function pass_proof(obj,fz_order_id){
-    //     alert('ad')
-    // }
-    $(document).on('.delete','click',function(){
-        console.log(111)
-    })
+    
 </script>
 {/block}

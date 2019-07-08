@@ -33,7 +33,7 @@
                                 <td>{if condition="$vo.shop_confirm"}已确认{else /}未确认{/if}</td>
                                 <td>{$vo.add_time|date="Y-m-d",###}</td>
                                 <td>
-                                    {if condition="!$vo.shop_confirm"}<a class="btn btn-default delete" href="javascript:;" _href="{:url('FiftyZone/pass_proof',['fz_order_id'=>$vo.fz_order_id],false)}" >通过审核 </i></a>{/if}
+                                    {if condition="!$vo.shop_confirm"}<a class="btn btn-default delete" onclick="pass_proof(this,{$vo.fz_order_id})" href="javascript:;" _href="{:url('FiftyZone/pass_proof',['fz_order_id'=>$vo.fz_order_id],false)}" >通过审核 </i></a>{/if}
                                 </td>
                             </tr>
                             {/volist}
@@ -58,100 +58,12 @@
 {/block}
 {block name='script'}
 <script>
-    function del(obj,goods_id){
-        if(window.confirm('确认删除该商品吗？')){
-            $.post("{:url('Goods/del')}",{'goods_id':goods_id},function(data){
+    function pass_proof(obj,fz_order_id){
+        if(window.confirm('确认审核通过吗？')){
+            $.post($(obj).attr('_href'),{'fz_order_id':fz_order_id},function(data){
                 alert(data.msg);
                 if(data.code){
                     $(obj).parents('tr').remove();
-                }
-            },'json');
-        }
-    }
-
-    function is_show(obj,goods_id){
-        var is_show = $(obj).attr('is_show');
-
-        if( is_show == 1 ){
-            is_show = 0;
-            ts = '是否下架?';
-        }else{
-            is_show = 1;
-            ts = '是否上架?';
-        }
-
-        if(window.confirm(ts)){
-            $.post("{:url('Goods/is_show')}",{'goods_id':goods_id,'is_show':is_show},function(data){
-                if(data.code){
-                    $(obj).attr('is_show',is_show);
-                    if( is_show ){
-                        $(obj).parents('tr').find('td').eq(4).html('已上架');
-                        $(obj).html('下架');
-                        alert('上架成功！');
-                    }else{
-                        $(obj).parents('tr').find('td').eq(4).html('未上架');
-                        $(obj).html('上架');
-                        alert('下架成功！');
-                    }
-                }
-            },'json');
-        }
-    }
-
-    function is_show_all(is_show){
-
-        var goods_id = '';
-        var flag = 0
-        $('.ch_item').each(function(k,v){
-            if( $(v).is(':checked') ){
-                flag = 1;
-                goods_id += $(v).val() + ',';
-            }
-        });
-        if( !flag ){
-            if( is_show == 1 ){
-                alert('请勾选需要批量上架的ID！');
-            }else{
-                alert('请勾选需要批量下架的ID！');
-            }
-        }
-        goods_id = goods_id.substring(0, goods_id.length - 1);  
-        
-        $.post("{:url('Goods/is_show_all')}",{'goods_id':goods_id,'is_show':is_show},function(data){
-            if(data.code){
-                if( is_show ){
-                    alert('批量上架成功！');
-                }else{
-                    alert('批量下架成功！');
-                }
-                location.reload();
-            }
-        },'json');
-
-    }
-
-    function del_all(obj,goods_id){
-        var goods_id = '';
-        var flag = 0
-        $('.ch_item').each(function(k,v){
-            if( $(v).is(':checked') ){
-                flag = 1;
-                goods_id += $(v).val() + ',';
-            }
-        });
-        if( !flag ){
-            alert('请勾选需要批量删除的ID！');
-            return;
-        }
-        goods_id = goods_id.substring(0, goods_id.length - 1);
-
-        if(window.confirm('确认批量删除商品吗？')){
-            $.post("{:url('Goods/del_all')}",{'goods_id':goods_id},function(data){
-                if(data.code){
-                    alert('批量删除成功！');
-                    location.reload();
-                }else{
-                    alert('批量删除失败！');
                 }
             },'json');
         }

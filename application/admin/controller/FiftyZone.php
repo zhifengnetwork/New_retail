@@ -268,4 +268,16 @@ class FiftyZone extends Common
 
     }
 
+    /*
+     * 通过审核
+     */
+    public function pass_proof(){
+        $data['fz_order_id'] = input('fz_order_id');
+        $data['shop_confirm'] = 1;
+        if(Db::table('fifty_zone_order')->update($data)){
+            jason([],'审核通过成功！');
+        }
+        jason([],'审核通过失败！',0);
+    }
+
 }
