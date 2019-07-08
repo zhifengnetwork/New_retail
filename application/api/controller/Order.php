@@ -504,8 +504,23 @@ class Order extends ApiBase
         $where = [];
         $pageParam = ['query' => []];
 
+        //50元专区
         if($type=='fifty'){
+            $goods_id = 50;
+            $img = Config('c_pub.apiimg') . Db::table('goods_img')->where('goods_id',$goods_id)->where('main',1)->value('picture');
+            $goods_name = Db::table('goods')->where('goods_id',$goods_id)->value('goods_name');
             
+            $order_list = Db::table('fifty_zone_order')->where('user_id',$user_id)->order('fz_order_id DESC')->paginate(10,false,$pageParam);
+            if($order_list){
+                $order_list = $order_list->all();
+
+                foreach($order_list as $key=>&$value){
+                    $value['goods_name'] = $goods_name;
+                    $value['img'] = $img;
+                }
+            }
+
+            $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$order_list]);
         }
 
         if ($type=='dfk'){
@@ -1039,7 +1054,7 @@ class Order extends ApiBase
         $data['goods'] = Db::table('order_goods')->where('order_id',$order_id)->field('goods_id,goods_name,goods_sn,goods_num,goods_price,spec_key_name')->select();
 
         foreach($data['goods'] as $key=>&$value){
-            $value['img'] = Config('c_pub.apiimg') . Db::table('goods_img')->where('goods_id',$value['goods_id'])->where('main',1)->value('picture img');
+            $value['img'] = Config('c_pub.apiimg') . Db::table('goods_img')->where('goods_id',$value['goods_id'])->where('main',1)->value('picture');
         }
 
         $data['consignee'] = $order['consignee'];
