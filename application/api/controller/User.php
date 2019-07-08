@@ -52,7 +52,7 @@ class User extends ApiBase
     {
         $result = [];
         try {
-            if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
+            // if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
             $phone = trim($this->param['phone']);
             $password = trim($this->param['user_password']);
 
