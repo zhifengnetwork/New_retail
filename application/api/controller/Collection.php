@@ -22,6 +22,12 @@ class Collection extends ApiBase
                 ->where('user_id',$user_id)
                 ->where('gi.main',1)
                 ->select();
+        if($list){
+            foreach($list as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') . $value['img'];
+            }
+        }
+
         $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$list]);
     }
 
