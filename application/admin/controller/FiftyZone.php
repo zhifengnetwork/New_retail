@@ -225,12 +225,45 @@ class FiftyZone extends Common
                 ->field('fzo.*,u.mobile')
                 ->order('fzo.fz_order_id DESC')
                 ->paginate(10,false,$pageParam);
-        pred($list);
+        
         return $this->fetch('',[
             'list'          =>  $list,
             'mobile'        =>  $mobile,
             
             'meta_title'    =>  '已审核列表',
+        ]);
+
+    }
+
+    /*
+     * 未审核列表
+     */
+    public function audit_proof(){
+        $where['fzo.user_confirm'] = 1;
+        $where['fzo.shop_confirm'] = 0;
+        $where['fzo.shop_user_id'] = 0;
+        $pageParam['query']['user_confirm'] = 1;
+        $pageParam['query']['shop_confirm'] = 0;
+        $pageParam['query']['shop_user_id'] = 0;
+
+        $mobile = input('mobile');
+        if($mobile){
+            $where['u.mobile'] = ['like',"%{$mobile}%"];
+            $pageParam['query']['mobile'] = $mobile;
+        }
+
+        $list = Db::table('fifty_zone_order')->alias('fzo')
+                ->join('member u','u.id=fzo.user_id')
+                ->where($where)
+                ->field('fzo.*,u.mobile')
+                ->order('fzo.fz_order_id DESC')
+                ->paginate(10,false,$pageParam);
+        
+        return $this->fetch('',[
+            'list'          =>  $list,
+            'mobile'        =>  $mobile,
+            
+            'meta_title'    =>  '未审核列表',
         ]);
 
     }

@@ -3,6 +3,7 @@
  * 收藏API
  */
 namespace app\api\controller;
+use app\common\controller\ApiBase;
 use think\Db;
 
 class Collection extends ApiBase

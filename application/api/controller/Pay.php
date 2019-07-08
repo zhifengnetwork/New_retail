@@ -187,6 +187,7 @@ class Pay extends ApiBase
             $res =  Db::table('member')->where(['user_id' => $user_id])->update($remainder_money);
             if(!$res){
                 Db::rollback();
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'余额不足','data'=>'']);
             }
 
             //余额记录

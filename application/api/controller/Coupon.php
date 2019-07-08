@@ -1,5 +1,6 @@
 <?php
 namespace app\api\controller;
+use app\common\controller\ApiBase;
 use think\Db;
 
 class Coupon extends ApiBase
