@@ -193,14 +193,13 @@ class Pay extends ApiBase
             //余额记录
             $balance_log = [
                 'user_id'      => $user_id,
-                'balance'      => $balance_info['balance'] - $order_info['order_amount'],
-                'balance_type' => $balance_info['balance_type'],
+                'balance'      => $member['remainder_money'] - $order_info['order_amount'],
                 'source_type'  => 0,
                 'log_type'     => 0,
                 'source_id'    => $order_info['order_sn'],
                 'note'         => '商品订单消费',
                 'create_time'  => time(),
-                'old_balance'  => $balance_info['balance']
+                'old_balance'  => $member['remainder_money']
             ];
             $res2 = Db::table('menber_balance_log')->insert($balance_log);
             if(!$res2){
