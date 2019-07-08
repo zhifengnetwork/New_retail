@@ -204,7 +204,7 @@ class Address extends ApiBase
     public function get_region(){
         $codeid=input('get.code');
         if(is_null($codeid)||empty($codeid)){
-            $res=Db::name('region')->where('parent_id',1)->select();
+            $res=Db::name('region')->where('parent_id',100000)->select();
         }else{
             $res=Db::name('region')->where('parent_id',$codeid)->select();
         }
