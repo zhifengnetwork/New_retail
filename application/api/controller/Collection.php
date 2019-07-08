@@ -38,13 +38,13 @@ class Collection extends ApiBase
         $user_id = $this->get_user_id();
 
         $goods_id = input('goods_id');
-        if(!$goods_id) $this->ajaxReturn(['status' => -2 , 'msg'=>'参数错误！','data'=>'']);
+        if(!$goods_id) $this->ajaxReturn(['status' => 301 , 'msg'=>'参数错误！','data'=>'']);
 
-        $res = Db::table('goods')->where('goods_id',$goods_id)->find();
-        if(!$res) $this->ajaxReturn(['status' => -2 , 'msg'=>'该商品不存在！','data'=>'']);
+        $res = Db::table('goods')->where('goods_id','in',$goods_id)->find();
+        if(!$res) $this->ajaxReturn(['status' => 301 , 'msg'=>'该商品不存在！','data'=>'']);
 
         $where['user_id'] = $user_id;
-        $where['goods_id'] = $goods_id;
+        $where['goods_id'] = ['in',$goods_id];
 
         $res = Db::table('collection')->where($where)->find();
 
@@ -52,7 +52,15 @@ class Collection extends ApiBase
             $res = Db::table('collection')->where($where)->delete();
             $this->ajaxReturn(['status' => 200 , 'msg'=>'取消收藏！','data'=>'']);
         }else{
-            $res = Db::table('collection')->insert($where);
+
+            $goods_id = explode(',',$goods_id);
+            $arr = [];
+            foreach($goods_id as $key=>$value){
+                $arr[$key]['goods_id'] = $value;
+                $arr[$key]['user_id'] = $user_id;
+            }
+
+            $res = Db::table('collection')->insertAll($arr);
             $this->ajaxReturn(['status' => 200 , 'msg'=>'收藏成功！','data'=>'']);
         }
     }
