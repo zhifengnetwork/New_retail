@@ -209,12 +209,17 @@ class ApiAbstract extends Controller
 
     public function getResult($status, $message, $data)
     {
-
-        return [
+        header('Access-Control-Allow-Origin:*');
+        header('Access-Control-Allow-Headers:*');
+        header("Access-Control-Allow-Methods:GET, POST, OPTIONS, DELETE");
+        header('Content-Type:application/json; charset=utf-8');
+        $return = [
             'status' => $status,
             'msg' => $message,
             'data' => $data
         ];
+        exit(str_replace("\\/", "/",json_encode($return,JSON_UNESCAPED_UNICODE)));
+
     }
 
 }
