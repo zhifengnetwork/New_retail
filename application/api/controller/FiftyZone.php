@@ -15,9 +15,9 @@ class FiftyZone extends ApiBase
     public function shop_list(){
         $user_id = $this->get_user_id();
 
-       if($this->fifty_order(1)){
-           $this->ajaxReturn(['status' => 304 , 'msg'=>'还有未付款的订单！','data'=>'']);
-       }
+        if($this->fifty_order(1)){
+            $this->ajaxReturn(['status' => 304 , 'msg'=>'还有未付款的订单！','data'=>'']);
+        }
 
         $user = Db::table('member')->field('release,residue_release,release_ci,release_time')->find($user_id);
 

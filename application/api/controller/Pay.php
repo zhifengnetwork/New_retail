@@ -253,7 +253,7 @@ class Pay extends ApiBase
 
     public function release_wx_pay(){
         $user_id = $this->get_user_id();
-        $pay_type     = input('pay_type');//支付方式
+        $pay_type     = input('pay_type',2);//支付方式
         $pwd = input('pwd');
 
         $ss = Db::table('config')->where('module',5)->where('name','release_money')->value('value');
@@ -318,7 +318,7 @@ class Pay extends ApiBase
                 'client_ip'    => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1',// 客户地址
                 'scene_info' => [
                     'type'     => 'Wap',// IOS  Android  Wap  腾讯建议 IOS  ANDROID 采用app支付
-                    'wap_url'  => 'https://helei112g.github.io/',//自己的 wap 地址
+                    'wap_url'  => 'http://new_retail.zhifengwangluo.com/',//自己的 wap 地址
                     'wap_name' => '微信支付',
                 ],
             ];
