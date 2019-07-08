@@ -1039,7 +1039,7 @@ class Order extends ApiBase
         $data['goods'] = Db::table('order_goods')->where('order_id',$order_id)->field('goods_id,goods_name,goods_sn,goods_num,goods_price,spec_key_name')->select();
 
         foreach($data['goods'] as $key=>&$value){
-            $value['img'] = Db::table('goods_img')->where('goods_id',$value['goods_id'])->where('main',1)->value('picture img');
+            $value['img'] = Config('c_pub.apiimg') . Db::table('goods_img')->where('goods_id',$value['goods_id'])->where('main',1)->value('picture img');
         }
 
         $data['consignee'] = $order['consignee'];
