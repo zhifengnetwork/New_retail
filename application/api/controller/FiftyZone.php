@@ -156,15 +156,9 @@ class FiftyZone extends ApiBase
         }
 
         
-
-        
-        //开启事务
-        Db::startTrans();
-        
-        
         $arr = [];
         $time = time();
-        $res2 = Db::table('order')->insertGetId(['order_sn'=>date('YmdHis',$time) . mt_rand(10000000,99999999),'user_id'=>$user_id,'prom_type'=>5,'add_time'=>$time]);
+        // $res2 = Db::table('order')->insertGetId(['order_sn'=>date('YmdHis',$time) . mt_rand(10000000,99999999),'user_id'=>$user_id,'prom_type'=>5,'add_time'=>$time]);
         
         foreach($list as $key=>$value){
             if($value['user_id'] == $user_id){
@@ -176,7 +170,8 @@ class FiftyZone extends ApiBase
                 $this->ajaxReturn(['status' => 301 , 'msg'=>"个别商家的商品已没库存，请刷新列表！",'data'=>'']);
             }
             $arr[$key]['fz_id']        = $value['fz_id'];
-            $arr[$key]['order_id']     = $res2;
+            // $arr[$key]['order_id']     = $res2;
+            $arr[$key]['order_sn']     = date('YmdHis',$time) . mt_rand(10000000,99999999);
             $arr[$key]['user_id']      = $user_id;
             $arr[$key]['shop_user_id'] = $value['user_id'];
             $arr[$key]['goods_id']     = $value['goods_id'];
@@ -184,6 +179,10 @@ class FiftyZone extends ApiBase
             $arr[$key]['add_time']     = $time;
         }
 
+        
+        //开启事务
+        Db::startTrans();
+        
         $res = Db::table('fifty_zone_order')->insertAll($arr);
 
         if($res){
