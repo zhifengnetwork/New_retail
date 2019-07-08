@@ -172,18 +172,19 @@ class Pay extends ApiBase
                 exit;
             }
         }elseif($pay_type == 1){
-            $balance_info  = get_balance($user_id,0);
-            if($balance_info['balance'] < $order_info['order_amount']){
-                $this->ajaxReturn(['status' => 0 , 'msg'=>'余额不足','data'=>'']);
+            // $balance_info  = get_balance($user_id,0);
+            if($member['remainder_money'] < $order_info['order_amount']){
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'余额不足','data'=>'']);
             }
+
             // 启动事务
             Db::startTrans();
 
             //扣除用户余额
-            $balance = [
-                'balance'            =>  Db::raw('balance-'.$amount.''),
+            $remainder_money = [
+                'remainder_money'            =>  Db::raw('remainder_money-'.$amount.''),
             ];
-            $res =  Db::table('member_balance')->where(['user_id' => $user_id,'balance_type' => 0])->update($balance);
+            $res =  Db::table('member')->where(['user_id' => $user_id])->update($remainder_money);
             if(!$res){
                 Db::rollback();
             }
