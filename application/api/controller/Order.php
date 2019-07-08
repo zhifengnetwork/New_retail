@@ -504,6 +504,10 @@ class Order extends ApiBase
         $where = [];
         $pageParam = ['query' => []];
 
+        if($type=='fifty'){
+
+        }
+
         if ($type=='dfk'){
             $where = array('order_status' => 1 ,'pay_status'=>0 ,'shipping_status' =>0); //待付款
             $pageParam['query']['order_status'] = 1;
@@ -549,12 +553,12 @@ class Order extends ApiBase
                         ->where($where)
                         ->group('og.order_id')
                         ->order('o.order_id DESC')
-                        ->field('o.order_id,o.order_sn,og.goods_name,gi.picture img,og.spec_key_name,og.goods_price,g.original_price,og.goods_num,o.order_status,o.pay_status,o.shipping_status,pay_type,o.add_time')
-                        ->paginate(10,false,$pageParam)
-                        ->toArray();
+                        ->field('o.order_id,o.order_sn,o.comment,og.goods_name,gi.picture img,og.spec_key_name,og.goods_price,g.original_price,og.goods_num,o.order_status,o.pay_status,o.shipping_status,pay_type,o.add_time')
+                        ->paginate(10,false,$pageParam);
                         
-        if($order_list['data']){
-            foreach($order_list['data'] as $key=>&$value){
+        if($order_list){
+            $order_list = $order_list->all();
+            foreach($order_list as $key=>&$value){
 
                 $value['img'] = Config('c_pub.apiimg') . $value['img'];
 
@@ -569,12 +573,12 @@ class Order extends ApiBase
                     $value['status'] = 4;   //待评价
                     
                     //是否评价
-                    $comment = Db::table('goods_comment')->where('order_id',$value['order_id'])->find();
-                    if($comment){
-                        $value['comment'] = 1;
-                    }else{
-                        $value['comment'] = 0; 
-                    }
+                    // $comment = Db::table('goods_comment')->where('order_id',$value['order_id'])->find();
+                    // if($comment){
+                    //     $value['comment'] = 1;
+                    // }else{
+                    //     $value['comment'] = 0; 
+                    // }
 
                 }else if( $value['order_status'] == 3 && $value['pay_status'] == 0 && $value['shipping_status'] == 0 ){
                     $value['status'] = 5;   //已取消
@@ -588,7 +592,7 @@ class Order extends ApiBase
             }
         }
         
-        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$order_list['data']]);
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$order_list]);
     }
 
 
@@ -915,6 +919,7 @@ class Order extends ApiBase
         $res = Db::table('goods_comment')->insertAll($comments);
 
         if($res){
+            Db::table('order')->where('order_id',$order_id)->update(['comment'=>1]);
             $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>'']);
         }
 
@@ -1030,6 +1035,8 @@ class Order extends ApiBase
         if( $order['order_status'] > 3 && $order['shipping_status'] > 4 ){
             $this->ajaxReturn(['status' => 301 , 'msg'=>'参数错误！','data'=>'']);
         }
+
+        $data['goods'] = Db::table('order_goods')->where('order_id',$order_id)->field('goods_name,goods_sn,goods_num,goods_price,spec_key_name')->select();
 
         $data['consignee'] = $order['consignee'];
         $data['mobile'] = $order['mobile'];
