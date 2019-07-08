@@ -323,7 +323,7 @@ class Pay extends ApiBase
                 ],
             ];
             $wxConfig = Config::get('wx_config');
-            $url      = Charge::run(Config::WX_CHANNEL_WAP, $wxConfig, $payData);
+            $url      = Charge::run(PayConfig::WX_CHANNEL_WAP, $wxConfig, $payData);
             try {
                 $this->ajaxReturn(['status' => 200 , 'msg'=>'支付路径','data'=> ['url' => $url]]);
             } catch (PayException $e) {
