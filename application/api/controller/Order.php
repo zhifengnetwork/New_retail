@@ -595,7 +595,7 @@ class Order extends ApiBase
 
                 $value['img'] = Config('c_pub.apiimg') . $value['img'];
 
-                $value['comment'] = 0; 
+                // $value['comment'] = 0; 
                 if( $value['order_status'] == 1 && $value['pay_status'] == 0 && $value['shipping_status'] == 0 ){
                     $value['status'] = 1;   //待付款
                 }else if( $value['order_status'] == 1 && $value['pay_status'] == 1 && $value['shipping_status'] == 0 ){
