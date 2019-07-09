@@ -913,7 +913,7 @@ class User extends ApiBase
             'money'   => $money ,
             'rate'    => $tax,
             'taxfee'  => $taxfee,
-            'create_time'    => time(),
+            'createtime'    => time(),
             'type'           => $withdraw_type,
             'account_name'   =>  $member['alipay_name'],
             'account_number' =>  $member['alipay'],
