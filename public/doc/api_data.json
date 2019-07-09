@@ -918,6 +918,52 @@
   },
   {
     "type": "POST",
+    "url": "/user/edit_name",
+    "title": "修改用户名",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token*（必填）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "realname",
+            "description": "<p>姓名*（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"realname\":\"xxxxxxxxxxxxxxxxxxxxxx\",\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n\"status\": 200,\n\"msg\": \"success\",\n\"data\":\"成功\"\n\n}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"操作失败\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/User.php",
+    "groupTitle": "user",
+    "name": "PostUserEdit_name"
+  },
+  {
+    "type": "POST",
     "url": "/user/estimate_list",
     "title": "预计收益明细",
     "group": "user",
