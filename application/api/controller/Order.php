@@ -815,7 +815,7 @@ class Order extends ApiBase
             $this->ajaxReturn(['status' => 301 , 'msg'=>'参数错误！','data'=>'']);
         }
 
-        $order = Db::table('order')->where('order_id',$order_id)->where('user_id',$user_id)->field('order_status,groupon_id,pay_status,shipping_status')->find();
+        $order = Db::table('order')->where('order_id',$order_id)->where('user_id',$user_id)->field('order_status,order_sn,order_amount,groupon_id,pay_status,shipping_status')->find();
         if(!$order) $this->ajaxReturn(['status' => 301 , 'msg'=>'订单不存在！','data'=>'']);
 
         if( $order['order_status'] == 1 && $order['pay_status'] == 0 && $order['shipping_status'] == 0 ){
@@ -863,7 +863,7 @@ class Order extends ApiBase
 
             $Sales = new Sales($user_id,$order_id,0);
 
-            $rest = $Sales->reward_leve($user_id,$order_id,$order['order_sn'],1);
+            $res = $Sales->reward_leve($user_id,$order_id,$order['order_sn'],$order['order_amount'],1);
 
             if($rest == false){
                 Db::rollback();

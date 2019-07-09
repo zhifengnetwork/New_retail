@@ -247,10 +247,15 @@ class Pay extends ApiBase
                     $jifen = sprintf("%.2f",$jifen + ($value['goods_num'] * $goods['gift_points']));
                 }
             }
+
+            $Sales = new Sales($user_id,$order_id,0);
+
+            $res = $Sales->reward_leve($user_id,$order_id,$order_info['order_sn'],$order_info['order_amount'],0);
+
            
             // $res = Db::table('member')->update(['id'=>$user_id,'gouwujifen'=>$jifen]);
 
-            if($reult){
+            if($reult && $res){
                 // 提交事务
                 Db::commit();
                 $this->ajaxReturn(['status' => 200 , 'msg'=>'余额支付成功!','data'=>['order_id' =>$order_info['order_id'],'order_amount' =>$order_info['order_amount'],'goods_name' => getPayBody($order_info['order_id']),'order_sn' => $order_info['order_sn'] ]]);
