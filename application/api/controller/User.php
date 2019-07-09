@@ -917,7 +917,7 @@ class User extends ApiBase
             'type'           => $withdraw_type,
             'account_name'   =>  $member['alipay_name'],
             'account_number' =>  $member['alipay'],
-            'status'         => 0,
+            'status'         => 1,
         ];
 
         $res  = Db::name('member_withdrawal')->insert($data);
