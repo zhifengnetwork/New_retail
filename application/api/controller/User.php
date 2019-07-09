@@ -905,7 +905,7 @@ class User extends ApiBase
             $this->failResult('用户名或者账户不能为空！', 301);
 
         }
-        $withdraw_type      = input('withdraw_type',3);
+        $withdraw_type      = input('withdraw_type',4);
         $tax                = 0.006; //提现费率
         $taxfee             = $money * $tax;
         $data = [
@@ -921,7 +921,6 @@ class User extends ApiBase
         ];
 
         $res  = Db::name('member_withdrawal')->insert($data);
-
         if($res == false){
             return $this->failResult('提现失败', 301);
         }
