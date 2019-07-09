@@ -888,11 +888,15 @@ class User extends ApiBase
             return $this->failResult('用户不存在', 301);
         }
 
-        $member  = Db::name('member')->where(['id' => $user_id])->field('alipay_name,alipay,is_cash')->find();
+        $member  = Db::name('member')->where(['id' => $user_id])->field('alipay_name,alipay,is_cash,remainder_money')->find();
  
         $money   = input('money/f');
-
+       
         if(!preg_match("/^\d+(\.\d+)?$/",$money))$this->failResult('请输入正确的金额！', 301);
+
+        if($money > $member['remainder_money']){
+            $this->failResult('提现金额大于余额！', 301);
+        }
 
         if($member['is_cash'] != 1){
 
@@ -905,6 +909,7 @@ class User extends ApiBase
             $this->failResult('用户名或者账户不能为空！', 301);
 
         }
+       
         $withdraw_type      = input('withdraw_type',4);
         $tax                = 0.006; //提现费率
         $taxfee             = $money * $tax;
@@ -919,12 +924,23 @@ class User extends ApiBase
             'account_number' =>  $member['alipay'],
             'status'         => 1,
         ];
+        // 启动事务
+        Db::startTrans();
 
         $res  = Db::name('member_withdrawal')->insert($data);
+
         if($res == false){
+            Db::rollback();
             return $this->failResult('提现失败', 301);
         }
-       $this->ajaxReturn(['status'=>200,'msg'=>'提现申请成功,工作人员加急审核中！','data'=>[]]);
+        //余额扣减
+        $res1 = Member::where(['id' => $user_id])->setDec('remainder_money',$money);
+        if($res1 == false){
+            Db::rollback();
+            return $this->failResult('提现失败', 301);
+        }
+        Db::commit();
+        $this->ajaxReturn(['status'=>200,'msg'=>'提现申请成功,工作人员加急审核中！','data'=>[]]);
     }
 
 

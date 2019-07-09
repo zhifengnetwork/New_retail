@@ -361,8 +361,8 @@ class Finance extends Common
        
         
         $list  = MemberWithdrawal::alias('w')
-            ->field('w.data, w.id, m.id as mid , m.groupid , m.level , m.avatar , w.money , w.rate , w.account , w.content ,w.ordersn ,  m.realname , m.mobile ,w.createtime ,w.checktime ,w.type,w.status')
-            ->join("member m",'m.openid = w.openid','LEFT')
+            ->field('w.data, w.id,w.taxfee,m.id as mid ,w.account_name,w.account_number,m.groupid , m.level , m.avatar , w.money , w.rate , w.account , w.content ,w.ordersn ,  m.realname , m.mobile ,w.createtime ,w.checktime ,w.type,w.status')
+            ->join("member m",'m.id = w.user_id','LEFT')
             ->where($where)
             ->order('m.createtime DESC')
             ->paginate(10, false, ['query' => $where]);
@@ -384,6 +384,56 @@ class Finance extends Common
             'meta_title'   => '余额提现列表',
         ]);
     }
+
+    /***
+     * 提现审批操作
+     */
+
+    public function withdrawal(){
+
+        $id     = input('id');
+        $status = input('status1');
+        $content = input('content','');
+        $info = MemberWithdrawal::where(['id' => $id])->find();
+        if($status == 2){
+            //调用支付宝转账接口
+            $this->error('支付宝配置未对接');
+        }elseif($status == -1){
+            //审核拒绝
+
+            // 启动事务
+            Db::startTrans();
+            $update = [
+                'status' => $status,
+                'checktime' => time(),
+                'content'   => $content,
+            ];
+
+            $res = MemberWithdrawal::where(['id' => $id])->update($update);
+
+            if($res == false){
+                Db::rollback();
+                $this->error('拒绝失败');
+            }
+            //余额返回
+            $res1 = MemberModel::where(['id' => $info['user_id']])->setInc('remainder_money',$info['money']);
+            if($res1 == false){
+                Db::rollback();
+                $this->error('拒绝失败');
+            }
+           
+            Db::commit();
+            $this->success('拒绝成功', url('finance/withdrawal_list'));
+
+        }
+        
+
+
+
+    }
+
+
+    
 
 
     
