@@ -797,6 +797,89 @@ class User extends ApiBase
         return $this->successResult($data);
     }
 
+     /**
+     * 账户余额
+     */
+    public function user_remainder(){
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+        $info  = Db::name('member')->where(['id' => $user_id])->field('remainder_money')->find();
+        $data['remainder_money'] = $info['remainder_money'];
+        return $this->successResult($data);
+    }
+
+     /**
+     * 提现列表
+     */
+    public function withdrawal_list(){
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+
+        $list  = Db::name('withdraw')->where(['user_id' => $user_id,'status' => ['neq',-2]])->field('*')->select();
+        $data['list'] = $list;
+        return $this->successResult($data);
+    }
+
+     /**
+     * 账单列表
+     */
+    public function remainder_list(){
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+
+        $list  = Db::name('menber_balance_log')->where(['user_id' => $user_id,'balance_type' => 1])->field('note,balance,source_id,create_time')->select();
+        $data['list'] = $list;
+        return $this->successResult($data);
+    }
+
+      /**
+     * 支付宝账号详情
+     */
+    public function zfb_info(){
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+        $data  = Db::name('menber')->where(['user_id' => $user_id])->field('alipay_name,alipay')->find();
+        return $this->successResult($data);
+    }
+
+
+    /**
+     * 支付宝账号编辑
+     */
+    public function zfb_edit(){
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+        $alipay_name = input('alipay_name');
+        $alipay      = input('alipay');
+
+        if(empty($alipay_name) || empty($alipay) ){
+            return $this->failResult('支付宝用户名或者账户不能为空', 301);
+        }
+
+        $data = [
+            'alipay'     => $alipay,
+            'alipay_name' => $alipay_name,
+        ];
+        $res  = Db::name('menber')->where(['id' => $user_id])->update($data);
+
+        if($res == false){
+            return $this->failResult('编辑失败', 301);
+        }
+        return $this->successResult($data);
+    }
+
+
+
         /**
      * @api {POST} /user/sharePoster 我的推广码
      * @apiGroup user

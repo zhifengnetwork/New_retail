@@ -361,7 +361,7 @@ class Finance extends Common
        
         
         $list  = MemberWithdrawal::alias('w')
-            ->field('w.data, w.id, m.id as mid , m.groupid , m.level , m.avatar , w.money , w.rate , w.account , w.content ,w.ordersn , m.nickname , m.realname , m.mobile ,m.weixin ,w.createtime ,w.checktime ,w.type,w.status')
+            ->field('w.data, w.id, m.id as mid , m.groupid , m.level , m.avatar , w.money , w.rate , w.account , w.content ,w.ordersn ,  m.realname , m.mobile ,w.createtime ,w.checktime ,w.type,w.status')
             ->join("member m",'m.openid = w.openid','LEFT')
             ->where($where)
             ->order('m.createtime DESC')
