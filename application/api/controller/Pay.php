@@ -256,7 +256,7 @@ class Pay extends ApiBase
            
             // $res = Db::table('member')->update(['id'=>$user_id,'gouwujifen'=>$jifen]);
 
-            if($reult && $res){
+            if($reult){
                 // 提交事务
                 Db::commit();
                 $this->ajaxReturn(['status' => 200 , 'msg'=>'余额支付成功!','data'=>['order_id' =>$order_info['order_id'],'order_amount' =>$order_info['order_amount'],'goods_name' => getPayBody($order_info['order_id']),'order_sn' => $order_info['order_sn'] ]]);

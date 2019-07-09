@@ -12,7 +12,7 @@ use think\Request;
 
 class Photoshop extends ApiBase {
 
-    private static $Qrcode_url = '';
+    private static $Qrcode_url = 'http://new_retail_web.zhifengwangluo.com/Register';
     private static $savePath = '';
     private static $bg_path = '';
     private static $mof_bg_path = '';
