@@ -318,7 +318,7 @@ class Pay extends ApiBase
                 'client_ip'    => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1',// 客户地址
                 'scene_info' => [
                     'type'     => 'Wap',// IOS  Android  Wap  腾讯建议 IOS  ANDROID 采用app支付
-                    'wap_url'  => 'http://new_retail.zhifengwangluo.com/',//自己的 wap 地址
+                    'wap_url'  => 'http://new_retail_web.zhifengwangluo.com/Payment',//自己的 wap 地址
                     'wap_name' => '微信支付',
                 ],
             ];
