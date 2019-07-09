@@ -366,6 +366,47 @@ class User extends ApiBase
         return $result;
     }
 
+       /**
+     * @api {POST} /user/edit_name 修改用户名
+     * @apiGroup user
+     * @apiVersion 1.0.0
+     *
+     * @apiParam {string}    token              token*（必填）
+     * @apiParam {string}    realname              姓名*（必填）
+     * @apiParamExample {json} 请求数据:
+     * {
+     *      "realname":"xxxxxxxxxxxxxxxxxxxxxx",
+     *      "token":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     * "status": 200,
+     * "msg": "success",
+     * "data":"成功"
+     * 
+     * }
+     * //错误返回结果
+     * {
+     * "status": 301,
+     * "msg": "操作失败",
+     * "data": false
+     * }
+     */
+    public function edit_name()
+    {
+        $user_id = $this->get_user_id();
+        $data['realname']=input("realname");
+        $memberRes=Db::name("member")->where("id",$user_id)->update($data);
+       if($memberRes!==false){
+           return $this->successResult("用户名修改成功");
+       }else{
+           return $this->successResult("操作失败");
+       }
+    }
+
+
+
 
        /**
      * @api {POST} /user/team 我的团队
