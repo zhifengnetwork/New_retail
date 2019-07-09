@@ -92,6 +92,15 @@ class Index extends ApiBase
      */
     public function index()
     {
+        $order_id = 1636;
+        $goods_ids = Db::table('order_goods')->where('order_id',$order_id)->column('goods_id');
+        $goods_ids[] = 40;
+        $goods = Db::table('goods')->where('goods_id','in',$goods_ids)->column('is_gift');
+        if(in_array(1,$goods)){
+            echo 1;die;
+        }
+        pred($goods);
+
         $banners=Db::name('advertisement')->field('picture,title,url')->where(['type'=>0,'state'=>1])->order('sort','desc')->limit(3)->select();
         if($banners){
             foreach($banners as $bk=>$bv){

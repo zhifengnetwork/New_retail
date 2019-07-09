@@ -140,11 +140,9 @@ class Goods extends Common
 
             // 本店售价
             $pri = $data['pri_td']['pri'];
-            $group_pri = $data['pri_td']['group_pri'];
             $pri_count = count($pri);
             for ($m = 0; $m < $pri_count; $m++) {
                 $data_spec[$m]['pri'] = ['key' => 'pri', 'value' => $pri[$m]];
-                $data_spec[$m]['group_pri'] = ['key' => 'group_pri', 'value' => $group_pri[$m]];
             }
 
             // 初始化规格数据格式
@@ -314,11 +312,9 @@ class Goods extends Common
 
             // 本店售价
             $pri = $data['pri_td']['pri'];
-            $group_pri = $data['pri_td']['group_pri'];
             $pri_count = count($pri);
             for ($m = 0; $m < $pri_count; $m++) {
                 $data_spec[$m]['pri'] = ['key' => 'pri', 'value' => $pri[$m]];
-                $data_spec[$m]['group_pri'] = ['key' => 'group_pri', 'value' => $group_pri[$m]];
             }
             // 初始化规格数据格式
             $count = count($data['goods_td'][1]);
@@ -497,7 +493,7 @@ class Goods extends Common
         }
         
         $spec_th[] = '价格';
-        $spec_th[] = '拼团价格';
+        // $spec_th[] = '拼团价格';
         $spec_th[] = '库存';
         $spec_th[] = '冻结库存';
         $info['th'] = $spec_th;

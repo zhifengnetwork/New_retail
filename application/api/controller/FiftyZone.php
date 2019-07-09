@@ -15,6 +15,11 @@ class FiftyZone extends ApiBase
     public function shop_list(){
         $user_id = $this->get_user_id();
 
+        $is_release = Db::table('member')->where('id',$user_id)->value('is_release');
+        if(!$is_release){
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'需要购买礼品专区的商品才能参与50元专区！','data'=>'']);
+        }
+
         if($this->fifty_order(1)){
             $this->ajaxReturn(['status' => 304 , 'msg'=>'还有未付款的订单！','data'=>'']);
         }

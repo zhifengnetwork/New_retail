@@ -851,6 +851,16 @@ class Order extends ApiBase
                 $this->ajaxReturn(['status' => 301 , 'msg'=>'修改订单状态失败！','data'=>'']);
             }
 
+            $goods_ids = Db::table('order_goods')->where('order_id',$order_id)->column('goods_id');
+            $goods = Db::table('goods')->where('goods_id','in',$goods_ids)->column('is_gift');
+            if(in_array(1,$goods)){
+                $member = Db::table('member')->where('id',$user_id)->update(['is_release'=>1]);
+                if($member === false){
+                    Db::rollback();
+                    $this->ajaxReturn(['status' => 301 , 'msg'=>'修改订单状态失败！','data'=>'']);
+                }
+            }
+
             $Sales = new Sales($user_id,$order_id,0);
 
             $rest = $Sales->reward_leve($user_id,$order_id,$order['order_sn'],1);
