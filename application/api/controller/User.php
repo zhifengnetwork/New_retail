@@ -913,46 +913,8 @@ class User extends ApiBase
             if(!$user_id){
                 return $this->failResult('用户不存在', 301);
             }
-            $share_error = 0;
-            $filename = $user_id.'-qrcode.png';
-            $save_dir = ROOT_PATH.'public/shareposter/';
-            $my_poster = $save_dir.$user_id.'-share.png';
-            $my_poster_src = SITE_URL.'/shareposter/'.$user_id.'-share.png';
-            if( !file_exists($my_poster) ){
-                    $qianurl = 'http://new_retail_web.zhifengwangluo.com';
-                    $imgUrl  = $qianurl.'?uid='.$user_id;
-                    vendor('phpqrcode.phpqrcode');
-                    \QRcode::png($imgUrl, $save_dir.$filename, QR_ECLEVEL_M);
-                    $image_path =  ROOT_PATH.'public/shareposter/load/qr_backgroup.png';
-                    if(!file_exists($image_path)){
-                        $share_error = 1;
-                    }
-                    # 分享海报
-                    if(!file_exists($my_poster) && !$share_error){
-                        # 海报配置
-                        $conf = Db::name('config')->where(['name' => 'shareposter'])->find();
-                        $config = json_decode($conf['value'],true);
-                        $image_w = $config['w'] ? $config['w'] : 75;
-                        $image_h = $config['h'] ? $config['h'] : 75;
-                        $image_x = $config['x'] ? $config['x'] : 0;
-                        $image_y = $config['y'] ? $config['y'] : 0;
-                        # 根据设置的尺寸，生成缓存二维码
-                        $qr_image = \think\Image::open($save_dir.$filename);
-                        $qrcode_temp_path = $save_dir.$user_id.'-poster.png';
-                        $qr_image->thumb($image_w,$image_h,\think\Image::THUMB_SOUTHEAST)->save($qrcode_temp_path);
-                        
-                        if($image_x > 0 || $image_y > 0){
-                            $water = [$image_x, $image_y];
-                        }else{
-                            $water = 5;
-                        }
-                        # 图片合成
-                        $image = \think\Image::open($image_path);
-                        $image->water($qrcode_temp_path, $water)->save($my_poster);
-                        @unlink($qrcode_temp_path);
-                        @unlink($save_dir.$filename);
-                    }
-            }
+            $poster = new Photoshop();
+            $my_poster_src = $poster->getPosterPhoto();
             $info  = Db::name('member')->where(['id' => $user_id])->field('realname,mobile,id,avatar')->find();
             $data['realname'] = $info['realname'];
             $data['avatar']   = $info['avatar'];
