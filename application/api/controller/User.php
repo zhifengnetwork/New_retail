@@ -718,13 +718,13 @@ class User extends ApiBase
         file_put_contents(ROOT_PATH .Config('c_pub.img').$name.$saveName,$imga);
 
         $imgPath = Config('c_pub.apiimg') . $name.$saveName;
-
+        $data['avatar'] = $imgPath;
         // $imgPath=uploadTou('image');    //提供image
         // if(!$imgPath){
         //     return $this->failResult('缺少图片参数');
         // }
         // $imgPath='/uploads/tou/'.date('Ymd').'/'.$imgPath;
-        $data['avatar']=SITE_URL.$imgPath;
+        // $data['avatar']=SITE_URL.$imgPath;
 
         $member=Db::name('member')->where('id',$user_id)->find();
         if($member){
