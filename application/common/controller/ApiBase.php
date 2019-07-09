@@ -32,12 +32,6 @@ class ApiBase extends ApiAbstract
         if (in_array(strtolower($action), $action_array)) {
             return;
         }
-        
-        $user_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQyIsImlhdCI6MTU1OTYzOTg3MCwiZXhwIjoxNTU5Njc1ODcwLCJ1c2VyX2lkIjo3Nn0.YUQ3hG3TiXzz_5U594tLOyGYUzAwfzgDD8jZFY9n1WA';
-
-        if ($user_token == input('token')) {
-            return 76;
-        }
 
         $this->user_id = $this->decode_token(input('token'));
         // if (empty($user_id)) exit(json_encode(['status' => 999, 'msg' => '您未登录，请登录！']));
@@ -114,19 +108,16 @@ class ApiBase extends ApiAbstract
 
         $token = input('token');
 
-//        $user_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQyIsImlhdCI6MTU1OTYzOTg3MCwiZXhwIjoxNTU5Njc1ODcwLCJ1c2VyX2lkIjo3Nn0.YUQ3hG3TiXzz_5U594tLOyGYUzAwfzgDD8jZFY9n1WA';
-//
-//        if ($user_token == $token) {
-//            return 76;
-//        } else {
             if (!$token) {
                 $this->ajaxReturn(['status' => 301, 'msg' => 'token不存在！', 'data' => []]);
             }
 
             $res = $this->decode_token($token);
+            
             if (!$res) {
                 $this->ajaxReturn(['status' => 301, 'msg' => 'token已过期！', 'data' => []]);
             }
+            return $res;
             if (!isset($res['iat']) || !isset($res['exp']) || !isset($res['user_id'])) {
                 $this->ajaxReturn(['status' => 301, 'msg' => 'token已过期！', 'data' => []]);
             }
@@ -135,7 +126,6 @@ class ApiBase extends ApiAbstract
                 $this->ajaxReturn(['status' => 301, 'msg' => 'token已过期！', 'data' => []]);
             }
             return $res['user_id'];
-//        }
     }
 
     /**
