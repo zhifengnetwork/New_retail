@@ -818,7 +818,7 @@ class User extends ApiBase
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
-        $list  = Db::name('withdraw')->where(['user_id' => $user_id,'status' => ['neq',-2]])->field('create_time,money,taxfee,status')->select();
+        $list  = Db::name('member_withdrawal')->where(['user_id' => $user_id])->field('createtime,money,taxfee,status')->select();
         $data['list'] = $list;
         return $this->successResult($data);
     }
@@ -911,14 +911,16 @@ class User extends ApiBase
         $data = [
             'user_id' => $user_id,
             'money'   => $money ,
+            'rate'    => $tax,
+            'taxfee'  => $taxfee,
             'create_time'    => time(),
-            'withdraw_type'  => $withdraw_type,
+            'type'           => $withdraw_type,
             'account_name'   =>  $member['alipay_name'],
             'account_number' =>  $member['alipay'],
             'status'         => 0,
         ];
 
-        $res  = Db::name('withdraw')->insert($data);
+        $res  = Db::name('member_withdrawal')->insert($data);
 
         if($res == false){
             return $this->failResult('提现失败', 301);
