@@ -135,6 +135,7 @@ class FiftyZone extends ApiBase
             $this->ajaxReturn(['status' => 302 , 'msg'=>'是否缴纳30元服务费！','data'=>'']);
         }        
 
+        $info = Db::table('config')->where('module',5)->column('value','name');
 
         $num = 10;
         
@@ -177,6 +178,7 @@ class FiftyZone extends ApiBase
             $arr[$key]['goods_id']     = $value['goods_id'];
             $arr[$key]['goods_num']    = 1;
             $arr[$key]['add_time']     = $time;
+            $arr[$key]['sure_time']    = $time + ($info['auto_cancel'] * 60);
         }
 
         
