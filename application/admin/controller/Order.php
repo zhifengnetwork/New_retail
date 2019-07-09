@@ -342,8 +342,7 @@ class Order extends Common
             if (!$orderGoods){
                 $this->error('此订单商品已完成退货或换货');//已经完成售后的不能再发货  
             }
-            print_r($order);
-            die;
+            
             $this->assign('order',$order);
             $this->assign('orderGoods',$orderGoods);
             $shipping_list = Db::name('shipping')->field('shipping_name,shipping_code')->where('')->select();
