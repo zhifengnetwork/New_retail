@@ -272,6 +272,7 @@ class FiftyZone extends ApiBase
 
         $saveName = request()->time().rand(0,99999) . '.png';
 
+        $proof = explode(',',$proof)[1];
         $imga=base64_decode($proof);
         //生成文件夹
         $names = "fifty_zone" ;

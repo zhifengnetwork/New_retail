@@ -745,7 +745,8 @@ class User extends ApiBase
         }
 
         $image = input('image');
-        $image = explode(',',$image)[0];
+        $image = explode(',',$image)[1];
+        
         $saveName = request()->time().rand(0,99999) . '.png';
 
         $imga=base64_decode($image);
