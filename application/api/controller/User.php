@@ -734,7 +734,7 @@ class User extends ApiBase
         return $this->successResult($info);
     }
 
-    /**
+   /**
      * 上传头像
      * @throws Exception
      */
@@ -743,31 +743,18 @@ class User extends ApiBase
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
-
         $image = input('image');
-        $image = explode(',',$image)[1];
-        
         $saveName = request()->time().rand(0,99999) . '.png';
-
-        $imga=base64_decode($image);
+        $imga=file_get_contents($image);
         //生成文件夹
         $names = "tou" ;
         $name = "tou/" .date('Ymd',time()) ;
         if (!file_exists(ROOT_PATH .Config('c_pub.img').$names)){ 
             mkdir(ROOT_PATH .Config('c_pub.img').$names,0777,true);
         }
-        //保存图片到本地
         file_put_contents(ROOT_PATH .Config('c_pub.img').$name.$saveName,$imga);
-
         $imgPath = Config('c_pub.apiimg') . $name.$saveName;
-
-        // $imgPath=uploadTou('image');    //提供image
-        // if(!$imgPath){
-        //     return $this->failResult('缺少图片参数');
-        // }
-        // $imgPath='/uploads/tou/'.date('Ymd').'/'.$imgPath;
         $data['avatar']=$imgPath;
-
         $member=Db::name('member')->where('id',$user_id)->find();
         if($member){
             $res=Db::name("member")->where('id',$user_id)->update($data);
@@ -775,7 +762,7 @@ class User extends ApiBase
             return $this->failResult("操作失败");
         }
         if($res){
-            return $this->successResult("{$data['avatar']}");
+            return $this->successResult("操作成功");
         }else{
             return $this->failResult("操作失败");
         }
