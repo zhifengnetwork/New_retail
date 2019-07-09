@@ -702,11 +702,28 @@ class User extends ApiBase
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
-        $imgPath=uploadTou('image');    //提供image
-        if(!$imgPath){
-            return $this->failResult('缺少图片参数');
+
+        $image = input('image');
+        $image = explode(',',$image)[0];
+        $saveName = request()->time().rand(0,99999) . '.png';
+
+        $imga=base64_decode($image);
+        //生成文件夹
+        $names = "tou" ;
+        $name = "tou/" .date('Ymd',time()) ;
+        if (!file_exists(ROOT_PATH .Config('c_pub.img').$names)){ 
+            mkdir(ROOT_PATH .Config('c_pub.img').$names,0777,true);
         }
-        $imgPath='/uploads/tou/'.date('Ymd').'/'.$imgPath;
+        //保存图片到本地
+        file_put_contents(ROOT_PATH .Config('c_pub.img').$name.$saveName,$imga);
+
+        $imgPath = Config('c_pub.apiimg') . $name.$saveName;
+
+        // $imgPath=uploadTou('image');    //提供image
+        // if(!$imgPath){
+        //     return $this->failResult('缺少图片参数');
+        // }
+        // $imgPath='/uploads/tou/'.date('Ymd').'/'.$imgPath;
         $data['avatar']=SITE_URL.$imgPath;
 
         $member=Db::name('member')->where('id',$user_id)->find();
