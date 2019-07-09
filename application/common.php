@@ -855,3 +855,21 @@ function uploadOne($image){
         }
     }
 }
+
+/**
+ * 上传头像
+ * @param $image
+ * @return bool|string
+ */
+function uploadTou($image){
+    $file = request()->file($image);
+    if($file){
+        $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads'. DS . 'tou');
+        if($info){
+            return $info->getFilename();
+        }else{
+            // 上传失败获取错误信息
+            return false;
+        }
+    }
+}

@@ -667,7 +667,88 @@ class User extends ApiBase
         $info['not_evaluate']   = $not_evaluate;
         $info['collection']     = $collection;
 
+
         return $this->successResult($info);
+    }
+
+    /**
+     * 获取默认头像
+     * @param $user_id
+     */
+    public function defaultTou($user_id){
+        $info     = Db::name('member')->where(['id' => $user_id])->field('realname,mobile,id,avatar')->find();
+        //默认头像的位置
+        return $info['avatar'];
+    }
+
+    /**
+     * 个人资料页面
+     */
+    public function personal(){
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+        $info  = Db::name('member')->where(['id' => $user_id])->field('realname,mobile,id,avatar')->find();
+        return $this->successResult($info);
+    }
+
+    /**
+     * 上传头像
+     * @throws Exception
+     */
+    public function updateTou(){
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+        $imgPath=uploadTou('image');    //提供image
+        if(!$imgPath){
+            return $this->failResult('缺少图片参数');
+        }
+        $imgPath='/uploads/tou/'.date('Ymd').'/'.$imgPath;
+        $data['avatar']=SITE_URL.$imgPath;
+
+        $member=Db::name('member')->where('id',$user_id)->find();
+        if($member){
+            $res=Db::name("member")->where('id',$user_id)->update($data);
+        }else{
+            return $this->failResult("操作失败");
+        }
+        if($res){
+            return $this->successResult("操作成功");
+        }else{
+            return $this->failResult("操作失败");
+        }
+    }
+
+    /**
+     * 退出成功
+     */
+    public function logout(){
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+        $data['token'] = '';
+        return $this->successResult($data);
+    }
+
+    /**
+     * 我的邀请链接
+     */
+    public function shareUrl(){
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+        $info  = Db::name('member')->where(['id' => $user_id])->field('realname,mobile,id,avatar')->find();
+        $data['realname'] = $info['realname'];
+        $data['avatar'] = $info['avatar'];
+        $data['mobile'] = $info['mobile'];
+        $data['id'] = $info['id'];
+        $data['url'] = '?uid='.$info['id'];
+        return $this->successResult($data);
     }
 
         /**
@@ -743,6 +824,11 @@ class User extends ApiBase
                         @unlink($save_dir.$filename);
                     }
             }
+            $info  = Db::name('member')->where(['id' => $user_id])->field('realname,mobile,id,avatar')->find();
+            $data['realname'] = $info['realname'];
+            $data['avatar'] = $info['avatar'];
+            $data['mobile'] = $info['mobile'];
+            $data['id'] = $info['id'];
                 $data['my_poster_src'] = $my_poster_src;
                 return $this->successResult($data);
         } catch (Exception $e) {
