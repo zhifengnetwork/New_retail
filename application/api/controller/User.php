@@ -774,7 +774,7 @@ class User extends ApiBase
             return $this->failResult("操作失败");
         }
         if($res){
-            return $this->successResult("操作成功");
+            return $this->successResult("{$data['avatar']}");
         }else{
             return $this->failResult("操作失败");
         }
