@@ -699,6 +699,7 @@ class Order extends ApiBase
             'o.twon',//街道
             'o.address',//地址
             'o.coupon_price',//优惠券抵扣
+            'o.goods_price',//商品总价
             'o.order_amount',//订单总价
             'o.total_amount',//应付款金额
             'o.add_time',//下单时间
