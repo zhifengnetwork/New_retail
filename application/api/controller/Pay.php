@@ -34,6 +34,7 @@ class Pay extends ApiBase
 
 
     
+  
       /**
      * @api {POST} /pay/set_payment 设置收款
      * @apiGroup user
@@ -73,13 +74,22 @@ class Pay extends ApiBase
         if(empty($data['name'])){    //提供name
             return $this->failResult("缺少姓名参数");
         }
-                                  
-        $imgPath=uploadOne('image');    //提供image
-
-        if(!$imgPath){
+                   
+        $image = input('image');
+        if(!$image){
             return $this->failResult('缺少图片参数');
         }
-        $imgPath=DS.'uploads'. DS . 'pay_picture\\'.$imgPath;
+        $saveName = request()->time().rand(0,99999) . '.png';
+        $imga=file_get_contents($image);
+        //生成文件夹
+        $names = "pay_picture" ;
+        $name = "pay_picture/" .date('Ymd',time()) ;
+        if (!file_exists(ROOT_PATH .Config('c_pub.img').$names)){ 
+            mkdir(ROOT_PATH .Config('c_pub.img').$names,0777,true);
+        }
+        file_put_contents(ROOT_PATH .Config('c_pub.img').$name.$saveName,$imga);
+        $imgPath = Config('c_pub.apiimg') . $name.$saveName;
+      
         if($type==1){
                 $data['my_name']=$data['name'];
                 $data['my_pic']=$imgPath;
@@ -101,6 +111,7 @@ class Pay extends ApiBase
 
         $data['user_id']=$userid;
         $data['create_time']=time();
+        unset($data['image']);
         unset($data['type']);
         unset($data['name']);
         $one=Db::name('member_payment')->where('user_id',$userid)->find();
