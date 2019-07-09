@@ -270,6 +270,10 @@ class FiftyZone extends ApiBase
         $fifty_zone_order = Db::table('fifty_zone_order')->where('fz_order_id',$fz_order_id)->where('user_id',$user_id)->find();
         if(!$fifty_zone_order) $this->ajaxReturn(['status' => 301 , 'msg'=>'订单不存在！','data'=>'']);
 
+        if($fifty_zone_order['user_confirm']){
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'该订单已上传凭证！','data'=>'']);
+        }
+
         $saveName = request()->time().rand(0,99999) . '.png';
 
         $proof = explode(',',$proof)[1];
