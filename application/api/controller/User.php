@@ -366,6 +366,47 @@ class User extends ApiBase
         return $result;
     }
 
+       /**
+     * @api {POST} /user/edit_name 修改用户名
+     * @apiGroup user
+     * @apiVersion 1.0.0
+     *
+     * @apiParam {string}    token              token*（必填）
+     * @apiParam {string}    realname              姓名*（必填）
+     * @apiParamExample {json} 请求数据:
+     * {
+     *      "realname":"xxxxxxxxxxxxxxxxxxxxxx",
+     *      "token":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+     * {
+     * "status": 200,
+     * "msg": "success",
+     * "data":"成功"
+     * 
+     * }
+     * //错误返回结果
+     * {
+     * "status": 301,
+     * "msg": "操作失败",
+     * "data": false
+     * }
+     */
+    public function edit_name()
+    {
+        $user_id = $this->get_user_id();
+        $data['realname']=input("realname");
+        $memberRes=Db::name("member")->where("id",$user_id)->update($data);
+       if($memberRes!==false){
+           return $this->successResult("用户名修改成功");
+       }else{
+           return $this->successResult("操作失败");
+       }
+    }
+
+
+
 
        /**
      * @api {POST} /user/team 我的团队
@@ -693,7 +734,7 @@ class User extends ApiBase
         return $this->successResult($info);
     }
 
-    /**
+   /**
      * 上传头像
      * @throws Exception
      */
@@ -702,13 +743,18 @@ class User extends ApiBase
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
-        $imgPath=uploadTou('image');    //提供image
-        if(!$imgPath){
-            return $this->failResult('缺少图片参数');
+        $image = input('image');
+        $saveName = request()->time().rand(0,99999) . '.png';
+        $imga=file_get_contents($image);
+        //生成文件夹
+        $names = "tou" ;
+        $name = "tou/" .date('Ymd',time()) ;
+        if (!file_exists(ROOT_PATH .Config('c_pub.img').$names)){ 
+            mkdir(ROOT_PATH .Config('c_pub.img').$names,0777,true);
         }
-        $imgPath='/uploads/tou/'.date('Ymd').'/'.$imgPath;
-        $data['avatar']=SITE_URL.$imgPath;
-
+        file_put_contents(ROOT_PATH .Config('c_pub.img').$name.$saveName,$imga);
+        $imgPath = Config('c_pub.apiimg') . $name.$saveName;
+        $data['avatar']=$imgPath;
         $member=Db::name('member')->where('id',$user_id)->find();
         if($member){
             $res=Db::name("member")->where('id',$user_id)->update($data);

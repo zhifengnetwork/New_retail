@@ -17,6 +17,29 @@ class Goods extends ApiBase
 {
 
     /**
+    * 礼品专区商品列表
+    */
+    public function goods_gift(){
+        $list = Db::table('goods')->alias('g')
+                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
+                ->where('gi.main',1)
+                ->where('g.is_show',1)
+                ->where('g.is_gift',1)
+                ->order('g.goods_id DESC')
+                ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
+                ->paginate(4);
+
+        if($list){
+            $list = $list->all();
+            foreach($list as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') .$value['img'];
+            }
+        }
+
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$list]);
+    }
+
+    /**
     * 商品分类接口
     */
     /*public function categoryList(){

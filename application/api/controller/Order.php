@@ -11,6 +11,24 @@ use think\Config;
 class Order extends ApiBase
 {
 
+    public function get_pay_type(){
+        $user_id = $this->get_user_id();
+        $pay_type = Config('PAY_TYPE');
+        $pay = Db::table('sysset')->value('sets');
+        $pay = unserialize($pay)['pay'];
+        $arr = [];
+        $i = 0;
+        foreach($pay as $key=>$value){
+            if($value){
+                $arr[$i]['pay_type'] = $pay_type[$key]['pay_type'];
+                $arr[$i]['pay_name'] = $pay_type[$key]['pay_name'];
+                $i++;
+            }
+        }
+
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$arr]);
+    }
+
     /**
      * @api {POST} /order/temporary 购物车提交订单
      * @apiGroup order
@@ -831,6 +849,16 @@ class Order extends ApiBase
             if($res == false){
                 Db::rollback();
                 $this->ajaxReturn(['status' => 301 , 'msg'=>'修改订单状态失败！','data'=>'']);
+            }
+
+            $goods_ids = Db::table('order_goods')->where('order_id',$order_id)->column('goods_id');
+            $goods = Db::table('goods')->where('goods_id','in',$goods_ids)->column('is_gift');
+            if(in_array(1,$goods)){
+                $member = Db::table('member')->where('id',$user_id)->update(['is_release'=>1]);
+                if($member === false){
+                    Db::rollback();
+                    $this->ajaxReturn(['status' => 301 , 'msg'=>'修改订单状态失败！','data'=>'']);
+                }
             }
 
             $Sales = new Sales($user_id,$order_id,0);

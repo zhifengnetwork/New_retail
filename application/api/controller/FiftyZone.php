@@ -15,6 +15,11 @@ class FiftyZone extends ApiBase
     public function shop_list(){
         $user_id = $this->get_user_id();
 
+        $is_release = Db::table('member')->where('id',$user_id)->value('is_release');
+        if(!$is_release){
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'需要购买礼品专区的商品才能参与50元专区！','data'=>'']);
+        }
+
         if($this->fifty_order(1)){
             $this->ajaxReturn(['status' => 304 , 'msg'=>'还有未付款的订单！','data'=>'']);
         }
@@ -270,8 +275,13 @@ class FiftyZone extends ApiBase
         $fifty_zone_order = Db::table('fifty_zone_order')->where('fz_order_id',$fz_order_id)->where('user_id',$user_id)->find();
         if(!$fifty_zone_order) $this->ajaxReturn(['status' => 301 , 'msg'=>'订单不存在！','data'=>'']);
 
+        if($fifty_zone_order['user_confirm']){
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'该订单已上传凭证！','data'=>'']);
+        }
+
         $saveName = request()->time().rand(0,99999) . '.png';
 
+        $proof = explode(',',$proof)[1];
         $imga=base64_decode($proof);
         //生成文件夹
         $names = "fifty_zone" ;
