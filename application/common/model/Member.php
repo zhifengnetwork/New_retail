@@ -69,8 +69,8 @@ class Member extends Model
      * @param $data
      * @return mixed
      */
-    public function getFisrtLeaderNumAttr($value, $data){
-        $fisrt_leader = $this->where(['first_leader'=>$data['user_id']])->count();
+     public static function getFisrtLeaderNumAttr($user_id){
+        $fisrt_leader = self::where(['first_leader'=>$user_id])->count();
         return  $fisrt_leader;
     }
 

@@ -42,9 +42,16 @@ class Sales extends Model
 		
 	}
 
-	public function reward_leve($user_id,$order_id,$order_sn,$state = 0,$num = 0){
+	/***
+	 * state 判断是否是预计收益或者真实收益
+	 * num   循环次数
+	 * 
+	 */
 
-		$num++;
+
+	public function reward_leve($user_id,$order_id,$order_sn,$order_price,$state = 0,$num = 0){
+
+		$num += 1;
 
 		$info  = Member::where(['id' => $user_id])->find();
         
@@ -55,11 +62,13 @@ class Sales extends Model
 		}
 		 //获取直推人数
 		$leader_count  = Member::getFisrtLeaderNumAttr($first_leader);
+	
 
-		$commission    = Db::name('commission')->where(['levelratio' => $num])->find();
-
-		if($leader_count > $commission['start_num'] && $leader_count < $commission['end_time']){
-			$money =   $order_price * $commission['div'];
+		$commission    = Db::name('distribution')->where(['level' => $num])->find();
+		
+		if($leader_count > $commission['start_num'] && $leader_count < $commission['start_end']){
+			$money =  $order_price * $commission['levelratio'];
+			
 			if($state == 1){
 				//提现解锁
 				$this->cash_unlock($first_leader);
@@ -81,6 +90,7 @@ class Sales extends Model
 					'source_id'   => $order_id,
 					'bonus_from'  => $num.'级分佣奖励',
 					'old_balance' => $info['remainder_money'],
+					'note'        => $num.'级分佣奖励',  
 					'create_time' => time(),
 				];
 
@@ -111,7 +121,8 @@ class Sales extends Model
 
 			
 		}
-		$this->reward_leve($first_leader,$order_id,$order_sn,$state,$num);
+		
+		$this->reward_leve($first_leader,$order_id,$order_sn,$order_price,$state,$num);
 	}
 
 

@@ -90,6 +90,7 @@ class Common extends Controller
         Session::set('ALL_MENU_LIST', $menu_tree);
         $left_menu = self::menu($menu_tree);
         
+        
         return $left_menu;
     }
 
@@ -106,6 +107,10 @@ class Common extends Controller
            $url = 'index/index';
         }
         // $url = str_replace('admin/', '', $url);
+        // var_dump($url);
+
+        // var_dump($left_menu);
+        // die;
         $array = array();
         foreach ($left_menu as $key => &$val) {
             if($url == $val['url']||stripos($url,$val['url'])){

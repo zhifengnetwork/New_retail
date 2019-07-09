@@ -2,7 +2,7 @@
 namespace app\admin\controller;
 
 
-
+use app\common\model\Sales;
 use Payment\Config;
 use think\Loader;
 use think\Request;
@@ -15,6 +15,9 @@ class Index extends Common
 {
     public function index()
     {
+        // $Sales = new Sales(51,1451,0);
+        // $res = $Sales->reward_leve(51,1451,20190518162221706377,10,$state = 0,$num = 0);
+        // var_dump($res);
         $this->assign('meta_title', '店铺装修');
         return $this->fetch();
     }

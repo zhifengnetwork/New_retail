@@ -790,7 +790,7 @@ class User extends ApiBase
             $my_poster = $save_dir.$user_id.'-share.png';
             $my_poster_src = SITE_URL.'/shareposter/'.$user_id.'-share.png';
             if( !file_exists($my_poster) ){
-                    $qianurl = '前端注册登录url';
+                    $qianurl = 'http://new_retail_web.zhifengwangluo.com';
                     $imgUrl  = $qianurl.'?uid='.$user_id;
                     vendor('phpqrcode.phpqrcode');
                     \QRcode::png($imgUrl, $save_dir.$filename, QR_ECLEVEL_M);
@@ -826,11 +826,11 @@ class User extends ApiBase
             }
             $info  = Db::name('member')->where(['id' => $user_id])->field('realname,mobile,id,avatar')->find();
             $data['realname'] = $info['realname'];
-            $data['avatar'] = $info['avatar'];
-            $data['mobile'] = $info['mobile'];
-            $data['id'] = $info['id'];
-                $data['my_poster_src'] = $my_poster_src;
-                return $this->successResult($data);
+            $data['avatar']   = $info['avatar'];
+            $data['mobile']   = $info['mobile'];
+            $data['id']       = $info['id'];
+            $data['my_poster_src'] = $my_poster_src;
+            return $this->successResult($data);
         } catch (Exception $e) {
                 return $this->failResult($e->getMessage(), 301);
         }

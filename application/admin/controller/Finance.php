@@ -62,12 +62,11 @@ class Finance extends Common
         ];
 
         $list  = Db::name('menber_balance_log')->alias('log')
-            ->field('log.id,m.id as mid, log.user_id,m.realname,m.avatar,m.weixin,log.note,log.source_type,m.nickname,m.mobile,g.groupname,log.old_balance,log.balance,log.create_time,l.levelname')
+            ->field('log.id,m.id as mid, log.user_id,m.realname,m.avatar,log.note,log.source_type,m.mobile,log.old_balance,log.balance,log.create_time,l.levelname')
             ->join("member m",'m.id=log.user_id','LEFT')
-            ->join("member_group g",'m.groupid=g.id','LEFT')
             ->join("member_level l",'m.level =l.id','LEFT')
+            ->where(['log.balance_type' => 0])
             ->where($where)
-            ->where(['log.balance_type' => 1])
             ->order('m.createtime DESC')
             ->paginate(10, false, ['query' => $carryParameter]);
         // 导出
@@ -151,7 +150,7 @@ class Finance extends Common
         ];
 
         $list  = Db::name('menber_balance_log')->alias('log')
-            ->field('log.id,log.user_id,m.id as mid, m.realname,m.avatar,m.weixin,log.note,log.source_type,m.nickname,m.mobile,g.groupname,log.old_balance,log.balance,log.create_time,l.levelname')
+            ->field('log.id,log.user_id,m.id as mid, m.realname,m.avatar,log.note,log.source_type,m.mobile,g.groupname,log.old_balance,log.balance,log.create_time,l.levelname')
             ->join("member m",'m.id=log.user_id','LEFT')
             ->join("member_group g",'m.groupid=g.id','LEFT')
             ->join("member_level l",'m.level =l.id','LEFT')

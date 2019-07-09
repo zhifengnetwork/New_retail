@@ -31,30 +31,27 @@
                                     <th>等级ID</th>
                                     <th>等级名称</th>
                                     <th>等级比例</th>
-                                    <th>升级条件</th>
-                                    <th>分销权限</th>
+                                    <th>分销条件</th>
                                     <th>操作</th>
                                 </tr>
                             </thead> 
                             <tbody>
                                 {notempty name="list"}
-                                {volist name="list.data" id="vo"}
+                                {volist name="list" id="vo"}
                                 <tr>
                                     <td>{$vo.id}</td>
                                     <td>{$vo.levelname}</td>
                                     <td>{$vo.levelratio}</td>
-                                    <td>{if condition="$vo.autoupdate"}自动升级{else /}不自动升级{/if}</td>
-                                    <td>{$vo.authority_item}</td>
+                                    <td>直推人数{$vo.start_num}到{$vo.start_end}人</td>
                                     <td>
                                         <a class='btn btn-default' href="{:url('distribution/distribution_grade_add',['id'=>$vo.id],false)}">编辑</a>
-                                        <a class='btn btn-default' onclick="del(this,{$vo.id})">删除</a>
+                                        <!-- <a class='btn btn-default' onclick="del(this,{$vo.id})">删除</a> -->
                                     </td>
                                 </tr>
                                 {/volist}
                                 {/notempty}
                             </tbody>
                         </table>
-                        {$page}
                     </div>
                 </div>
                 

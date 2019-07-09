@@ -454,7 +454,7 @@ return [
                 'id'    => 60100,
                 'title' => '财务管理',
                 'sort'  => 1,
-                'url'   => 'finance/index',
+                'url'   => 'finance/balance_logs',
                 'hide'  => 1,
                 'child' => [
                     [
@@ -467,7 +467,7 @@ return [
                     [
                         'id'    => 60102,
                         'title' => '积分记录',
-                        'sort'  => 1,
+                        'sort'  => 2,
                         'url'   => 'finance/integral_logs',
                         'hide'  => 1,
                     ],
@@ -677,31 +677,6 @@ return [
                     ],
                 ],
             ],
-            [
-                'id'    => 210400,
-                'title' => '微信管理',
-                'sort'  => 1,
-                'url'   => 'wxfans/index',
-                'hide'  => 1,
-                'icon'  => 'fa-th-large',
-                'child' => [
-                   
-                    [
-                        'id'    => 210401,
-                        'title' => '粉丝列表',
-                        'sort'  => 1,
-                        'url'   => 'wxfans/index',
-                        'hide'  => 1,
-                    ],
-                    [
-                        'id'    => 210402,
-                        'title' => '微信菜单',
-                        'sort'  => 2,
-                        'url'   => 'wxmenu/index',
-                        'hide'  => 1,
-                    ],
-                ],
-            ],
         ],
      ],
 
@@ -710,7 +685,7 @@ return [
         'id'    => 70000,
         'title' => '分销管理',
         'sort'  => 9,
-        'url'   => 'distribution/index',
+        'url'   => 'distribution/distribution_grade',
         'hide'  => 1,
         'icon'  => 'glyphicon glyphicon-fullscreen',
         'child' => [
@@ -718,50 +693,15 @@ return [
                 'id'    => 70100,
                 'title' => '分销中心',
                 'sort'  => 1,
-                'url'   => 'distribution/index',
+                'url'   => 'distribution/distribution_grade',
                 'hide'  => 1,
                 'icon'  => 'fa-th-large',
                 'child' => [
-                    [
-                        'id'    => 70101,
-                        'title' => '分销中心入口',
-                        'sort'  => 1,
-                        'url'   => 'distribution/distribution_center',
-                        'hide'  => 1,
-                    ],
-                    [
-                        'id'    => 70201,
-                        'title' => '分销设置',
-                        'sort'  => 2,
-                        'url'   => 'distribution/distribution_set',
-                        'hide'  => 1,
-                    ],
-                    [
-                        'id'    => 70301,
-                        'title' => '分销商',
-                        'sort'  => 3,
-                        'url'   => 'distribution/index',
-                        'hide'  => 1,
-                    ],
                     [
                         'id'    => 70401,
                         'title' => '分销商等级',
                         'sort'  => 4,
                         'url'   => 'distribution/distribution_grade',
-                        'hide'  => 1,
-                    ],
-                    [
-                        'id'    => 70501,
-                        'title' => '分销关系',
-                        'sort'  => 5,
-                        'url'   => 'distribution/distribution_relations',
-                        'hide'  => 1,
-                    ],
-                    [
-                        'id'    => 70601,
-                        'title' => '通知设置',
-                        'sort'  => 6,
-                        'url'   => 'distribution/distribution_notify',
                         'hide'  => 1,
                     ],
                 ],
