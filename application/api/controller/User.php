@@ -724,7 +724,6 @@ class User extends ApiBase
         //     return $this->failResult('缺少图片参数');
         // }
         // $imgPath='/uploads/tou/'.date('Ymd').'/'.$imgPath;
-        echo $imgPath;die;
         $data['avatar']=$imgPath;
 
         $member=Db::name('member')->where('id',$user_id)->find();
