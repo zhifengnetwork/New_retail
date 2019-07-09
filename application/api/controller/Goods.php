@@ -544,6 +544,68 @@ class Goods extends ApiBase
                 }
             }
         }
+
+        //属性  add  by zgp
+        $arr_attr = null;
+        $goodsRes['productAttr'] = null;
+        if(isset($goodsRes['spec']['spec_attr']) && !empty($goodsRes['spec']['spec_attr'])){
+            foreach($goodsRes['spec']['spec_attr'] as $k=>$vv){
+                $goodsRes['productAttr'][$k]['product_id'] = $goodsRes['goods_id'];
+                $goodsRes['productAttr'][$k]['attr_name'] = $vv['spec_name'];
+                $goodsRes['productAttr'][$k]['spec_id'] = $vv['spec_id'];
+                $goodsRes['productAttr'][$k]['res'] = $vv['res'];
+                foreach($vv['res'] as $aabb => $item){
+                    $arr_attr[$k][$aabb] = $item['attr_id'].','.$item['attr_name'];
+                }
+
+            }
+        }
+        //goods_sku  完善所有组合
+        $arr_attr = getArrSet($arr_attr);
+
+        $goodsRes['productSku'] = null;
+//        print_r($goodsRes['spec']['goods_sku']);die;
+        $check_true_arr = null;
+        $sku_all_arr = null;
+        if(isset($goodsRes['spec']['goods_sku']) && !empty($goodsRes['spec']['goods_sku'])){
+            foreach($arr_attr as $k=>$vv){
+                foreach($vv as $aabb=>$item){
+                    $arr = explode(",",$item);
+                    $check_true_arr[$k][$aabb] = $arr[0];
+                }
+                $check_true_arr[$k]['arr_str'] = implode(",",$check_true_arr[$k]);
+                unset($check_true_arr[$k][0]);
+                unset($check_true_arr[$k][1]);
+                unset($check_true_arr[$k][2]);
+            }
+            //全部的sku数组
+            foreach($check_true_arr as $k=>$vv){
+                $sku_all_arr[$k] = $vv['arr_str'];
+            }
+            foreach($sku_all_arr as $k=>$vv){
+                if(isset($goodsRes['spec']['goods_sku'][$k]) && !empty($goodsRes['spec']['goods_sku'][$k])){
+                    if(in_array($goodsRes['spec']['goods_sku'][$k]['sku_attr1'],$sku_all_arr)){
+                        $goodsRes['productSku'][$k]['product_id'] = $goodsRes['goods_id'];
+                        $goodsRes['productSku'][$k] = $goodsRes['spec']['goods_sku'][$k];
+                    }
+                }else{
+                    $goodsRes['productSku'][$k]['sku_id'] = 0;
+                    $goodsRes['productSku'][$k]['product_id'] = $goodsRes['goods_id'];
+                    $goodsRes['productSku'][$k]['goods_id'] = $goodsRes['goods_id'];;
+                    $goodsRes['productSku'][$k]['inventory'] = 0;
+                    $goodsRes['productSku'][$k]['price'] = 0;
+                    $goodsRes['productSku'][$k]['sku_attr'] = '';
+                    $goodsRes['productSku'][$k]['img'] = 0;
+                    $goodsRes['productSku'][$k]['groupon_price'] = 0;
+                    $goodsRes['productSku'][$k]['frozen_stock'] = 0;
+                    $goodsRes['productSku'][$k]['sales'] = 0;
+                    $goodsRes['productSku'][$k]['virtual_sales'] = 0;
+                    $goodsRes['productSku'][$k]['sku_attr1'] = $vv;
+                }
+
+            }
+        }
+        // add by zgp
               
         $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>$goodsRes]);
 
