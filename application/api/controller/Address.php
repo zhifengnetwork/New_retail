@@ -126,8 +126,9 @@ class Address extends ApiBase
         if(!$user_id||is_array($user_id)){
             return $this->failResult("用户不存在");
         }
+        $address_id=$data['address_id']?$data['address_id']:0;
         $useraddr=new UserAddr();
-        return $useraddr->add_address($user_id,$address_id=0,$data);
+        return $useraddr->add_address($user_id,$address_id,$data);
     }
 
     

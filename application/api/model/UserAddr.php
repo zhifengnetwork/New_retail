@@ -64,7 +64,7 @@ class UserAddr extends Model
      * @param $user_id 地址id(编辑时需传入)
      * @return array
      */
-    public function add_address($user_id,$address_id=0,$data){
+    public function add_address($user_id,$address_id,$data){
         $post = $data;
         if($address_id == 0)
         {
