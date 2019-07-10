@@ -100,13 +100,12 @@ class Common extends Controller
         //!$url && $url = strtolower(request()->controller() . '/' . request()->action());
         !$url && $url = request()->path();
        
-        // if($url == '/'){
-        //    $url = 'index/index';
-        // }
         $url = str_replace('admin/', '', $url);
 
-        // var_dump($left_menu);
-        // die;
+        if ($url == '/') {
+            $url = strtolower(request()->controller() . "/" . request()->action());
+        }
+
         $array = array();
         foreach ($left_menu as $key => &$val) {
             if($url == $val['url']||stripos($url,$val['url'])){
@@ -114,7 +113,7 @@ class Common extends Controller
             }
             if (!empty($val['_child'])) {
                 $val['_child'] = self::menu($val['_child']);
-                
+
                 if ($url == $val['url']||stripos($url,$val['url'])) {
                     $val['class']  = 'active';
                     $val['class2'] = 'select';
@@ -180,10 +179,15 @@ class Common extends Controller
         //当前url
 
         $url = $request->path();
+       
         $url = str_replace('admin/', '', $url);
-        // if ($url == '/') {
-        //     $url = strtolower($request->controller() . "/" . $request->action());
-        // }
+        
+      
+        if ($url == '/') {
+            $url = strtolower($request->controller() . "/" . $request->action());
+        }
+      
+      
         //超级管理员，直接返回
         if (UID === IS_ROOT) {
             return true;
