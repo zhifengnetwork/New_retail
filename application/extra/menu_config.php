@@ -682,6 +682,13 @@ return [
                         'url'   => 'menu/index',
                         'hide'  => 1,
                     ],
+                    [
+                        'id'    => 210302,
+                        'title' => '更新菜单',
+                        'sort'  => 2,
+                        'url'   => 'menu/import_menu',
+                        'hide'  => 0,
+                    ],
                 ],
             ],
         ],
