@@ -1321,6 +1321,45 @@
   },
   {
     "type": "POST",
+    "url": "/user/shop_list",
+    "title": "我的发布",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token*（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n{\"status\":200,\n\"msg\":\"成功！\",\n\"data\":[{\"fz_id\":45,\"user_id\":76,\"goods_id\":50,\"stock\":11,\"frozen_stock\":0,\n\"add_time\":1562412462,\"goods_name\":\"五十块钱\",\"img\":\"http://newretail.com/upload/images/goods/20190703156215158672344.png\"},\n{\"fz_id\":44,\"user_id\":76,\"goods_id\":50,\"stock\":11,\"frozen_stock\":0,\"add_time\":1562408249,\"goods_name\":\"五十块钱\",\n\"img\":\"http://newretail.com/upload/images/goods/20190703156215158672344.png\"}]}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"操作失败\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/User.php",
+    "groupTitle": "user",
+    "name": "PostUserShop_list"
+  },
+  {
+    "type": "POST",
     "url": "/user/team",
     "title": "我的团队",
     "group": "user",

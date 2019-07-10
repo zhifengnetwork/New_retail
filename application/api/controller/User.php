@@ -1129,6 +1129,56 @@ class User extends ApiBase
            }
        }
 
+              /**
+     * @api {POST} /user/shop_list 我的发布
+     * @apiGroup user
+     * @apiVersion 1.0.0
+     *
+     * @apiParam {string}    token              token*（必填）
+     * @apiParamExample {json} 请求数据:
+     * {
+     *      "token":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+       *{
+         * {"status":200,
+         * "msg":"成功！",
+         * "data":[{"fz_id":45,"user_id":76,"goods_id":50,"stock":11,"frozen_stock":0,
+         * "add_time":1562412462,"goods_name":"五十块钱","img":"http://newretail.com/upload/images/goods/20190703156215158672344.png"},
+         * {"fz_id":44,"user_id":76,"goods_id":50,"stock":11,"frozen_stock":0,"add_time":1562408249,"goods_name":"五十块钱",
+         * "img":"http://newretail.com/upload/images/goods/20190703156215158672344.png"}]}
+     * //错误返回结果
+     * {
+     * "status": 301,
+     * "msg": "操作失败",
+     * "data": false
+     * }
+     */
+    public function shop_list(){
+        // $user_id = $this->get_user_id();
+        $user_id=76;
+        $goods_id = 50;
+        $info = Db::table('config')->where('module',5)->column('value','name');
+        $where['g.goods_id'] = $goods_id;
+        $where['gi.main'] = 1;
+        $where['fzs.stock'] = ['neq',0];
+        $where['fzs.user_id'] = ['eq',$user_id];
+        $list = Db::table('fifty_zone_shop')->alias('fzs')
+                ->join('goods g','g.goods_id=fzs.goods_id','LEFT')
+                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
+                ->join('member m','m.id=fzs.user_id','LEFT')
+                ->field('fzs.*,g.goods_name,gi.picture img')
+                ->where($where)
+                ->order('fzs.add_time DESC')
+                ->limit($info['show_num'])
+                ->select();
+        foreach($list as $key=>&$value){
+            $value['img'] = Config('c_pub.apiimg') . $value['img'];
+        }
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$list]);
+    }
+
 
 
 }
