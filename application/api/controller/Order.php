@@ -912,7 +912,7 @@ class Order extends ApiBase
      */
     public function order_comment(){
         $user_id = $this->get_user_id();
-
+        echo 1;die;
         $comments = input('comments');
         pred($comments);
         $comments = json_decode($comments ,true);
