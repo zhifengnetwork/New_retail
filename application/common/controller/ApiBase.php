@@ -109,13 +109,13 @@ class ApiBase extends ApiAbstract
         $token = input('token');
 
             if (!$token) {
-                $this->ajaxReturn(['status' => 301, 'msg' => 'token不存在！', 'data' => []]);
+                $this->ajaxReturn(['status' => 999, 'msg' => 'token不存在！', 'data' => []]);
             }
 
             $res = $this->decode_token($token);
             
             if (!$res) {
-                $this->ajaxReturn(['status' => 301, 'msg' => 'token已过期！', 'data' => []]);
+                $this->ajaxReturn(['status' => 999, 'msg' => 'token已过期！', 'data' => []]);
             }
             return $res;
             if (!isset($res['iat']) || !isset($res['exp']) || !isset($res['user_id'])) {
