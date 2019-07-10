@@ -839,8 +839,7 @@ class User extends ApiBase
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
-        $log_type       =  input('log_type',0);
-        $list           = Db::name('menber_balance_log')->where(['user_id' => $user_id,'balance_type' => 1,'log_type' => $log_type])->field('note,balance,source_id,create_time,old_balance')->select();
+        $list           = Db::name('menber_balance_log')->where(['user_id' => $user_id,'balance_type' => 1])->field('note,balance,source_id,create_time,old_balance,log_type')->select();
         if(!empty( $list)){
             foreach($list as &$v){
                 $v['balance'] = $v['old_balance'] -  $v['balance'];
