@@ -1098,7 +1098,7 @@ class User extends ApiBase
 
 
            /**
-     * @api {POST} /user/sharePoster 我的推广码
+     * @api {POST} /user/bank_card 银行设置
      * @apiGroup user
      * @apiVersion 1.0.0
      *
@@ -1116,7 +1116,7 @@ class User extends ApiBase
      * //错误返回结果
      * {
      * "status": 301,
-     * "msg": "验证码错误！",
+     * "msg": "操作失败",
      * "data": false
      * }
      */
