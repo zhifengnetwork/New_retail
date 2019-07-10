@@ -881,7 +881,7 @@ class User extends ApiBase
             'alipay'      => $alipay,
             'alipay_name' => $alipay_name,
         ];
-        $res  = Db::name('menber')->where(['id' => $user_id])->update($data);
+        $res  = Db::name('member')->where(['id' => $user_id])->update($data);
 
         if($res == false){
             return $this->failResult('编辑失败', 301);
@@ -931,7 +931,7 @@ class User extends ApiBase
             'money'   => $money ,
             'rate'    => $tax,
             'taxfee'  => $taxfee,
-            'createtime'    => time(),
+            'createtime'     => time(),
             'type'           => $withdraw_type,
             'account_name'   =>  $member['alipay_name'],
             'account_number' =>  $member['alipay'],
@@ -965,9 +965,7 @@ class User extends ApiBase
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
-          
-
-
+        $member  = Db::name('member_level')->where(['id' => $user_id])->field('id,level')->find();
       
     }
 
