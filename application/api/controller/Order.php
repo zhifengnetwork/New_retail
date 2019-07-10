@@ -915,7 +915,7 @@ class Order extends ApiBase
 
         $comments = input('comments');
         $comments = json_decode($comments ,true);
-
+        pred($comments);
         $order_id = $comments[0]['order_id'];
         $sku_id = $comments[0]['sku_id'];
 
