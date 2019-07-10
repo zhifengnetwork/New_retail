@@ -138,6 +138,10 @@ class Goods extends Common
             //     }
             // }
 
+            if(empty($data['goods_td'][1][0]) || empty($data['goods_td']['num'][0]) || empty($data['pri_td']['pri'][0])){
+                $this->error('规格不能为空！');
+            }
+
             // 本店售价
             $pri = $data['pri_td']['pri'];
             $pri_count = count($pri);

@@ -162,6 +162,29 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">是否开启  </label>
+                            <div class="col-sm-9">
+                                <label style="margin-top:4px; margin-right:20px;">
+                                    <input type="radio" value="0" name="is_open" {if condition='(isset($info.is_open) and !$info.is_open) or !isset($info.is_open)'} checked {/if} /> 否
+                                </label>
+                                <label>
+                                    <input type="radio" value="1" name="is_open" {if condition='isset($info.is_open) and $info.is_open'} checked {/if} /> 是
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group fl">
+                            <label class="col-sm-2 control-label">开启时间</label>
+                            <style>
+                                .fl span{float:left;}
+                                .fl input{width:100px;}
+                            </style>
+                            <div class="col-sm-9">
+                                <span><input type="text" name="start_open_time" value="" class="form-control"></span> <span>-</span> <span><input type="text" name="end_open_time" value="" class="form-control"></span><span>点</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">商家联系方式</label>
                             <div class="col-sm-9">
                                 <input type="text" name="shop_mobile" value="{if condition='isset($info.shop_mobile)'}{$info.shop_mobile}{else /}110{/if}" class="form-control">
@@ -217,13 +240,28 @@
         });
         
     })
-    
-})();
 
 $(".del").on("click",function(){
     $(this).parent('li').remove();
     $(".upload_image").show();
     $(".upload_btn").show();
 });
+
+    if( $('input[name=is_open]:checked').val() == 1 ){
+        $('.fl').show();
+    }else{
+        $('.fl').hide();
+    }
+    
+})();
+
+$('input[name=is_open]').on('click',function(){
+    if( $(this).val() == 1 ){
+        $('.fl').show();
+    }else{
+        $('.fl').hide();
+    }
+})
+
 </script>
 {/block}

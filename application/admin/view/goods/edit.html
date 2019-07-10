@@ -646,84 +646,9 @@ Calendar.setup({
     });
 
 
-
-    //禁用同级点击
-  $(document).on("click", ".checkbox", function(e){ 
-    $(e.target).siblings().removeAttr('checked');
-    $(e.target).attr('checked','checked');
-  });
-
-  //添加
-  $('.addd').on('click',function(){
-    $('.vv').parents('tbody').append( $('.vv').eq(0).clone().find('.validate').removeAttr('disabled').find('option').removeAttr('selected').parents('tr').find('.dels').css('display','inline-block').attr('sku_id','').parents('tr').prop("outerHTML") );
-  });
-
-  //删除
-  $(document).on("click", ".dels", function(e){ 
-    if( $('.vv').length == 1 ){
-      alert('最少保留一条规格!');
-      return;
-    }
-    
-    if( $(e.target).attr('sku_id') ){
-      if (confirm('确认要删除吗?')==true) {
-        $.post("{:url('Goods/del_sku')}" ,{'sku_id':$(e.target).attr('sku_id')} ,function(data){
-          if(data){
-            $(e.target).parents('.vv').remove();
-            layer.msg('{:lang(\'已删除\')}!',{icon:1,time:1000});
-          }else{
-            layer.msg('{:lang(\'删除失败\')}!',{icon: 5,time:1000});
-          }
-        },'json');
-      }
-    }else{
-      $(e.target).parents('.vv').remove();
-    }
-
-  });
-
-
-function isRepeat(arr){
-  var  hash = {};
-  for(var i in arr) {
-    if(hash[arr[i]]) {
-      return true;
-    }
-    hash[arr[i]] = true;
-  }
-  return false;
-}
-
 //表单提交验证事件
 $("form").submit(function(e){
-  var validate = 0
-  $('.validate').each(function(k,v){
-    if( !$(v).val() ){
-      validate=1;
-      return false;
-    }
-  });
-  if(validate){
-    alert('商品规格必须填写完整!');
-    return false;
-  }
-
-  var arr = new Array();
-  $('.vv').each(function(key,value){
-    var arr2 = new Array()
-    $(value).find('select').find('option:selected').each(function(k,v){
-      arr2.push( $(v).val() );
-    });
-    arr.push( arr2 );
-  });
-
-  if( isRepeat(arr) ){
-    alert('商品规格有重复,请检查!');
-    return false;
-  }
-
-  $('.validate').removeAttr('disabled');
-
+ 
 });
 </script>
 {/block}
