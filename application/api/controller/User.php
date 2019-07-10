@@ -1036,5 +1036,39 @@ class User extends ApiBase
     }
 
 
+           /**
+     * @api {POST} /user/sharePoster 我的推广码
+     * @apiGroup user
+     * @apiVersion 1.0.0
+     *
+     * @apiParam {string}    token              token*（必填）
+     * @apiParamExample {json} 请求数据:
+     * {
+     *      "token":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+       *{
+         * "status":200,
+         * "msg":"success",
+         * "data":{"id":55,"title":"张11","name":"1321545646546","module":1,"group":0,"extra":"","remark":"广州工商银行","status":1,"value":"6202565465215495","sort":1,"update_time":1562727208,"create_time":1562727187}}
+     * //错误返回结果
+     * {
+     * "status": 301,
+     * "msg": "验证码错误！",
+     * "data": false
+     * }
+     */
+       public function bank_card()
+       {
+           $bankInfo=Db::name('config')->where(['id'=>56])->find();
+           if($bankInfo){
+                 return $this->successResult($bankInfo);
+           }else{
+                  return $this->failResult("操作失败");
+           }
+       }
+
+
 
 }
