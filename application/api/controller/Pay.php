@@ -138,6 +138,7 @@ class Pay extends ApiBase
     public function payment(){
         $order_id     = input('order_id');
         $pay_type     = input('pay_type');//支付方式
+        $pwd          = input('pwd','');
         $user_id      = $this->get_user_id();
 
         $order_info   = Db::name('order')->where(['order_id' => $order_id])->field('order_id,groupon_id,order_sn,order_amount,pay_type,pay_status,user_id')->find();//订单信息
@@ -184,11 +185,17 @@ class Pay extends ApiBase
                 exit;
             }
         }elseif($pay_type == 1){
+            if(empty($pwd)){
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'支付不能为空！','data'=>'']);
+            }
+            $pwd = md5($user['salt'] . $pwd);
+            if ($pwd != $user['pwd']) {
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'支付密码错误！','data'=>'']);
+            }
             // $balance_info  = get_balance($user_id,0);
             if($member['remainder_money'] < $order_info['order_amount']){
                 $this->ajaxReturn(['status' => 301 , 'msg'=>'余额不足','data'=>'']);
             }
-
             // 启动事务
             Db::startTrans();
 

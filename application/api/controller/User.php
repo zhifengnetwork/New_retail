@@ -312,8 +312,8 @@ class User extends ApiBase
             if (!Request::instance()->isPost()) return $this->getResult(301, 'error', '请求方式有误');
             $phone = input('phone/s', '');
             $type = input('type', 1);
-            $verify_code = input('verify_code/s', '');
-            $password = input('user_password/s', '');
+            $verify_code      = input('verify_code/s', '');
+            $password         = input('user_password/s', '');
             $confirm_password = input('confirm_password/s', '');
 
             if ($password != $confirm_password) {
@@ -346,6 +346,9 @@ class User extends ApiBase
                 $stri = 'password';
             } else {
                 $stri = 'pwd';
+                if(strlen($password) != 6){
+                    return $this->failResult('支付密码长度错误！', 301);
+                }
             }
             $password = md5($member['salt'] . $password);
             if ($password == $member[$stri]) {
@@ -502,6 +505,7 @@ class User extends ApiBase
         $all_lower = get_all_lower($user_id);
        
         $all_lower = implode(',',$all_lower);
+
         $list = array();
     
         if ($all_lower) {
@@ -831,8 +835,14 @@ class User extends ApiBase
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
-        $list  = Db::name('menber_balance_log')->where(['user_id' => $user_id,'balance_type' => 1])->field('note,balance,source_id,create_time')->select();
-        $data['list'] = $list;
+        $log_type       =  input('log_type',0);
+        $list           = Db::name('menber_balance_log')->where(['user_id' => $user_id,'balance_type' => 1,'log_type' => $log_type])->field('note,balance,source_id,create_time,old_balance')->select();
+        if(!empty( $list)){
+            foreach($list as &$v){
+                $v['balance'] = $v['old_balance'] -  $v['balance'];
+            }
+        }
+        $data['list']   = $list;
         return $this->successResult($data);
     }
 
@@ -942,6 +952,57 @@ class User extends ApiBase
         Db::commit();
         $this->ajaxReturn(['status'=>200,'msg'=>'提现申请成功,工作人员加急审核中！','data'=>[]]);
     }
+
+     /***
+     * 代理商等级条件
+     */
+    public function agent_res(){
+        
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+          
+
+
+      
+    }
+
+
+    /***
+     * 代理商（申请代理）
+     */
+    public function user_agent(){
+        
+        $user_id = $this->get_user_id();
+        if(!$user_id){
+            return $this->failResult('用户不存在', 301);
+        }
+        $image    = input('image');
+        $saveName = request()->time().rand(0,99999) . '.png';
+        $imga     = file_get_contents($image);
+        //生成文件夹
+        $names = "agent" ;
+        $name  = "agent/" .date('Ymd',time()) ;
+        if (!file_exists(ROOT_PATH .Config('c_pub.img').$names)){ 
+            mkdir(ROOT_PATH .Config('c_pub.img').$names,0777,true);
+        }
+        file_put_contents(ROOT_PATH .Config('c_pub.img').$name.$saveName,$imga);
+        $imgPath        = Config('c_pub.apiimg') . $name.$saveName;
+        $data['avatar'] =  $imgPath;
+        $member   = Db::name('member')->where('id',$user_id)->find();
+        if($member){
+            $res  = Db::name("member")->where('id',$user_id)->update($data);
+        }else{
+            return $this->failResult("操作失败");
+        }
+        if($res){
+            return $this->successResult("操作成功");
+        }else{
+            return $this->failResult("操作失败");
+        }
+    }
+    
 
 
 
