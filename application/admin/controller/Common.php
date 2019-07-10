@@ -100,11 +100,10 @@ class Common extends Controller
         //!$url && $url = strtolower(request()->controller() . '/' . request()->action());
         !$url && $url = request()->path();
        
-        if($url == '/'){
-           $url = 'index/index';
-        }
-        // $url = str_replace('admin/', '', $url);
-        // var_dump($url);
+        // if($url == '/'){
+        //    $url = 'index/index';
+        // }
+        $url = str_replace('admin/', '', $url);
 
         // var_dump($left_menu);
         // die;
