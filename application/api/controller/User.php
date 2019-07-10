@@ -1178,6 +1178,8 @@ class User extends ApiBase
                 ->select();
         foreach($list as $key=>&$value){
             $value['img'] = Config('c_pub.apiimg') . $value['img'];
+            $value['ymdTime'] = date("Y-m-d",$value['add_time']);
+            $value['hisTime'] = date("h:i:s",$value['add_time']);
         }
         $this->ajaxReturn(['status' => 200 , 'msg'=>'成功！','data'=>$list]);
     }
