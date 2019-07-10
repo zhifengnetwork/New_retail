@@ -400,6 +400,11 @@ class User extends ApiBase
     {
         $user_id = $this->get_user_id();
         $data['realname']=input("realname");
+        $result = $this->validate($this->param, 'User.edit_name');
+        if (true !== $result) {
+            return $this->failResult($result, 301);
+        }
+
         $memberRes=Db::name("member")->where("id",$user_id)->update($data);
        if($memberRes!==false){
            return $this->successResult("用户名修改成功");
