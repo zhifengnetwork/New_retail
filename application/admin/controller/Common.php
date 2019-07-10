@@ -212,9 +212,9 @@ class Common extends Controller
         //去除重复值
         $rules_array = array_unique($rules_array);
         // //权限判断
-        // if (!in_array($rule_id, $rules_array)) {
-        //     return $this->error("没有权限");
-        // }
+        if (!in_array($rule_id, $rules_array)) {
+            return $this->error("没有权限");
+        }
 
     }
 
