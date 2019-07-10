@@ -692,13 +692,17 @@ class User extends ApiBase
         //退款
         $refund   = Db::name('order_refund')->where(['user_id' => $user_id,'refund_status' => 2])->field('*')->count();
         //待付款
-        $not_pay  = Db::name('order')->where(['user_id' => $user_id,'pay_status' => 0])->field('*')->count();
+        $where = array('order_status' => 1 ,'pay_status'=>0 ,'shipping_status' =>0,'user_id'=>$user_id); //待付款
+        $not_pay  = Db::name('order')->where($where)->field('*')->count();
         //待发货
-        $not_delivery   = Db::name('order')->where(['user_id' => $user_id,'pay_status' =>1,'shipping_status' => 0])->field('*')->count();
+        $where = array('order_status' => 1 ,'pay_status'=>1 ,'shipping_status' =>0,'user_id' => $user_id); //待发货
+        $not_delivery   = Db::name('order')->where($where)->field('*')->count();
         //待收货
-        $not_receiving  = Db::name('order')->where(['user_id' => $user_id,'pay_status' =>1,'shipping_status' => 1])->field('*')->count();
+        $where = array('order_status' => 1 ,'pay_status'=>1 ,'shipping_status' =>1,'user_id' => $user_id); //待收货
+        $not_receiving  = Db::name('order')->where($where)->field('*')->count();
         //待评价
-        $not_evaluate   = Db::name('order')->where(['user_id' => $user_id,'comment' =>0,'pay_status' => 1,'shipping_status' => 3])->field('*')->count();
+        $where = array('order_status' => 4 ,'pay_status'=>1 ,'shipping_status' =>3,'user_id' => $user_id,'comment' =>0); //待评价
+        $not_evaluate   = Db::name('order')->where($where)->field('*')->count();
         //收藏
         $collection     = Db::name('collection')->where(['user_id' => $user_id])->field('*')->count();
         //预计收益
@@ -1091,6 +1095,40 @@ class User extends ApiBase
         }
          
     }
+
+
+           /**
+     * @api {POST} /user/sharePoster 我的推广码
+     * @apiGroup user
+     * @apiVersion 1.0.0
+     *
+     * @apiParam {string}    token              token*（必填）
+     * @apiParamExample {json} 请求数据:
+     * {
+     *      "token":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     * }
+     * @apiSuccessExample {json} 返回数据：
+     * //正确返回结果
+       *{
+         * "status":200,
+         * "msg":"success",
+         * "data":{"id":55,"title":"张11","name":"1321545646546","module":1,"group":0,"extra":"","remark":"广州工商银行","status":1,"value":"6202565465215495","sort":1,"update_time":1562727208,"create_time":1562727187}}
+     * //错误返回结果
+     * {
+     * "status": 301,
+     * "msg": "验证码错误！",
+     * "data": false
+     * }
+     */
+       public function bank_card()
+       {
+           $bankInfo=Db::name('config')->where(['id'=>56])->find();
+           if($bankInfo){
+                 return $this->successResult($bankInfo);
+           }else{
+                  return $this->failResult("操作失败");
+           }
+       }
 
 
 

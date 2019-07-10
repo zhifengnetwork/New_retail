@@ -10,13 +10,13 @@ class Cart extends Model
     public function cartList($where = array())
     {   
         $cart_list = $this->field('id cart_id,selected,user_id,groupon_id,goods_id,goods_sn,goods_name,market_price,goods_price,member_goods_price,subtotal_price,sku_id,goods_num,spec_key_name')->where($where)->order('id DESC')->select();
-
+        
         $arr = [];
         if($cart_list){
             foreach($cart_list as $key=>$value){
 
                 if( isset($arr[$value['goods_id']]) ){
-                    $arr[$value['goods_id']]['cart_id'] = $arr[$value['goods_id']]['cart_id'] . ',' . $value['id'];
+                    $arr[$value['goods_id']]['cart_id'] = $arr[$value['goods_id']]['cart_id'] . ',' . $value['cart_id'];
                     $arr[$value['goods_id']]['subtotal_price'] = sprintf("%.2f",$arr[$value['goods_id']]['subtotal_price'] + $value['subtotal_price']);
                     $arr[$value['goods_id']]['goods_num'] = $arr[$value['goods_id']]['goods_num'] + $value['goods_num'];
                     $arr[$value['goods_id']]['spec'][] = $value;
@@ -34,7 +34,7 @@ class Cart extends Model
                 }
             }
         }
-
+        
         $arr = ota($arr);
         $arr = array_values( $arr );
         return $arr;
