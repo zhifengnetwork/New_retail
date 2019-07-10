@@ -914,8 +914,8 @@ class Order extends ApiBase
         $user_id = $this->get_user_id();
 
         $comments = input('comments');
-        $comments = json_decode($comments ,true);
         pred($comments);
+        $comments = json_decode($comments ,true);
         $order_id = $comments[0]['order_id'];
         $sku_id = $comments[0]['sku_id'];
 
