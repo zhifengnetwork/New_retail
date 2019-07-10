@@ -907,13 +907,13 @@ return [
                         'url'   => 'member/level_add',
                         'hide'  => 0,
                     ],
-                    [
-                        'id'    => 90108,
-                        'title' => '会员分组',
-                        'sort'  => 4,
-                        'url'   => 'member/group',
-                        'hide'  => 1,
-                    ],
+//                    [
+//                        'id'    => 90108,
+//                        'title' => '会员分组',
+//                        'sort'  => 4,
+//                        'url'   => 'member/group',
+//                        'hide'  => 1,
+//                    ],
                     [
                         'id'    => 90109,
                         'title' => '分组编辑',
