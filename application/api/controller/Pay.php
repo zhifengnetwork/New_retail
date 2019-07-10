@@ -186,7 +186,7 @@ class Pay extends ApiBase
             }
         }elseif($pay_type == 1){
             if(empty($pwd)){
-                $this->ajaxReturn(['status' => 301 , 'msg'=>'支付不能为空！','data'=>'']);
+                $this->ajaxReturn(['status' => 301 , 'msg'=>'支付密码不能为空！','data'=>'']);
             }
             $pwd = md5($user['salt'] . $pwd);
             if ($pwd != $user['pwd']) {
