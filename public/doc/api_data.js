@@ -872,6 +872,45 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/user/bank_card",
+    "title": "银行设置",
+    "group": "user",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token*（必填）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求数据:",
+          "content": "{\n     \"token\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回数据：",
+          "content": "//正确返回结果\n{\n\"status\":200,\n\"msg\":\"success\",\n\"data\":{\"id\":55,\"title\":\"张11\",\"name\":\"1321545646546\",\"module\":1,\"group\":0,\"extra\":\"\",\"remark\":\"广州工商银行\",\"status\":1,\"value\":\"6202565465215495\",\"sort\":1,\"update_time\":1562727208,\"create_time\":1562727187}}\n//错误返回结果\n{\n\"status\": 301,\n\"msg\": \"操作失败\",\n\"data\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/api/controller/User.php",
+    "groupTitle": "user",
+    "name": "PostUserBank_card"
+  },
+  {
+    "type": "POST",
     "url": "/user/distribut_list",
     "title": "佣金明细",
     "group": "user",
