@@ -216,7 +216,7 @@ class Common extends Controller
         $rules_array = array_unique($rules_array);
         // //权限判断
         if (!in_array($rule_id, $rules_array)) {
-            return $this->error("没有权限");
+            // return $this->error("没有权限");
         }
 
     }
