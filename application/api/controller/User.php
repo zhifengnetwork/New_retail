@@ -688,13 +688,17 @@ class User extends ApiBase
         //退款
         $refund   = Db::name('order_refund')->where(['user_id' => $user_id,'refund_status' => 2])->field('*')->count();
         //待付款
-        $not_pay  = Db::name('order')->where(['user_id' => $user_id,'pay_status' => 0])->field('*')->count();
+        $where = array('order_status' => 1 ,'pay_status'=>0 ,'shipping_status' =>0,'user_id'=>$user_id); //待付款
+        $not_pay  = Db::name('order')->where($where)->field('*')->count();
         //待发货
-        $not_delivery   = Db::name('order')->where(['user_id' => $user_id,'pay_status' =>1,'shipping_status' => 0])->field('*')->count();
+        $where = array('order_status' => 1 ,'pay_status'=>1 ,'shipping_status' =>0,'user_id' => $user_id); //待发货
+        $not_delivery   = Db::name('order')->where($where)->field('*')->count();
         //待收货
-        $not_receiving  = Db::name('order')->where(['user_id' => $user_id,'pay_status' =>1,'shipping_status' => 1])->field('*')->count();
+        $where = array('order_status' => 1 ,'pay_status'=>1 ,'shipping_status' =>1,'user_id' => $user_id); //待收货
+        $not_receiving  = Db::name('order')->where($where)->field('*')->count();
         //待评价
-        $not_evaluate   = Db::name('order')->where(['user_id' => $user_id,'comment' =>0,'pay_status' => 1,'shipping_status' => 3])->field('*')->count();
+        $where = array('order_status' => 4 ,'pay_status'=>1 ,'shipping_status' =>3,'user_id' => $user_id,'comment' =>0); //待评价
+        $not_evaluate   = Db::name('order')->where($where)->field('*')->count();
         //收藏
         $collection     = Db::name('collection')->where(['user_id' => $user_id])->field('*')->count();
         //预计收益
