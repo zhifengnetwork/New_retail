@@ -187,7 +187,6 @@ class Common extends Controller
             $url = strtolower($request->controller() . "/" . $request->action());
         }
       
-      
         //超级管理员，直接返回
         if (UID === IS_ROOT) {
             return true;
