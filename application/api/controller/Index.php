@@ -133,8 +133,24 @@ class Index extends ApiBase
                 $value['img'] = Config('c_pub.apiimg') .$value['img'];
             }
         }
+
+        $goods_gift = Db::table('goods')->alias('g')
+                ->join('goods_img gi','gi.goods_id=g.goods_id','LEFT')
+                ->where('gi.main',1)
+                ->where('g.is_show',1)
+                ->where('g.is_gift',1)
+                ->order('g.goods_id DESC')
+                ->field('g.goods_id,goods_name,gi.picture img,price,original_price')
+                ->paginate(4);
+
+        if($goods_gift){
+            $goods_gift = $goods_gift->all();
+            foreach($goods_gift as $key=>&$value){
+                $value['img'] = Config('c_pub.apiimg') .$value['img'];
+            }
+        }
         
-        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>['banners'=>$banners,'announce'=>$announce,'hot_goods'=>$hot_goods,'recommend_goods'=>$recommend_goods]]);
+        $this->ajaxReturn(['status' => 200 , 'msg'=>'获取成功','data'=>['banners'=>$banners,'announce'=>$announce,'hot_goods'=>$hot_goods,'recommend_goods'=>$recommend_goods,'goods_gift'=>$goods_gift]]);
     }
 
     

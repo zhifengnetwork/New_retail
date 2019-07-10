@@ -316,6 +316,13 @@ return [
                         'url'   => 'fifty_zone/audit_proof',
                         'hide'  => 1,
                     ],
+                    [
+                        'id'    => 30808,
+                        'title' => '图片',
+                        'sort'  => 0,
+                        'url'   => 'fifty_zone/img',
+                        'hide'  => 1,
+                    ],
                 ],
             ],
         ],
