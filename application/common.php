@@ -105,7 +105,7 @@ function checkMobile($mobilePhone)
 
 function send_zhangjun($mobile,$code){//掌骏
     
-    $content = "【ETH】您的手机验证码为：".$code."，该短信1分钟内有效。如非本人操作，可不用理会！";
+    $content = "【NewRetial】您的手机验证码为：".$code."，该短信1分钟内有效。如非本人操作，可不用理会！";
     $time=date('ymdhis',time());
     $arr=array('uname'=>"hsxx40",'pwd'=>"hsxx40",'time'=>$time);
     $signPars='';
@@ -125,7 +125,7 @@ function send_zhangjun($mobile,$code){//掌骏
  * @return mixed
  */
 function send_zhangjun_seller($mobile){
-    $content = "【ETH】您发布的商品有用户已购买，请在5分钟内确认订单！";
+    $content = "【NewRetial】您发布的商品有用户已购买，请在5分钟内确认订单！";
     $time=date('ymdhis',time());
     $arr=array('uname'=>"hsxx40",'pwd'=>"hsxx40",'time'=>$time);
     $signPars='';
@@ -145,7 +145,7 @@ function send_zhangjun_seller($mobile){
  * @return mixed
  */
 function send_zhangjun_buyer($mobile){
-    $content = "【ETH】您提交的支付凭证已发送给商家，系统会在5分钟确认订单支付！";
+    $content = "【NewRetial】您提交的支付凭证已发送给商家，系统会在5分钟确认订单支付！";
     $time=date('ymdhis',time());
     $arr=array('uname'=>"hsxx40",'pwd'=>"hsxx40",'time'=>$time);
     $signPars='';
