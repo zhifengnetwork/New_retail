@@ -100,9 +100,9 @@ class ApiAbstract extends Controller
             return ['status' => -2 , 'msg'=>'发送失败，请重试！'];
         }
 //      测试默认通过  zgp
-        $ret['message'] = 'ok';
+//        $ret['message'] = 'ok';
 //        正式启动验证码 zgp
-//        $ret = send_zhangjun($mobile, $code);
+        $ret = send_zhangjun($mobile, $code);
         if($ret['message'] == 'ok'){
             return ['status' => 1 , 'msg'=>'发送成功！'];
         }
@@ -140,11 +140,11 @@ class ApiAbstract extends Controller
             return ['status' => -2 , 'msg'=>'发送失败，请重试！'];
         }
 //      测试默认通过  zgp
-        $ret['message'] = 'ok';
+//        $ret['message'] = 'ok';
         if($type==1){//发送给买方
-//            $ret = send_zhangjun_buyer($mobile);
+            $ret = send_zhangjun_buyer($mobile);
         }else{//发送给卖方
-//            $ret = send_zhangjun_seller($mobile);
+            $ret = send_zhangjun_seller($mobile);
         }
         if($ret['message'] == 'ok'){
             return ['status' => 1 , 'msg'=>'发送成功！'];
