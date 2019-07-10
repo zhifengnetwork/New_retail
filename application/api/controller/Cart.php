@@ -179,13 +179,13 @@ class Cart extends ApiBase
         $act = Request::instance()->param('edit');
 
         if( !$sku_id || !$cart_number ){
-            $this->ajaxReturn(['status' => 301 , 'msg'=>'该商品不存在！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'请选择规格！','data'=>'']);
         }
 
         $sku_res = Db::name('goods_sku')->where('sku_id', $sku_id)->field('price,groupon_price,inventory,frozen_stock,goods_id')->find();
 
         if (empty($sku_res)) {
-            $this->ajaxReturn(['status' => 301 , 'msg'=>'该商品不存在！','data'=>'']);
+            $this->ajaxReturn(['status' => 301 , 'msg'=>'请选择规格！','data'=>'']);
         }
 
         if ($cart_number > ($sku_res['inventory']-$sku_res['frozen_stock'])) {
