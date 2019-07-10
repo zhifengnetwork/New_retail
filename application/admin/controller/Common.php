@@ -180,9 +180,10 @@ class Common extends Controller
         //当前url
 
         $url = $request->path();
-        if ($url == '/') {
-            $url = strtolower($request->controller() . "/" . $request->action());
-        }
+        $url = str_replace('admin/', '', $url);
+        // if ($url == '/') {
+        //     $url = strtolower($request->controller() . "/" . $request->action());
+        // }
         //超级管理员，直接返回
         if (UID === IS_ROOT) {
             return true;
