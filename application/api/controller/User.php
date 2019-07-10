@@ -743,7 +743,7 @@ class User extends ApiBase
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
-        $info  = Db::name('member')->where(['id' => $user_id])->field('realname,mobile,id,avatar')->find();
+        $info  = Db::name('member')->where(['id' => $user_id])->field('realname,mobile,id,avatar,level')->find();
         return $this->successResult($info);
     }
 
