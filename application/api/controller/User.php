@@ -841,7 +841,7 @@ class User extends ApiBase
      */
     public function remainder_list(){
         $user_id = $this->get_user_id();
-        $log_type=input('log_type');
+        $log_type=input('log_type')?input('log_type'):0;
         if(!$user_id){
             return $this->failResult('用户不存在', 301);
         }
