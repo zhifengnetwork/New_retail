@@ -189,12 +189,12 @@ class Pay extends ApiBase
                 $this->ajaxReturn(['status' => 301 , 'msg'=>'支付密码不能为空！','data'=>'']);
             }
 
-            if(empty($user['pwd'])){
+            if(empty($member['pwd'])){
                 $this->ajaxReturn(['status' => 888 , 'msg'=>'支付密码未设置','data'=>'']);
             }
-            
-            $pwd = md5($user['salt'] . $pwd);
-            if ($pwd != $user['pwd']) {
+
+            $pwd = md5($member['salt'] . $pwd);
+            if ($pwd != $member['pwd']) {
                 $this->ajaxReturn(['status' => 301 , 'msg'=>'支付密码错误！','data'=>'']);
             }
             // $balance_info  = get_balance($user_id,0);
