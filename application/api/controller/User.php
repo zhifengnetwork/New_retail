@@ -924,7 +924,7 @@ class User extends ApiBase
         }
        
         $withdraw_type      = input('withdraw_type',4);
-        $tax                = 0.006; //提现费率
+        $tax                = 0.006; //提现费率 todo:后台配置
         $taxfee             = $money * $tax;
         $data = [
             'user_id' => $user_id,
