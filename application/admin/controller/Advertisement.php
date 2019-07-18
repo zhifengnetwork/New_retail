@@ -77,6 +77,23 @@ class Advertisement extends Common
     }
 
 
+    /**
+     *  删除公告
+     */
+    public function announce_del () {
+        $id = request()->param('id',0);
+        if ($id){
+            $del = Db::table('announce')->where('id',$id)->delete();
+            if ($del){
+                return json(['code'=>1,'msg'=>'操作成功！','data'=>[]]);
+            }else{
+                json(['code'=>0,'msg'=>'修改失败！','data'=>[]]);
+            }
+        }else{
+            return json(['code'=>0,'msg'=>'id不存在！','data'=>[]]);
+        }
+    }
+
 
 
     /**

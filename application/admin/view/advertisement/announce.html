@@ -79,7 +79,7 @@ function update(obj,id,status){
 
 function del(obj,id,status){
     if(window.confirm('确认删除该页面吗？')){
-        $.post("{:url('Advertisement/announce_status')}",{'id':id,'status':status},function(data){
+        $.post("{:url('Advertisement/announce_del')}",{'id':id,'status':status},function(data){
             console.log(data)
             alert(data.msg);
             if(data.code==1){
